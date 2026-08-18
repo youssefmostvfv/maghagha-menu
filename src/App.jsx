@@ -11,6 +11,8 @@ function App() {
   const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [showPreloader, setShowPreloader] = useState(true);
+  const [fadePreloader, setFadePreloader] = useState(false);
   const [theme, setTheme] = useState(() => {
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem('theme');
@@ -26,6 +28,21 @@ function App() {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
   }, [theme]);
+
+  useEffect(() => {
+    const fadeTimer = setTimeout(() => {
+      setFadePreloader(true);
+    }, 3400);
+
+    const removeTimer = setTimeout(() => {
+      setShowPreloader(false);
+    }, 4000);
+
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(removeTimer);
+    };
+  }, []);
 
   const toggleTheme = () => {
     setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
@@ -81,6 +98,24 @@ function App() {
 
   return (
     <>
+      {/* Preloader */}
+      {showPreloader && (
+        <div className={`preloader-overlay ${fadePreloader ? 'fade-out' : ''}`}>
+          <div className="preloader-content">
+            <div className="preloader-icon">
+              <i className="fa-solid fa-burger"></i>
+            </div>
+            <h1 className="preloader-title">
+              <span className="word-1">دليل مغاغة</span>
+              <span className="word-2"> في جيبك</span>
+            </h1>
+            <div className="preloader-bar">
+              <div className="preloader-progress"></div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <header className="app-header">
         <h1 className="brand-title">منيو مغاغة <i className="fa-solid fa-burger"></i></h1>
