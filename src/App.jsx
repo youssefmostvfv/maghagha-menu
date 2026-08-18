@@ -154,24 +154,47 @@ function App() {
         {/* Hero Section */}
         <section className="hero-section">
           <div className="hero-content">
-            <h2 className="hero-title">دليل مغاغه ف جيبك <i className="fa-solid fa-bullseye"></i></h2>
+            <div className="hero-badge">
+              <i className="fa-solid fa-magnifying-glass"></i>
+              <span>ابحث وتصفح منيو مطاعم مغاغة بسهولة</span>
+            </div>
+            <h2 className="hero-title">دليل مغاغه ف جيبك 🎯</h2>
             <p className="hero-subtitle">
-              دليلك السريع لمعرفة مواعيد العمل، أرقام الدليفري والاتصال، تصفح المنيو الورقي الأصلي، ومعرفة أسعار وجباتك المفضلة بسهولة تامة.
+              منصتك المتكاملة لتصفح المنيوهات  وأسعار وجباتك المفضلة بمغاغة، والاتصال بالدليفري مباشرة.
             </p>
+            
+            {/* Integrated Search Input */}
+            <div className="search-wrapper hero-search-box">
+              <i className="fa-solid fa-magnifying-glass search-icon"></i>
+              <input
+                type="text"
+                className="search-input"
+                placeholder="ابحث عن مطعم، أكلة، كريب، شاورما، برجر..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+
+            {/* Quick Search Tag Helpers */}
+            <div className="hero-tags">
+              <span className="tags-label">الأكثر بحثاً:</span>
+              {['كريب', 'بروست', 'سماش برجر', 'سوشي', 'مشويات'].map(tag => (
+                <button 
+                  key={tag} 
+                  className="hero-tag-btn"
+                  onClick={() => setSearchTerm(tag)}
+                >
+                  {tag}
+                </button>
+              ))}
+              {searchTerm && (
+                <button className="hero-tag-clear" onClick={() => setSearchTerm('')}>
+                  مسح <i className="fa-solid fa-xmark"></i>
+                </button>
+              )}
+            </div>
           </div>
         </section>
-
-        {/* Search Input */}
-        <div className="search-wrapper">
-          <i className="fa-solid fa-magnifying-glass search-icon"></i>
-          <input
-            type="text"
-            className="search-input"
-            placeholder="ابحث عن مطعم، كريب، شاورما، حلو..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
 
         {/* Categories Carousel */}
         <div className="categories-container">
