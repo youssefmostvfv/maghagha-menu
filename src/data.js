@@ -15,6 +15,21 @@ import docMenu7 from './assets/doctor-box-meanu7.jpg';
 import docMenu8 from './assets/doctor-box-meanu8.jpg';
 import kokapLogo from './assets/kokap-logo.jpg';
 import kokapMenu1 from './assets/kokap-meanu1.jpg.jpeg';
+import mazekaLogo from './assets/mazeka-logo.png';
+import mazekaMenu from './assets/mazeka--meanu.jpg';
+import elthwraLogo from './assets/elthwra-menu.jpg';
+import elthwraMenu from './assets/elthwra.jpg';
+import elshraeaLogo from './assets/elshraea-logo.jpg';
+import elshraeaMenu1 from './assets/elshraea-menu1.jpg';
+import elshraeaMenu2 from './assets/elshraea-menu2.jpg';
+import elshraeaMenu3 from './assets/elshraea-menu3.jpg';
+import elshraeaOffer from './assets/elshraea-offer.jpg';
+import elshraea2Menu1 from './assets/elshraea2-menu1.jpg';
+import elshraea2Menu2 from './assets/elshraea2-menu2.jpg';
+import koshiLogo from './assets/Koshi-Sushi-logo.jpg';
+import koshiMenu from './assets/Koshi-Sushi-menu.jpg';
+import babaLogo from './assets/baba-food-logo.jpg';
+import babaMenu from './assets/baba-food-menu.jpg';
 
 // بيانات المطاعم والمحلات النموذجية لموقع دليل مغاغة للمطاعم
 export const CATEGORIES = [
@@ -24,10 +39,121 @@ export const CATEGORIES = [
   { id: 'crepe', name: 'كريب/بيتزا', icon: 'fa-pizza-slice' },
   { id: 'sweets', name: 'وافل/حلويات', icon: 'fa-ice-cream' },
   { id: 'chicken', name: 'فرايد تشكن /بروست', icon: 'fa-drumstick-bite' },
-  { id: 'burger', name: 'سماش برجر', icon: 'fa-burger' }
+  { id: 'burger', name: 'سماش برجر', icon: 'fa-burger' },
+  { id: 'sushi', name: 'سوشي', icon: 'fa-shrimp' }
 ];
 
 export const RESTAURANTS = [
+  {
+    id: 16,
+    name: 'بابا برجر - Baba Burger',
+    category: 'burger',
+    logo: babaLogo,
+    description: 'أفضل وأجود ساندوتشات السماش برجر اللحم والدجاج الطازج بخلطتنا الفريدة في مغاغة.',
+    phones: ['01118487387'],
+    whatsApp: '201118487387',
+    deliveryFee: '20 جنيه',
+    address: 'مغاغة - شارع الثورة، بجوار حلو الشام',
+    workingHours: {
+      start: '12:00',
+      end: '02:00',
+      display: 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'
+    },
+    popularItems: [
+      { name: 'سماش برجر كلاسيك (سنجل)', price: 70, description: 'قطعة لحم سماش، جبنة شيدر، خس، طماطم، خيار مخلل، صوص بابا المميز' },
+      { name: 'بابا برجر دبل سماش', price: 95, description: 'قطعتين لحم سماش، دبل جبنة شيدر، بصل مكرمل وصوص خاص' },
+      { name: 'ساندوتش دجاج كريسبي بابا', price: 80, description: 'صدر دجاج مقرمش، جبنة شيدر سايحة، خس، مايونيز' }
+    ],
+    menuImages: [babaMenu]
+  },
+  {
+    id: 15,
+    name: 'سوشي كوشي - Koshi Sushi',
+    category: 'sushi',
+    logo: koshiLogo,
+    description: 'أشهى ساندوتشات ولفائف السوشي اليابانية الطازجة والمحضرّة من أجود المكونات في مغاغة.',
+    phones: ['01287187786'],
+    whatsApp: '',
+    deliveryFee: '20 جنيه',
+    address: 'أونلاين (توصيل فقط)',
+    workingHours: {
+      start: '12:00',
+      end: '23:00',
+      display: 'من 12:00 ظهراً إلى 11:00 مساءً'
+    },
+    popularItems: [
+      { name: 'هوسو ماكي سالمون (6 قطع)', price: 95, description: 'لفائف سوشي كلاسيكية محشوة بالسلمون الطازج والأرز ونوري' },
+      { name: 'فيلادلفيا رول (8 قطع)', price: 150, description: 'سلمون، جبنة كريمي، خيار، أفوكادو، سمسم' },
+      { name: 'كومبو مشكل (16 قطعة)', price: 290, description: 'تشكيلة ممتازة من السوشي رولز والماكي والساشيمي تناسب جميع الأذواق' }
+    ],
+    menuImages: [koshiMenu]
+  },
+  {
+    id: 11,
+    name: 'مزيكا كريب - Mazeka Crepe',
+    category: 'crepe',
+    logo: mazekaLogo,
+    description: 'أطعم وأكبر كريب حادق وحلو وبيتزا إيطالي مميزة في مغاغة.',
+    phones: ['01024716334', '01110672280'],
+    whatsApp: '',
+    deliveryFee: '20 جنيه',
+    address: 'مغاغة - شارع الثورة - أمام مطعم زيزو',
+    workingHours: {
+      start: '12:00',
+      end: '03:00',
+      display: 'من 12:00 ظهراً إلى 3:00 بعد منتصف الليل'
+    },
+    popularItems: [
+      { name: 'كريب سوبر كرانشي حار', price: 75, description: 'فرايد تشيكن مقرمش، بطاطس، جبن موزاريلا، صوصات مميزة' },
+      { name: 'كريب بطاطس سوري بالجبنة', price: 40, description: 'بطاطس مقلية مع تشكيلة جبن وصوص تومية' },
+      { name: 'بيتزا سوبر سوبريم وسط', price: 95, description: 'شرائح لحوم متبلة، موزاريلا، خضروات طازجة' }
+    ],
+    menuImages: [mazekaMenu]
+  },
+  {
+    id: 12,
+    name: 'مطعم الثورة - El Thawra Restaurant',
+    category: 'crepe',
+    logo: elthwraLogo,
+    description: 'أشهى كريب وسندوتشات غربية متنوعة وبيتزا إيطالية مميزة.',
+    phones: ['01128804535', '01032527269'],
+    whatsApp: '',
+    deliveryFee: '20 جنيه',
+    address: 'مغاغة - شارع الثورة، بجوار قصر السلطان',
+    workingHours: {
+      start: '12:00',
+      end: '02:30',
+      display: 'من 12:00 ظهراً إلى 2:30 بعد منتصف الليل'
+    },
+    popularItems: [
+      { name: 'كريب زنجر سوبريم حار', price: 80, description: 'قطع زنجر الدجاج الحار، جبن موزاريلا، فلفل، زيتون، صوصات' },
+      { name: 'بيتزا مارجريتا (وسط)', price: 65, description: 'عجينة بيتزا إيطالية غنية بالجبن الموزاريلا وصلصة الطماطم المتبلة' },
+      { name: 'كريب شاورما دجاج جامبو', price: 75, description: 'شاورما دجاج، جبن شيدر وموزاريلا، بطاطس، تومية وصوصات' }
+    ],
+    menuImages: [elthwraMenu]
+  },
+  {
+    id: 14,
+    name: 'كريب وبيتزا الشريعي - El Shraea Crepe & Pizza',
+    category: 'crepe',
+    logo: elshraeaLogo,
+    description: 'أجود أنواع الكريب والبيتزا الإيطالية والسندوتشات الغربية اللذيذة.',
+    phones: ['01201882717'],
+    whatsApp: '',
+    deliveryFee: '20 جنيه',
+    address: 'مغاغة - شارع السلام، أمام مدرسة الراهبات',
+    workingHours: {
+      start: '12:00',
+      end: '02:30',
+      display: 'من 12:00 ظهراً إلى 2:30 بعد منتصف الليل'
+    },
+    popularItems: [
+      { name: 'كريب زنجر سوبر سوبريم', price: 75, description: 'قطع زنجر الدجاج، بطاطس، موزاريلا، كاتشب، مايونيز، زيتون، فلفل' },
+      { name: 'بيتزا تشيكن رانش وسط', price: 90, description: 'صدور دجاج، صوص رانش، موزاريلا، فلفل، زيتون' },
+      { name: 'كريب نوتيلا بالموز والمكسرات', price: 50, description: 'كريب حلو غني بالنوتيلا والموز والمكسرات' }
+    ],
+    menuImages: [elshraea2Menu1, elshraea2Menu2]
+  },
   {
     id: 8,
     name: 'مشويات أبو طلعت - Abo Talaat Grill',
@@ -95,106 +221,26 @@ export const RESTAURANTS = [
     menuImages: [docMenu1, docMenu2, docMenu3, docMenu4, docMenu5, docMenu6, docMenu7, docMenu8]
   },
   {
-    id: 1,
-    name: 'باسم السوري - Bassem El Syrian',
-    category: 'syrian',
-    logo: 'https://images.unsplash.com/photo-1561651823-34fed022540d?w=150&auto=format&fit=crop&q=60',
-    description: 'أقوى الشاورما السورية والوجبات الغربية السريعة في مغاغة.',
-    phones: ['01123456789'],
-    whatsApp: '201123456789',
+    id: 13,
+    name: 'الشريعي فرايد تشيكن - El Shraea Fried Chicken',
+    category: 'chicken',
+    logo: elshraeaLogo,
+    description: 'أقوى وجبات الفرايد تشيكن والبروست المقرمش بعروض وخلطات مميزة.',
+    phones: ['01208696419'],
+    whatsApp: '',
     deliveryFee: '20 جنيه',
-    address: 'مغاغة - شارع الجمهورية بجوار بنك مصر',
+    address: 'مغاغة - شارع السلام، أمام كوبري الصنائع',
     workingHours: {
       start: '12:00',
       end: '02:00',
       display: 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'
     },
     popularItems: [
-      { name: 'شاورما عربي دبل', price: 85, description: 'شرائح شاورما دجاج، بطاطس، ثومية، مخلل' },
-      { name: 'صاروخ شاورما لحم', price: 70, description: 'خبز صاج كبير، شاورما لحم بلدي، طحينة' },
-      { name: 'ماريا باسم السوري', price: 90, description: 'خبز صاج محشو شاورما وجبنة موزاريلا على الفحم' },
-      { name: 'وجبة عربي فرط (نص كيلو)', price: 210, description: 'شاورما فرط، بطاطس، ثومية، خبز، مخللات' }
+      { name: 'وجبة سوبر كرانشي فردية', price: 90, description: '3 قطع دجاج بروست، بطاطس، ثومية، عيش' },
+      { name: 'ساندوتش الشريعي العملاق', price: 80, description: 'صدور دجاج كريسبي مقرمشة مع الخس والمايونيز والجبن' },
+      { name: 'وجبة العيلة الشريعي (12 قطعة)', price: 340, description: '12 قطعة بروست، بطاطس عائلية، كول سلو كبير، خبز ولتر كولا' }
     ],
-    menuImages: [
-      'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1544025162-d76694265947?w=800&auto=format&fit=crop&q=80'
-    ]
-  },
-  {
-    id: 2,
-    name: 'كريب ستور - Crepe Store',
-    category: 'crepe',
-    logo: 'https://images.unsplash.com/photo-1621961401348-f09374731b2a?w=150&auto=format&fit=crop&q=60',
-    description: 'أطعم وأكبر كريب حادق وحلو وبيتزا إيطالي مميزة.',
-    phones: ['01098765432'],
-    whatsApp: '201098765432',
-    deliveryFee: '20 جنيه',
-    address: 'مغاغة - شارع السلام خلف مجلس المدينة',
-    workingHours: {
-      start: '11:00',
-      end: '03:00',
-      display: 'من 11:00 صباحاً إلى 3:00 فجراً'
-    },
-    popularItems: [
-      { name: 'كريب سوبر شيش كرانشي', price: 75, description: 'شيش طاووق، كرانشي حار، بطاطس، جبن، صوصات' },
-      { name: 'كريب نوتيلا بالموز والمكسرات', price: 55, description: 'كريب حلو غني بشوكولاتة نوتيلا الأصلية' },
-      { name: 'بيتزا تشيكن رانش (وسط)', price: 95, description: 'دجاج، صوص رانش، موزاريلا، فلفل، زيتون' },
-      { name: 'كريب بطاطس سوري بالجبنة', price: 40, description: 'كريب اقتصادي ولذيذ بالبطاطس المقلية والجبن الموزاريلا' }
-    ],
-    menuImages: [
-      'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=800&auto=format&fit=crop&q=80'
-    ]
-  },
-  {
-    id: 3,
-    name: 'مشويات حضرموت - Hadramout Grill',
-    category: 'grill',
-    logo: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=150&auto=format&fit=crop&q=60',
-    description: 'أصل المشويات على الفحم والمندي البلدي الفاخر.',
-    phones: ['01211112223'],
-    whatsApp: '',
-    deliveryFee: '20 جنيه',
-    address: 'مغاغة - الطريق الزراعي أمام كوبري المشاة',
-    workingHours: {
-      start: '09:00',
-      end: '00:00',
-      display: 'من 9:00 صباحاً إلى 12:00 منتصف الليل'
-    },
-    popularItems: [
-      { name: 'ربع مندي فرخة (صدر/ورك)', price: 75, description: 'يقدم مع أرز مندي مبهر، سلطة خضراء، طحينة' },
-      { name: 'كيلو كفتة بلدي على الفحم', price: 380, description: 'لحم بلدي صافي مشوي مع التتبيلة السرية' },
-      { name: 'وجبة العيلة (نص تيس مندي)', price: 2100, description: 'تكفي من 6 لـ 8 أفراد، تقدم مع سرفيس الأرز والسلطات' },
-      { name: 'طاجن عكاوي بالبصل', price: 190, description: 'عكاوي بلدي مطهوة في الفرن مع البصل والتوابل' }
-    ],
-    menuImages: [
-      'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&auto=format&fit=crop&q=80'
-    ]
-  },
-  {
-    id: 4,
-    name: 'حلواني قصر الإليزيه - El Elysee Sweets',
-    category: 'sweets',
-    logo: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=150&auto=format&fit=crop&q=60',
-    description: 'شرقي، غربي، تورت، وافل، وأجود أنواع الأيس كريم والحلويات.',
-    phones: ['0863812345'],
-    whatsApp: '20863812345',
-    deliveryFee: '20 جنيه',
-    address: 'مغاغة - ميدان المحطة بجوار صيدلية الشعب',
-    workingHours: {
-      start: '10:00',
-      end: '23:30',
-      display: 'من 10:00 صباحاً إلى 11:30 مساءً'
-    },
-    popularItems: [
-      { name: 'وافل نوتيلا لوتس دبل', price: 65, description: 'وافل ساخن مغطى بكريمة نوتيلا و زبدة لوتس مع قطع بسكويت' },
-      { name: 'طبق بسبوسة سادة (كيلو)', price: 90, description: 'بسبوسة مرملة بالسمن البلدي والمكسرات' },
-      { name: 'تورته شوكولاتة وسط', price: 220, description: 'شوكولاتة بلجيكية فاخرة مع الكريمة الطازجة' },
-      { name: 'بولات أيس كريم مشكل', price: 35, description: 'أربع بولات بنكهات الفراولة، الشوكولاتة، المانجو، والفانيليا' }
-    ],
-    menuImages: [
-      'https://images.unsplash.com/photo-1587314168485-3236d6710814?w=800&auto=format&fit=crop&q=80'
-    ]
+    menuImages: [elshraeaMenu1, elshraeaMenu2, elshraeaMenu3, elshraeaOffer]
   },
   {
     id: 10,

@@ -17,9 +17,6 @@ function App() {
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem('theme');
       if (savedTheme) return savedTheme;
-      
-      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      return systemPrefersDark ? 'dark' : 'light';
     }
     return 'light';
   });
@@ -102,13 +99,36 @@ function App() {
       {showPreloader && (
         <div className={`preloader-overlay ${fadePreloader ? 'fade-out' : ''}`}>
           <div className="preloader-content">
-            <div className="preloader-icon">
-              <i className="fa-solid fa-burger"></i>
+            <div className="preloader-brand-wrapper">
+              <div className="preloader-ring"></div>
+              <div className="preloader-ring-pulse"></div>
+              <div className="preloader-icon">
+                <i className="fa-solid fa-burger"></i>
+              </div>
             </div>
             <h1 className="preloader-title">
               <span className="word-1">دليل مغاغة</span>
-              <span className="word-2"> في جيبك</span>
+              <span className="word-2">في جيبك</span>
             </h1>
+            
+            <div className="preloader-description">
+              <p className="preloader-lead">كل مطاعم مغاغة وبياناتها في مكان واحد 🎯</p>
+              <div className="preloader-features">
+                <div className="preloader-feature-item item-1">
+                  <i className="fa-solid fa-square-phone"></i>
+                  <span>أرقام الدليفري والاتصال المباشر بنقرة واحدة</span>
+                </div>
+                <div className="preloader-feature-item item-2">
+                  <i className="fa-solid fa-book-open"></i>
+                  <span>تصفح المنيو الورقي الأصلي وقارن الأسعار</span>
+                </div>
+                <div className="preloader-feature-item item-3">
+                  <i className="fa-solid fa-clock"></i>
+                  <span>مواعيد فتح وإغلاق المحلات وحالة العمل الآن</span>
+                </div>
+              </div>
+            </div>
+
             <div className="preloader-bar">
               <div className="preloader-progress"></div>
             </div>
