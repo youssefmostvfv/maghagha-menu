@@ -20,7 +20,7 @@ function App() {
   const [isRatingSubmitting, setIsRatingSubmitting] = useState(false);
   const [activeMainTab, setActiveMainTab] = useState('restaurants');
 
-  const KVDB_URL = 'https://kvdb.io/kvd_maghagha_menu_7d9a1e/all_ratings';
+  const KVDB_URL = 'https://kvdb.io/9d1yfbSFXNHqhxwRTpMsKE/all_ratings';
 
   useEffect(() => {
     // Load local ratings made by the user
