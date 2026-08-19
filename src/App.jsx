@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CATEGORIES, RESTAURANTS, isRestaurantOpen } from './data';
+import { CATEGORIES, RESTAURANTS, isRestaurantOpen, CAPTAINS } from './data';
 import logo from './assets/logo.png';
 import logoTow from './assets/logo-tow.png';
 import { initializeApp } from 'firebase/app';
@@ -35,6 +35,7 @@ function App() {
   const [userRatings, setUserRatings] = useState({});
   const [isRatingSubmitting, setIsRatingSubmitting] = useState(false);
   const [ratingAnimationState, setRatingAnimationState] = useState(null);
+  const [tripsCounts, setTripsCounts] = useState({});
   const [activeMainTab, setActiveMainTab] = useState('restaurants');
 
   useEffect(() => {
@@ -57,6 +58,16 @@ function App() {
         }
       })
       .catch((err) => console.error('Error loading ratings:', err));
+
+    // Fetch global trips counts from Firebase
+    const tripsRef = ref(db, 'trips');
+    get(tripsRef)
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          setTripsCounts(snapshot.val() || {});
+        }
+      })
+      .catch((err) => console.error('Error loading trips counts:', err));
   }, []);
 
   const [showBottomWhatsApp, setShowBottomWhatsApp] = useState(false);
@@ -142,6 +153,23 @@ function App() {
       setRatingAnimationState(null);
     } finally {
       setIsRatingSubmitting(false);
+    }
+  };
+
+  const handleIncrementTrips = async (captainId) => {
+    try {
+      const tripsRef = ref(db, `trips/${captainId}`);
+      const snapshot = await get(tripsRef);
+      const currentCount = snapshot.exists() ? (snapshot.val() || 0) : 0;
+      const newCount = currentCount + 1;
+      await set(tripsRef, newCount);
+      
+      setTripsCounts(prev => ({
+        ...prev,
+        [captainId]: newCount
+      }));
+    } catch (error) {
+      console.error('Error incrementing trips:', error);
     }
   };
 
@@ -315,9 +343,15 @@ function App() {
         <section className="hero-section">
           <div className="hero-content">
             <img src={logoTow} alt="Menu Maghagha Logo" className="hero-logo-img" />
-            <h2 className="hero-title">دليل مغاغه ف جيبك 🎯</h2>
+            <h2 className="hero-title">
+              {activeMainTab === 'restaurants' && "دليل مطاعم مغاغة ف جيبك 🍔"}
+              {activeMainTab === 'motorcycle' && "كباتن دليفري مغاغة ف جيبك 🏍️"}
+              {activeMainTab === 'pharmacy' && "دليل صيدليات وأطباء مغاغة ⚕️"}
+            </h2>
             <p className="hero-subtitle">
-              منصتك المتكاملة لتصفح خدمات، عيادات، محلات، ومطاعم مغاغة بالأسعار والتفاصيل، والاتصال المباشر بنقرة واحدة.
+              {activeMainTab === 'restaurants' && "منصتك المتكاملة لتصفح منيو، أسعار، تليفونات وعناوين جميع مطاعم مغاغة بنقرة واحدة!"}
+              {activeMainTab === 'motorcycle' && "تواصل مباشرة مع أسرع كباتن توصيل طلبات ومشاوير وسفر داخل مغاغة وضواحيها!"}
+              {activeMainTab === 'pharmacy' && "دليل كامل للصيدليات المتاحة، عيادات الأطباء، ومواعيدها الرسمية لتسهيل خدماتك الطبية."}
             </p>
             
             {/* Integrated Search Input */}
@@ -435,21 +469,63 @@ function App() {
               </div>
             )}
           </>
+        ) : activeMainTab === 'motorcycle' ? (
+          <div className="captains-grid">
+            {CAPTAINS.map(captain => {
+              const rData = ratings[captain.id] || { sum: 0, count: 0 };
+              const avgRating = rData.count > 0 ? (rData.sum / rData.count).toFixed(1) : null;
+              
+              return (
+                <div 
+                  key={captain.id} 
+                  className="captain-card"
+                  onClick={() => setSelectedRestaurant(captain)}
+                >
+                  <div className="captain-avatar-wrapper">
+                    <img 
+                      src={captain.avatar} 
+                      alt={captain.name} 
+                      className="captain-avatar" 
+                      loading="lazy"
+                    />
+                    <span className={`captain-status-dot ${captain.isAvailable ? 'available' : 'unavailable'}`}></span>
+                  </div>
+                  
+                  <div className="captain-info">
+                    <div className="captain-name-row">
+                      <h2 className="captain-name">{captain.name}</h2>
+                      {avgRating && (
+                        <div className="captain-rating">
+                          <i className="fa-solid fa-star"></i>
+                          <span>{avgRating}</span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <p className="captain-desc">{captain.description}</p>
+                    
+                    <div className="captain-services">
+                      {captain.serviceTypes.slice(0, 2).map((srv, sIdx) => (
+                        <span key={sIdx} className="captain-service-badge">{srv}</span>
+                      ))}
+                      {captain.serviceTypes.length > 2 && (
+                        <span className="captain-service-badge">+{captain.serviceTypes.length - 2} المزيد</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         ) : (
           <div className="coming-soon-container">
             <div className="coming-soon-card">
               <div className="coming-soon-icon">
-                {activeMainTab === 'motorcycle' ? (
-                  <i className="fa-solid fa-motorcycle coming-soon-bounce"></i>
-                ) : (
-                  <i className="fa-solid fa-house-chimney-medical coming-soon-pulse"></i>
-                )}
+                <i className="fa-solid fa-house-chimney-medical coming-soon-pulse"></i>
               </div>
               <h3 className="coming-soon-title">هذه الخدمة ستتوفر قريباً 🚀</h3>
               <p className="coming-soon-text">
-                {activeMainTab === 'motorcycle' 
-                  ? 'نوفر لك قريباً أرقام وتفاصيل كباتن الدليفري والموتوسيكلات للتوصيل السريع داخل مغاغة.' 
-                  : 'دليل كامل للصيدليات المتاحة، عيادات الأطباء، ومواعيدها لتصل لكل الخدمات الطبية بسهولة.'}
+                دليل كامل للصيدليات المتاحة، عيادات الأطباء، ومواعيدها لتصل لكل الخدمات الطبية بسهولة.
               </p>
               <div className="coming-soon-badge">قيد التطوير والتحضير</div>
             </div>
@@ -458,83 +534,127 @@ function App() {
       </main>
 
       {/* Details Bottom Sheet (Drawer) */}
-      {selectedRestaurant && (
-        <div className="drawer-overlay" onClick={() => setSelectedRestaurant(null)}>
-          <div className="drawer-content" onClick={(e) => e.stopPropagation()}>
-            <div className="drawer-header">
-              <div>
-                <span className={`status-badge ${isRestaurantOpen(selectedRestaurant.workingHours) ? 'open' : 'closed'}`} style={{ marginBottom: '8px', display: 'inline-block' }}>
-                  {isRestaurantOpen(selectedRestaurant.workingHours) ? 'مفتوح الآن' : 'مغلق حالياً'}
-                </span>
-                <h2 className="restaurant-detail-title">{selectedRestaurant.name}</h2>
-                <p className="restaurant-desc" style={{ WebkitLineClamp: 'unset' }}>{selectedRestaurant.description}</p>
+      {selectedRestaurant && (() => {
+        const isCaptain = typeof selectedRestaurant.id === 'string' && selectedRestaurant.id.startsWith('captain_');
+        return (
+          <div className="drawer-overlay" onClick={() => setSelectedRestaurant(null)}>
+            <div className="drawer-content" onClick={(e) => e.stopPropagation()}>
+              <div className="drawer-header" style={{ alignItems: 'flex-start' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%', flexWrap: 'wrap' }}>
+                  {isCaptain ? (
+                    <img 
+                      src={selectedRestaurant.avatar} 
+                      alt={selectedRestaurant.name} 
+                      style={{ width: '70px', height: '70px', borderRadius: 'var(--radius-md)', objectFit: 'cover', border: '2px solid var(--border-color)', flexShrink: 0 }}
+                    />
+                  ) : (
+                    <img 
+                      src={selectedRestaurant.logo} 
+                      alt={selectedRestaurant.name} 
+                      style={{ width: '70px', height: '70px', borderRadius: 'var(--radius-md)', objectFit: 'cover', border: '2px solid var(--border-color)', flexShrink: 0 }}
+                    />
+                  )}
+                  <div style={{ flex: 1, minWidth: '200px' }}>
+                    {isCaptain ? (
+                      <span className={`status-badge ${selectedRestaurant.isAvailable ? 'open' : 'closed'}`} style={{ marginBottom: '8px', display: 'inline-block' }}>
+                        {selectedRestaurant.isAvailable ? '🟢 متاح حالياً' : '🔴 غير متاح حالياً'}
+                      </span>
+                    ) : (
+                      <span className={`status-badge ${isRestaurantOpen(selectedRestaurant.workingHours) ? 'open' : 'closed'}`} style={{ marginBottom: '8px', display: 'inline-block' }}>
+                        {isRestaurantOpen(selectedRestaurant.workingHours) ? 'مفتوح الآن' : 'مغلق حالياً'}
+                      </span>
+                    )}
+                    <h2 className="restaurant-detail-title">{selectedRestaurant.name}</h2>
+                    <p className="restaurant-desc" style={{ WebkitLineClamp: 'unset', marginTop: '4px' }}>{selectedRestaurant.description}</p>
+                  </div>
+                </div>
+                <button className="close-btn" onClick={() => setSelectedRestaurant(null)} style={{ alignSelf: 'flex-start' }}>
+                  <i className="fa-solid fa-xmark"></i>
+                </button>
               </div>
-              <button className="close-btn" onClick={() => setSelectedRestaurant(null)}>
-                <i className="fa-solid fa-xmark"></i>
-              </button>
-            </div>
 
-            {/* Quick action buttons */}
-            <div className="action-buttons-grid">
-              {selectedRestaurant.secondBranchPhones ? (
-                <>
-                  <button 
-                    onClick={() => {
-                      setPhoneSelectorList(selectedRestaurant.phones);
-                    }} 
-                    className="action-btn btn-call"
-                  >
-                    <i className="fa-solid fa-phone"></i>
-                    <span>فرع شارع الثورة</span>
-                  </button>
-                  
-                  <button 
-                    onClick={() => {
-                      setPhoneSelectorList(selectedRestaurant.secondBranchPhones);
-                    }} 
-                    className="action-btn"
-                    style={{ backgroundColor: 'var(--brand-dark-blue)', color: 'white' }}
-                  >
-                    <i className="fa-solid fa-phone"></i>
-                    <span>فرع شارع المحطة</span>
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button 
-                    onClick={() => {
-                      if (selectedRestaurant.phones && selectedRestaurant.phones.length > 1) {
-                        setPhoneSelectorList(selectedRestaurant.phones);
-                      } else if (selectedRestaurant.phones && selectedRestaurant.phones.length === 1) {
-                        const phone = selectedRestaurant.phones[0];
-                        const number = typeof phone === 'object' && phone !== null ? phone.number : phone;
-                        window.location.href = `tel:${number}`;
-                      }
-                    }} 
-                    className="action-btn btn-call"
-                  >
-                    <i className="fa-solid fa-phone"></i>
-                    <span>اتصال بالدليفري</span>
-                  </button>
-                  {selectedRestaurant.whatsApp ? (
+              {/* Quick action buttons */}
+              <div className="action-buttons-grid">
+                {isCaptain ? (
+                  <>
                     <a 
-                      href={`https://wa.me/${selectedRestaurant.whatsApp}`} 
+                      href={`tel:${selectedRestaurant.phone}`} 
+                      className="action-btn btn-call"
+                      onClick={() => handleIncrementTrips(selectedRestaurant.id)}
+                    >
+                      <i className="fa-solid fa-phone"></i>
+                      <span>اتصال بالكابتن</span>
+                    </a>
+                    <a 
+                      href={`https://wa.me/20${selectedRestaurant.phone}`} 
                       target="_blank" 
                       rel="noopener noreferrer" 
                       className="action-btn btn-whatsapp"
+                      onClick={() => handleIncrementTrips(selectedRestaurant.id)}
                     >
                       <i className="fa-brands fa-whatsapp"></i>
-                      <span>طلب عبر الواتساب</span>
+                      <span>تواصل عبر واتساب</span>
                     </a>
-                  ) : (
-                    <button className="action-btn btn-whatsapp" style={{ opacity: 0.5, cursor: 'not-allowed' }} disabled>
-                      <i className="fa-brands fa-whatsapp"></i>
-                      <span>الواتساب غير متوفر</span>
+                  </>
+                ) : selectedRestaurant.secondBranchPhones ? (
+                  <>
+                    <button 
+                      onClick={() => {
+                        setPhoneSelectorList(selectedRestaurant.phones);
+                      }} 
+                      className="action-btn btn-call"
+                    >
+                      <i className="fa-solid fa-phone"></i>
+                      <span>فرع شارع الثورة</span>
                     </button>
-                  )}
-                </>
-              )}
-            </div>
+                    
+                    <button 
+                      onClick={() => {
+                        setPhoneSelectorList(selectedRestaurant.secondBranchPhones);
+                      }} 
+                      className="action-btn"
+                      style={{ backgroundColor: 'var(--brand-dark-blue)', color: 'white' }}
+                    >
+                      <i className="fa-solid fa-phone"></i>
+                      <span>فرع شارع المحطة</span>
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button 
+                      onClick={() => {
+                        if (selectedRestaurant.phones && selectedRestaurant.phones.length > 1) {
+                          setPhoneSelectorList(selectedRestaurant.phones);
+                        } else if (selectedRestaurant.phones && selectedRestaurant.phones.length === 1) {
+                          const phone = selectedRestaurant.phones[0];
+                          const number = typeof phone === 'object' && phone !== null ? phone.number : phone;
+                          window.location.href = `tel:${number}`;
+                        }
+                      }} 
+                      className="action-btn btn-call"
+                    >
+                      <i className="fa-solid fa-phone"></i>
+                      <span>اتصال بالدليفري</span>
+                    </button>
+                    {selectedRestaurant.whatsApp ? (
+                      <a 
+                        href={`https://wa.me/${selectedRestaurant.whatsApp}`} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="action-btn btn-whatsapp"
+                      >
+                        <i className="fa-brands fa-whatsapp"></i>
+                        <span>طلب عبر الواتساب</span>
+                      </a>
+                    ) : (
+                      <button className="action-btn btn-whatsapp" style={{ opacity: 0.5, cursor: 'not-allowed' }} disabled>
+                        <i className="fa-brands fa-whatsapp"></i>
+                        <span>الواتساب غير متوفر</span>
+                      </button>
+                    )}
+                  </>
+                )}
+              </div>
             {/* Rating Section */}
             <div className="rating-section">
               <div className="rating-header">
@@ -606,58 +726,94 @@ function App() {
             <div>
               <h3 className="drawer-section-title">بيانات التواصل والموقع</h3>
               <div className="info-list">
-                <div className="info-row">
-                  <i className="fa-solid fa-location-dot info-icon"></i>
-                  <span><strong>العنوان:</strong> {selectedRestaurant.address}</span>
-                </div>
-                <div className="info-row">
-                  <i className="fa-solid fa-clock info-icon"></i>
-                  <span><strong>مواعيد العمل:</strong> {selectedRestaurant.workingHours.display}</span>
-                </div>
-                <div className="info-row">
-                  <i className="fa-solid fa-truck info-icon"></i>
-                  <span><strong>خدمة التوصيل:</strong> {selectedRestaurant.deliveryFee}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Menu Images List */}
-            <div>
-              <h3 className="drawer-section-title">المنيو الورقي (اضغط للتكبير)</h3>
-              <div className="menu-thumbnails">
-                {selectedRestaurant.menuImages.map((img, idx) => (
-                  <div 
-                    key={idx} 
-                    className="menu-thumbnail-wrapper"
-                    onClick={() => {
-                      setActiveMenuImage(img);
-                      setZoomScale(1);
-                    }}
-                  >
-                    <img src={img} alt={`منيو صفحة ${idx + 1}`} className="menu-thumbnail" />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Popular Items */}
-            <div>
-              <h3 className="drawer-section-title">الوجبات الأكثر مبيعاً والأسعار</h3>
-              <div className="popular-menu-list">
-                {selectedRestaurant.popularItems.map((item, idx) => (
-                  <div key={idx} className="popular-menu-item">
-                    <div className="popular-item-info">
-                      <span className="popular-item-name">{item.name}</span>
-                      <span className="popular-item-desc">{item.description}</span>
+                {isCaptain ? (
+                  <>
+                    <div className="info-row">
+                      <i className="fa-solid fa-motorcycle info-icon"></i>
+                      <span><strong>نوع الخدمات:</strong> {selectedRestaurant.serviceTypes.join(' - ')}</span>
                     </div>
-                    <span className="popular-item-price">{item.price} ج.م</span>
-                  </div>
-                ))}
+                    <div className="info-row">
+                      <i className="fa-solid fa-route info-icon"></i>
+                      <span><strong>عدد الرحلات / الطلبات:</strong> {(selectedRestaurant.tripsCount || 0) + (tripsCounts[selectedRestaurant.id] || 0)} رحلة ناجحة 🚀</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="info-row">
+                      <i className="fa-solid fa-location-dot info-icon"></i>
+                      <span><strong>العنوان:</strong> {selectedRestaurant.address}</span>
+                    </div>
+                    <div className="info-row">
+                      <i className="fa-solid fa-clock info-icon"></i>
+                      <span><strong>مواعيد العمل:</strong> {selectedRestaurant.workingHours.display}</span>
+                    </div>
+                    <div className="info-row">
+                      <i className="fa-solid fa-truck info-icon"></i>
+                      <span><strong>خدمة التوصيل:</strong> {selectedRestaurant.deliveryFee}</span>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
+
+            {/* Menu Images List (Only for Restaurants) */}
+            {!isCaptain && selectedRestaurant.menuImages && (
+              <div>
+                <h3 className="drawer-section-title">المنيو الورقي (اضغط للتكبير)</h3>
+                <div className="menu-thumbnails">
+                  {selectedRestaurant.menuImages.map((img, idx) => (
+                    <div 
+                      key={idx} 
+                      className="menu-thumbnail-wrapper"
+                      onClick={() => {
+                        setActiveMenuImage(img);
+                        setZoomScale(1);
+                      }}
+                    >
+                      <img src={img} alt={`منيو صفحة ${idx + 1}`} className="menu-thumbnail" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Services / Popular Items */}
+            {isCaptain ? (
+              <div>
+                <h3 className="drawer-section-title">تفاصيل الخدمات والأسعار</h3>
+                <div className="popular-menu-list">
+                  {selectedRestaurant.serviceTypes.map((srv, idx) => (
+                    <div key={idx} className="popular-menu-item" style={{ padding: '14px 8px' }}>
+                      <div className="popular-item-info">
+                        <span className="popular-item-name">{srv}</span>
+                      </div>
+                      <span className="popular-item-price" style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>حسب الاتفاق 🗺️</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              selectedRestaurant.popularItems && (
+                <div>
+                  <h3 className="drawer-section-title">الوجبات الأكثر مبيعاً والأسعار</h3>
+                  <div className="popular-menu-list">
+                    {selectedRestaurant.popularItems.map((item, idx) => (
+                      <div key={idx} className="popular-menu-item">
+                        <div className="popular-item-info">
+                          <span className="popular-item-name">{item.name}</span>
+                          <span className="popular-item-desc">{item.description}</span>
+                        </div>
+                        <span className="popular-item-price">{item.price} ج.م</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )
+            )}
           </div>
         </div>
-      )}
+      );
+      })()}
 
       {/* Lightbox / Image Viewer */}
       {activeMenuImage && (

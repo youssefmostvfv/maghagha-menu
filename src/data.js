@@ -42,6 +42,7 @@ import hindMenu4 from './assets/hind-menu4.jpg';
 import gedoLogo from './assets/gedo-logo.jpg';
 import gedoMenu1 from './assets/gedo-menu1.jpg';
 import gedoMenu2 from './assets/gedo-menu2.jpg';
+import avatarMen from './assets/avatar-men.avif';
 
 // بيانات المطاعم والمحلات النموذجية لموقع دليل مغاغة للمطاعم
 export const CATEGORIES = [
@@ -345,6 +346,19 @@ export const RESTAURANTS = [
       { name: 'عصير كوكتيل كوكب السعادة', price: 40, description: 'طبقات من المانجو والفراولة والجوافة مع قطع الفواكه الطازجة' }
     ],
     menuImages: [kokapMenu1]
+  }
+];
+
+export const CAPTAINS = [
+  {
+    id: 'captain_1',
+    name: 'الكابتن أحمد الجارحي (أبو فهد)',
+    avatar: avatarMen,
+    phone: '01062049652',
+    serviceTypes: ['توصيل طلبات', 'مشاوير'],
+    isAvailable: true,
+    description: 'شاب ملتزم وموثوق، توصيل سريع وأمان كامل لطلباتكم ومأكولاتكم داخل مغاغة وضواحيها 24 ساعة.',
+    tripsCount: 235
   }
 ];
 
