@@ -1506,3 +1506,36 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* Admin Panel Styles */
+.admin-tab-btn {
+  background-color: transparent;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.admin-tab-btn:hover {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.admin-tab-btn.active {
+  background-color: var(--accent-color);
+  color: #fff !important;
+}
+
+/* Inputs and Forms styling */
+.admin-layout input, 
+.admin-layout select, 
+.admin-layout textarea {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-layout input:focus, 
+.admin-layout select:focus, 
+.admin-layout textarea:focus {
+  outline: none;
+  border-color: var(--accent-color) !important;
+  box-shadow: 0 0 0 3px rgba(30, 144, 255, 0.15);
+}

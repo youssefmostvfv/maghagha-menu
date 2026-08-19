@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CATEGORIES, RESTAURANTS, isRestaurantOpen, CAPTAINS } from './data';
+import { CATEGORIES, RESTAURANTS as INITIAL_RESTAURANTS, isRestaurantOpen, CAPTAINS as INITIAL_CAPTAINS } from './data';
 import logo from './assets/logo.png';
 import logoTow from './assets/logo-tow.png';
 import { initializeApp } from 'firebase/app';
@@ -39,6 +39,20 @@ function App() {
   const [activeMainTab, setActiveMainTab] = useState('restaurants');
   const [copySuccess, setCopySuccess] = useState(false);
   const [selectedCaptainService, setSelectedCaptainService] = useState('all');
+  const [restaurants, setRestaurants] = useState([]);
+  const [captains, setCaptains] = useState([]);
+  
+  const [isAdminPage, setIsAdminPage] = useState(false);
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+  const [adminPasscode, setAdminPasscode] = useState('');
+  const [adminLoginError, setAdminLoginError] = useState('');
+  const [activeAdminTab, setActiveAdminTab] = useState('stats');
+  
+  // States for adding/editing forms in Admin Panel
+  const [editingRestaurant, setEditingRestaurant] = useState(null);
+  const [editingCaptain, setEditingCaptain] = useState(null);
+  const [showAddRestaurantForm, setShowAddRestaurantForm] = useState(false);
+  const [showAddCaptainForm, setShowAddCaptainForm] = useState(false);
 
   useEffect(() => {
     // Load local ratings made by the user
@@ -71,16 +85,58 @@ function App() {
       })
       .catch((err) => console.error('Error loading trips counts:', err));
 
-    // Parse Deep Link URL ID on mount
+    // Fetch and seed Restaurants
+    const dbRestaurantsRef = ref(db, 'restaurants');
+    get(dbRestaurantsRef)
+      .then((snapshot) => {
+        if (snapshot.exists() && snapshot.val()) {
+          setRestaurants(snapshot.val());
+        } else {
+          set(dbRestaurantsRef, INITIAL_RESTAURANTS);
+          setRestaurants(INITIAL_RESTAURANTS);
+        }
+      })
+      .catch((err) => {
+        console.error('Error loading restaurants:', err);
+        setRestaurants(INITIAL_RESTAURANTS);
+      });
+
+    // Fetch and seed Captains
+    const dbCaptainsRef = ref(db, 'captains');
+    get(dbCaptainsRef)
+      .then((snapshot) => {
+        if (snapshot.exists() && snapshot.val()) {
+          setCaptains(snapshot.val());
+        } else {
+          set(dbCaptainsRef, INITIAL_CAPTAINS);
+          setCaptains(INITIAL_CAPTAINS);
+        }
+      })
+      .catch((err) => {
+        console.error('Error loading captains:', err);
+        setCaptains(INITIAL_CAPTAINS);
+      });
+
+    // Parse Deep Link URL ID and page parameter on mount (using seed data for instant synchronous matching)
     const params = new URLSearchParams(window.location.search);
+    
+    const pageParam = params.get('page');
+    if (pageParam === 'admin') {
+      setIsAdminPage(true);
+      const isAuth = sessionStorage.getItem('admin_logged_in');
+      if (isAuth === 'true') {
+        setIsAdminLoggedIn(true);
+      }
+    }
+
     const idParam = params.get('id');
     if (idParam) {
-      const foundRestaurant = RESTAURANTS.find(r => String(r.id) === idParam);
+      const foundRestaurant = INITIAL_RESTAURANTS.find(r => String(r.id) === idParam);
       if (foundRestaurant) {
         setSelectedRestaurant(foundRestaurant);
         setActiveMainTab('restaurants');
       } else {
-        const foundCaptain = CAPTAINS.find(c => String(c.id) === idParam);
+        const foundCaptain = INITIAL_CAPTAINS.find(c => String(c.id) === idParam);
         if (foundCaptain) {
           setSelectedRestaurant(foundCaptain);
           setActiveMainTab('motorcycle');
@@ -202,6 +258,71 @@ function App() {
       .catch(err => console.error('Failed to copy link:', err));
   };
 
+  const handleAdminLogin = (e) => {
+    e.preventDefault();
+    if (adminPasscode === 'MaghaghaAdmin2026') {
+      setIsAdminLoggedIn(true);
+      sessionStorage.setItem('admin_logged_in', 'true');
+      setAdminLoginError('');
+    } else {
+      setAdminLoginError('كلمة المرور غير صحيحة ❌');
+    }
+  };
+
+  const handleAdminLogout = () => {
+    setIsAdminLoggedIn(false);
+    sessionStorage.removeItem('admin_logged_in');
+  };
+
+  const handleBackToHome = () => {
+    window.history.pushState({}, '', window.location.pathname);
+    setIsAdminPage(false);
+  };
+
+  const handleAddRestaurant = async (newRes) => {
+    const updatedList = [...restaurants, { ...newRes, id: Date.now() }];
+    await set(ref(db, 'restaurants'), updatedList);
+    setRestaurants(updatedList);
+    setShowAddRestaurantForm(false);
+  };
+
+  const handleEditRestaurant = async (updatedRes) => {
+    const updatedList = restaurants.map(r => r.id === updatedRes.id ? updatedRes : r);
+    await set(ref(db, 'restaurants'), updatedList);
+    setRestaurants(updatedList);
+    setEditingRestaurant(null);
+  };
+
+  const handleDeleteRestaurant = async (resId) => {
+    if (window.confirm('هل أنت متأكد من حذف هذا المطعم نهائياً؟')) {
+      const updatedList = restaurants.filter(r => r.id !== resId);
+      await set(ref(db, 'restaurants'), updatedList);
+      setRestaurants(updatedList);
+    }
+  };
+
+  const handleAddCaptain = async (newCap) => {
+    const updatedList = [...captains, { ...newCap, id: `captain_${Date.now()}` }];
+    await set(ref(db, 'captains'), updatedList);
+    setCaptains(updatedList);
+    setShowAddCaptainForm(false);
+  };
+
+  const handleEditCaptain = async (updatedCap) => {
+    const updatedList = captains.map(c => c.id === updatedCap.id ? updatedCap : c);
+    await set(ref(db, 'captains'), updatedList);
+    setCaptains(updatedList);
+    setEditingCaptain(null);
+  };
+
+  const handleDeleteCaptain = async (capId) => {
+    if (window.confirm('هل أنت متأكد من حذف هذا الكابتن نهائياً؟')) {
+      const updatedList = captains.filter(c => c.id !== capId);
+      await set(ref(db, 'captains'), updatedList);
+      setCaptains(updatedList);
+    }
+  };
+
   const [theme, setTheme] = useState(() => {
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem('theme');
@@ -234,7 +355,7 @@ function App() {
     setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
   };
 
-  const filteredRestaurants = RESTAURANTS.filter(restaurant => {
+  const filteredRestaurants = restaurants.filter(restaurant => {
     const matchesCategory = selectedCategory === 'all' || restaurant.category === selectedCategory;
     const matchesSearch = 
       restaurant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -281,6 +402,414 @@ function App() {
   const handleDragEnd = () => {
     setIsDragging(false);
   };
+
+  if (isAdminPage) {
+    return (
+      <div className="admin-layout" style={{ direction: 'rtl', minHeight: '100vh', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
+        {/* Admin Header */}
+        <header className="admin-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 24px', backgroundColor: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <img src={logoTow} alt="Logo" style={{ height: '40px' }} />
+            <h1 style={{ fontSize: '18px', fontWeight: '800', margin: 0 }}>لوحة تحكم دليل مغاغة</h1>
+          </div>
+          {isAdminLoggedIn && (
+            <div className="admin-tabs" style={{ display: 'flex', gap: '8px' }}>
+              <button 
+                className={`admin-tab-btn ${activeAdminTab === 'stats' ? 'active' : ''}`}
+                onClick={() => { setActiveAdminTab('stats'); setEditingRestaurant(null); setEditingCaptain(null); setShowAddRestaurantForm(false); setShowAddCaptainForm(false); }}
+                style={{ padding: '8px 16px', borderRadius: 'var(--radius-sm)', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}
+              >
+                📊 الإحصائيات
+              </button>
+              <button 
+                className={`admin-tab-btn ${activeAdminTab === 'restaurants' ? 'active' : ''}`}
+                onClick={() => { setActiveAdminTab('restaurants'); setEditingRestaurant(null); setShowAddRestaurantForm(false); }}
+                style={{ padding: '8px 16px', borderRadius: 'var(--radius-sm)', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}
+              >
+                🍔 إدارة المطاعم
+              </button>
+              <button 
+                className={`admin-tab-btn ${activeAdminTab === 'captains' ? 'active' : ''}`}
+                onClick={() => { setActiveAdminTab('captains'); setEditingCaptain(null); setShowAddCaptainForm(false); }}
+                style={{ padding: '8px 16px', borderRadius: 'var(--radius-sm)', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}
+              >
+                🏍️ إدارة الكباتن
+              </button>
+            </div>
+          )}
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button onClick={handleBackToHome} style={{ padding: '8px 16px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', cursor: 'pointer', fontWeight: 'bold' }}>
+              🏠 الموقع الرئيسي
+            </button>
+            {isAdminLoggedIn && (
+              <button onClick={handleAdminLogout} style={{ padding: '8px 16px', borderRadius: 'var(--radius-sm)', border: 'none', backgroundColor: 'var(--status-closed)', color: '#fff', cursor: 'pointer', fontWeight: 'bold' }}>
+                🚪 خروج
+              </button>
+            )}
+          </div>
+        </header>
+
+        {/* Admin Body Content */}
+        <div style={{ padding: '24px' }}>
+          {!isAdminLoggedIn ? (
+            /* Login Screen */
+            <div style={{ maxWidth: '400px', margin: '80px auto', padding: '32px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-md)', textAlign: 'center' }}>
+              <img src={logo} alt="Logo" style={{ height: '70px', marginBottom: '16px' }} />
+              <h2 style={{ fontSize: '20px', fontWeight: '800', marginBottom: '24px' }}>تسجيل دخول الإدارة</h2>
+              <form onSubmit={handleAdminLogin} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <input 
+                  type="password" 
+                  placeholder="أدخل كلمة مرور المسؤول..." 
+                  value={adminPasscode}
+                  onChange={(e) => setAdminPasscode(e.target.value)}
+                  style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)', textAlign: 'center' }}
+                  required
+                />
+                {adminLoginError && <p style={{ color: 'var(--status-closed)', fontSize: '14px', margin: 0 }}>{adminLoginError}</p>}
+                <button type="submit" className="theme-toggle-btn" style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: 'none', backgroundColor: 'var(--accent-color)', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>
+                  دخول لوحة التحكم
+                </button>
+              </form>
+            </div>
+          ) : (
+            /* Dashboard View */
+            (() => {
+              if (activeAdminTab === 'stats') {
+                const totalRatingsCount = Object.values(ratings).reduce((acc, curr) => acc + (curr.count || 0), 0);
+                const totalTripsCount = Object.values(tripsCounts).reduce((acc, curr) => acc + (curr || 0), 0);
+                return (
+                  <div>
+                    <h2 style={{ marginBottom: '20px' }}>لوحة الإحصائيات العامة 📈</h2>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
+                      <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                        <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>إجمالي المطاعم</h3>
+                        <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{restaurants.length}</p>
+                      </div>
+                      <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                        <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>إجمالي الكباتن</h3>
+                        <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{captains.length}</p>
+                      </div>
+                      <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                        <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>الرحلات المسجلة (نقرات الاتصال)</h3>
+                        <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{totalTripsCount} رحلة 🚀</p>
+                      </div>
+                      <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                        <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>التقييمات المكتملة</h3>
+                        <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{totalRatingsCount} تقييم ⭐</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+
+              if (activeAdminTab === 'restaurants') {
+                const isFormOpen = showAddRestaurantForm || editingRestaurant;
+                const targetRestaurant = editingRestaurant || {};
+                return (
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                      <h2>إدارة المطاعم ({restaurants.length})</h2>
+                      {!isFormOpen && (
+                        <button onClick={() => setShowAddRestaurantForm(true)} style={{ padding: '10px 20px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>
+                          ➕ إضافة مطعم جديد
+                        </button>
+                      )}
+                    </div>
+
+                    {isFormOpen ? (
+                      /* Restaurant Add/Edit Form */
+                      <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', maxWidth: '700px' }}>
+                        <h3 style={{ marginBottom: '20px' }}>{editingRestaurant ? `تعديل مطعم: ${targetRestaurant.name}` : 'إضافة مطعم جديد'}</h3>
+                        <form onSubmit={(e) => {
+                          e.preventDefault();
+                          const formData = new FormData(e.currentTarget);
+                          
+                          // Parse Popular Items
+                          const popText = formData.get('popularItems') || '';
+                          const popItems = popText.split('\n').map(line => {
+                            if (!line.trim()) return null;
+                            const parts = line.split('|');
+                            return {
+                              name: parts[0]?.trim() || '',
+                              price: parts[1]?.trim() || '0',
+                              description: parts[2]?.trim() || ''
+                            };
+                          }).filter(Boolean);
+
+                          const menuText = formData.get('menuImages') || '';
+                          const menuImgs = menuText.split(',').map(url => url.trim()).filter(Boolean);
+
+                          const data = {
+                            id: editingRestaurant ? targetRestaurant.id : Date.now(),
+                            name: formData.get('name'),
+                            category: formData.get('category'),
+                            logo: formData.get('logo') || '',
+                            description: formData.get('description'),
+                            address: formData.get('address'),
+                            deliveryFee: formData.get('deliveryFee') || 'من 20 لـ 30 جنيه',
+                            phones: (formData.get('phones') || '').split(',').map(p => p.trim()).filter(Boolean),
+                            secondBranchPhones: (formData.get('secondBranchPhones') || '') ? (formData.get('secondBranchPhones') || '').split(',').map(p => p.trim()).filter(Boolean) : null,
+                            whatsApp: formData.get('whatsApp') || '',
+                            workingHours: {
+                              display: formData.get('workingHoursDisplay') || 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'
+                            },
+                            popularItems: popItems,
+                            menuImages: menuImgs
+                          };
+
+                          if (editingRestaurant) {
+                            handleEditRestaurant(data);
+                          } else {
+                            handleAddRestaurant(data);
+                          }
+                        }} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم المطعم:</label>
+                              <input type="text" name="name" defaultValue={targetRestaurant.name || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>تصنيف المطعم:</label>
+                              <select name="category" defaultValue={targetRestaurant.category || 'syrian'} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
+                                {CATEGORIES.filter(c => c.id !== 'all').map(cat => (
+                                  <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
+
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رابط اللوجو (Logo URL):</label>
+                              <input type="text" name="logo" placeholder="مثال: /assets/logo.png" defaultValue={targetRestaurant.logo || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>سعر التوصيل:</label>
+                              <input type="text" name="deliveryFee" defaultValue={targetRestaurant.deliveryFee || 'من 20 لـ 30 جنيه'} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                          </div>
+
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>الوصف القصير:</label>
+                            <input type="text" name="description" defaultValue={targetRestaurant.description || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>أرقام الهواتف الأساسية (مفصولة بفواصل):</label>
+                              <input type="text" name="phones" placeholder="010..., 011..." defaultValue={targetRestaurant.phones ? targetRestaurant.phones.join(', ') : ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>أرقام الفرع الثاني (مفصولة بفواصل - اختياري):</label>
+                              <input type="text" name="secondBranchPhones" placeholder="012..." defaultValue={targetRestaurant.secondBranchPhones ? targetRestaurant.secondBranchPhones.join(', ') : ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                          </div>
+
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رابط الواتساب (اختياري):</label>
+                              <input type="text" name="whatsApp" placeholder="010..." defaultValue={targetRestaurant.whatsApp || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>العنوان:</label>
+                              <input type="text" name="address" defaultValue={targetRestaurant.address || 'مغاغة - المنيا'} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                          </div>
+
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>مواعيد العمل (نص العرض):</label>
+                            <input type="text" name="workingHoursDisplay" defaultValue={targetRestaurant.workingHours ? targetRestaurant.workingHours.display : 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>صور المنيو (روابط مفصولة بفواصل):</label>
+                            <input type="text" name="menuImages" placeholder="http://..., http://..." defaultValue={targetRestaurant.menuImages ? targetRestaurant.menuImages.join(', ') : ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>الوجبات الأكثر مبيعاً (كل وجبة في سطر بصيغة: الاسم | السعر | وصف الوجبة):</label>
+                            <textarea name="popularItems" rows="4" placeholder="كريب نوتيلا | 60 | شوكولاتة نوتيلا أصلية&#10;شاورما عربي | 80 | قطع شاورما دجاج مع التومية والبطاطس" defaultValue={targetRestaurant.popularItems ? targetRestaurant.popularItems.map(item => `${item.name} | ${item.price} | ${item.description || ''}`).join('\n') : ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)', fontFamily: 'sans-serif' }}></textarea>
+                          </div>
+
+                          <div style={{ display: 'flex', gap: '12px', marginTop: '10px' }}>
+                            <button type="submit" style={{ flex: 1, padding: '12px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>حفظ التعديلات</button>
+                            <button type="button" onClick={() => { setEditingRestaurant(null); setShowAddRestaurantForm(false); }} style={{ flex: 1, padding: '12px', backgroundColor: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>إلغاء</button>
+                          </div>
+                        </form>
+                      </div>
+                    ) : (
+                      /* Restaurants List */
+                      <div style={{ overflowX: 'auto', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'right' }}>
+                          <thead>
+                            <tr style={{ borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)' }}>
+                              <th style={{ padding: '12px 16px' }}>الاسم</th>
+                              <th style={{ padding: '12px 16px' }}>التصنيف</th>
+                              <th style={{ padding: '12px 16px' }}>التوصيل</th>
+                              <th style={{ padding: '12px 16px' }}>الهواتف</th>
+                              <th style={{ padding: '12px 16px', textAlign: 'center' }}>العمليات</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {restaurants.map((res) => (
+                              <tr key={res.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                                <td style={{ padding: '12px 16px', fontWeight: 'bold' }}>{res.name}</td>
+                                <td style={{ padding: '12px 16px' }}>{CATEGORIES.find(c => c.id === res.category)?.name || res.category}</td>
+                                <td style={{ padding: '12px 16px' }}>{res.deliveryFee}</td>
+                                <td style={{ padding: '12px 16px', direction: 'ltr', textAlign: 'right' }}>{res.phones.join(' - ')}</td>
+                                <td style={{ padding: '12px 16px', display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                                  <button onClick={() => setEditingRestaurant(res)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--accent-color)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🔧 تعديل</button>
+                                  <button onClick={() => handleDeleteRestaurant(res.id)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--status-closed)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🗑️ حذف</button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              if (activeAdminTab === 'captains') {
+                const isFormOpen = showAddCaptainForm || editingCaptain;
+                const targetCaptain = editingCaptain || {};
+                return (
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                      <h2>إدارة كباتن الموتوسيكلات ({captains.length})</h2>
+                      {!isFormOpen && (
+                        <button onClick={() => setShowAddCaptainForm(true)} style={{ padding: '10px 20px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>
+                          ➕ إضافة كابتن جديد
+                        </button>
+                      )}
+                    </div>
+
+                    {isFormOpen ? (
+                      /* Captain Add/Edit Form */
+                      <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', maxWidth: '600px' }}>
+                        <h3 style={{ marginBottom: '20px' }}>{editingCaptain ? `تعديل كابتن: ${targetCaptain.name}` : 'إضافة كابتن جديد'}</h3>
+                        <form onSubmit={(e) => {
+                          e.preventDefault();
+                          const formData = new FormData(e.currentTarget);
+                          const services = [];
+                          if (formData.get('srv_delivery') === 'on') services.push('توصيل طلبات');
+                          if (formData.get('srv_rides') === 'on') services.push('مشاوير');
+
+                          const data = {
+                            id: editingCaptain ? targetCaptain.id : `captain_${Date.now()}`,
+                            name: formData.get('name'),
+                            avatar: formData.get('avatar') || '',
+                            phone: formData.get('phone'),
+                            isAvailable: formData.get('isAvailable') === 'on',
+                            description: formData.get('description'),
+                            tripsCount: Number(formData.get('tripsCount') || 0),
+                            serviceTypes: services
+                          };
+
+                          if (editingCaptain) {
+                            handleEditCaptain(data);
+                          } else {
+                            handleAddCaptain(data);
+                          }
+                        }} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم الكابتن:</label>
+                              <input type="text" name="name" defaultValue={targetCaptain.name || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رقم الهاتف:</label>
+                              <input type="text" name="phone" defaultValue={targetCaptain.phone || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                          </div>
+
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رابط الصورة (Avatar URL):</label>
+                              <input type="text" name="avatar" defaultValue={targetCaptain.avatar || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>عدد الرحلات الأساسية:</label>
+                              <input type="number" name="tripsCount" defaultValue={targetCaptain.tripsCount || 0} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                          </div>
+
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>الوصف القصير:</label>
+                            <input type="text" name="description" defaultValue={targetCaptain.description || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>أنواع الخدمات المتاحة:</label>
+                            <div style={{ display: 'flex', gap: '20px', marginTop: '6px' }}>
+                              <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+                                <input type="checkbox" name="srv_delivery" defaultChecked={targetCaptain.serviceTypes ? targetCaptain.serviceTypes.includes('توصيل طلبات') : true} />
+                                توصيل طلبات 📦
+                              </label>
+                              <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+                                <input type="checkbox" name="srv_rides" defaultChecked={targetCaptain.serviceTypes ? targetCaptain.serviceTypes.includes('مشاوير') : true} />
+                                مشاوير 🗺️
+                              </label>
+                            </div>
+                          </div>
+
+                          <div>
+                            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
+                              <input type="checkbox" name="isAvailable" defaultChecked={targetCaptain.isAvailable !== false} />
+                              الكابتن متاح للعمل حالياً 🟢
+                            </label>
+                          </div>
+
+                          <div style={{ display: 'flex', gap: '12px', marginTop: '10px' }}>
+                            <button type="submit" style={{ flex: 1, padding: '12px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>حفظ التعديلات</button>
+                            <button type="button" onClick={() => { setEditingCaptain(null); setShowAddCaptainForm(false); }} style={{ flex: 1, padding: '12px', backgroundColor: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>إلغاء</button>
+                          </div>
+                        </form>
+                      </div>
+                    ) : (
+                      /* Captains List */
+                      <div style={{ overflowX: 'auto', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'right' }}>
+                          <thead>
+                            <tr style={{ borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)' }}>
+                              <th style={{ padding: '12px 16px' }}>الاسم</th>
+                              <th style={{ padding: '12px 16px' }}>رقم الهاتف</th>
+                              <th style={{ padding: '12px 16px' }}>الحالة</th>
+                              <th style={{ padding: '12px 16px' }}>الخدمات</th>
+                              <th style={{ padding: '12px 16px', textAlign: 'center' }}>العمليات</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {captains.map((cap) => (
+                              <tr key={cap.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                                <td style={{ padding: '12px 16px', fontWeight: 'bold' }}>{cap.name}</td>
+                                <td style={{ padding: '12px 16px', direction: 'ltr', textAlign: 'right' }}>{cap.phone}</td>
+                                <td style={{ padding: '12px 16px' }}>
+                                  <span style={{ display: 'inline-block', padding: '4px 8px', borderRadius: 'var(--radius-sm)', fontSize: '12px', fontWeight: 'bold', backgroundColor: cap.isAvailable ? 'rgba(74, 222, 128, 0.15)' : 'rgba(239, 68, 68, 0.15)', color: cap.isAvailable ? 'var(--status-open)' : 'var(--status-closed)' }}>
+                                    {cap.isAvailable ? '🟢 متاح' : '🔴 غير متاح'}
+                                  </span>
+                                </td>
+                                <td style={{ padding: '12px 16px' }}>{cap.serviceTypes.join(' - ')}</td>
+                                <td style={{ padding: '12px 16px', display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                                  <button onClick={() => setEditingCaptain(cap)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--accent-color)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🔧 تعديل</button>
+                                  <button onClick={() => handleDeleteCaptain(cap.id)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--status-closed)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🗑️ حذف</button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+            })()
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -526,7 +1055,7 @@ function App() {
             </div>
 
             <div className="captains-grid">
-              {CAPTAINS.filter(captain => selectedCaptainService === 'all' || captain.serviceTypes.includes(selectedCaptainService)).map(captain => {
+              {captains.filter(captain => selectedCaptainService === 'all' || captain.serviceTypes.includes(selectedCaptainService)).map(captain => {
                 const rData = ratings[captain.id] || { sum: 0, count: 0 };
                 const avgRating = rData.count > 0 ? (rData.sum / rData.count).toFixed(1) : null;
                 
