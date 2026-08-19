@@ -95,7 +95,7 @@ function App() {
       };
 
       const putRes = await fetch(KVDB_URL, {
-        method: 'PUT',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
