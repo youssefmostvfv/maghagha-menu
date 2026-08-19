@@ -37,6 +37,8 @@ function App() {
   const [ratingAnimationState, setRatingAnimationState] = useState(null);
   const [tripsCounts, setTripsCounts] = useState({});
   const [activeMainTab, setActiveMainTab] = useState('restaurants');
+  const [copySuccess, setCopySuccess] = useState(false);
+  const [selectedCaptainService, setSelectedCaptainService] = useState('all');
 
   useEffect(() => {
     // Load local ratings made by the user
@@ -68,6 +70,23 @@ function App() {
         }
       })
       .catch((err) => console.error('Error loading trips counts:', err));
+
+    // Parse Deep Link URL ID on mount
+    const params = new URLSearchParams(window.location.search);
+    const idParam = params.get('id');
+    if (idParam) {
+      const foundRestaurant = RESTAURANTS.find(r => String(r.id) === idParam);
+      if (foundRestaurant) {
+        setSelectedRestaurant(foundRestaurant);
+        setActiveMainTab('restaurants');
+      } else {
+        const foundCaptain = CAPTAINS.find(c => String(c.id) === idParam);
+        if (foundCaptain) {
+          setSelectedRestaurant(foundCaptain);
+          setActiveMainTab('motorcycle');
+        }
+      }
+    }
   }, []);
 
   const [showBottomWhatsApp, setShowBottomWhatsApp] = useState(false);
@@ -171,6 +190,16 @@ function App() {
     } catch (error) {
       console.error('Error incrementing trips:', error);
     }
+  };
+
+  const handleShare = (itemId) => {
+    const shareUrl = `${window.location.origin}${window.location.pathname}?id=${itemId}`;
+    navigator.clipboard.writeText(shareUrl)
+      .then(() => {
+        setCopySuccess(true);
+        setTimeout(() => setCopySuccess(false), 2000);
+      })
+      .catch(err => console.error('Failed to copy link:', err));
   };
 
   const [theme, setTheme] = useState(() => {
@@ -470,53 +499,80 @@ function App() {
             )}
           </>
         ) : activeMainTab === 'motorcycle' ? (
-          <div className="captains-grid">
-            {CAPTAINS.map(captain => {
-              const rData = ratings[captain.id] || { sum: 0, count: 0 };
-              const avgRating = rData.count > 0 ? (rData.sum / rData.count).toFixed(1) : null;
-              
-              return (
-                <div 
-                  key={captain.id} 
-                  className="captain-card"
-                  onClick={() => setSelectedRestaurant(captain)}
-                >
-                  <div className="captain-avatar-wrapper">
-                    <img 
-                      src={captain.avatar} 
-                      alt={captain.name} 
-                      className="captain-avatar" 
-                      loading="lazy"
-                    />
-                    <span className={`captain-status-dot ${captain.isAvailable ? 'available' : 'unavailable'}`}></span>
-                  </div>
-                  
-                  <div className="captain-info">
-                    <div className="captain-name-row">
-                      <h2 className="captain-name">{captain.name}</h2>
-                      {avgRating && (
-                        <div className="captain-rating">
-                          <i className="fa-solid fa-star"></i>
-                          <span>{avgRating}</span>
-                        </div>
-                      )}
+          <>
+            {/* Captains Filter Chips */}
+            <div className="categories-container" style={{ margin: '10px 0 20px 0' }}>
+              <button 
+                className={`category-chip ${selectedCaptainService === 'all' ? 'active' : ''}`}
+                onClick={() => setSelectedCaptainService('all')}
+              >
+                <i className="fa-solid fa-motorcycle"></i>
+                <span>الكل</span>
+              </button>
+              <button 
+                className={`category-chip ${selectedCaptainService === 'توصيل طلبات' ? 'active' : ''}`}
+                onClick={() => setSelectedCaptainService('توصيل طلبات')}
+              >
+                <i className="fa-solid fa-truck-ramp-box"></i>
+                <span>توصيل طلبات</span>
+              </button>
+              <button 
+                className={`category-chip ${selectedCaptainService === 'مشاوير' ? 'active' : ''}`}
+                onClick={() => setSelectedCaptainService('مشاوير')}
+              >
+                <i className="fa-solid fa-route"></i>
+                <span>مشاوير</span>
+              </button>
+            </div>
+
+            <div className="captains-grid">
+              {CAPTAINS.filter(captain => selectedCaptainService === 'all' || captain.serviceTypes.includes(selectedCaptainService)).map(captain => {
+                const rData = ratings[captain.id] || { sum: 0, count: 0 };
+                const avgRating = rData.count > 0 ? (rData.sum / rData.count).toFixed(1) : null;
+                
+                return (
+                  <div 
+                    key={captain.id} 
+                    className="captain-card"
+                    onClick={() => setSelectedRestaurant(captain)}
+                  >
+                    <div className="captain-avatar-wrapper">
+                      <img 
+                        src={captain.avatar} 
+                        alt={captain.name} 
+                        className="captain-avatar" 
+                        loading="lazy"
+                      />
+                      <span className={`captain-status-dot ${captain.isAvailable ? 'available' : 'unavailable'}`}></span>
                     </div>
                     
-                    <p className="captain-desc">{captain.description}</p>
-                    
-                    <div className="captain-services">
-                      {captain.serviceTypes.slice(0, 2).map((srv, sIdx) => (
-                        <span key={sIdx} className="captain-service-badge">{srv}</span>
-                      ))}
-                      {captain.serviceTypes.length > 2 && (
-                        <span className="captain-service-badge">+{captain.serviceTypes.length - 2} المزيد</span>
-                      )}
+                    <div className="captain-info">
+                      <div className="captain-name-row">
+                        <h2 className="captain-name">{captain.name}</h2>
+                        {avgRating && (
+                          <div className="captain-rating">
+                            <i className="fa-solid fa-star"></i>
+                            <span>{avgRating}</span>
+                          </div>
+                        )}
+                      </div>
+                      
+                      <p className="captain-desc">{captain.description}</p>
+                      
+                      <div className="captain-services">
+                        {captain.serviceTypes.slice(0, 2).map((srv, sIdx) => (
+                          <span key={sIdx} className="captain-service-badge">{srv}</span>
+                        ))}
+                        {captain.serviceTypes.length > 2 && (
+                          <span className="captain-service-badge">+{captain.serviceTypes.length - 2} المزيد</span>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          </>
         ) : (
           <div className="coming-soon-container">
             <div className="coming-soon-card">
@@ -566,6 +622,29 @@ function App() {
                     )}
                     <h2 className="restaurant-detail-title">{selectedRestaurant.name}</h2>
                     <p className="restaurant-desc" style={{ WebkitLineClamp: 'unset', marginTop: '4px' }}>{selectedRestaurant.description}</p>
+                    <button 
+                      onClick={() => handleShare(selectedRestaurant.id)} 
+                      className="share-btn-detail"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        backgroundColor: 'var(--bg-primary)',
+                        border: '1px solid var(--border-color)',
+                        color: 'var(--text-secondary)',
+                        padding: '6px 12px',
+                        borderRadius: 'var(--radius-sm)',
+                        cursor: 'pointer',
+                        fontSize: '11px',
+                        fontWeight: '700',
+                        marginTop: '10px',
+                        width: 'fit-content',
+                        transition: 'all 0.2s ease'
+                      }}
+                    >
+                      <i className="fa-solid fa-share-nodes"></i>
+                      <span>{copySuccess ? 'تم نسخ الرابط! ✓' : 'مشاركة الرابط المباشر'}</span>
+                    </button>
                   </div>
                 </div>
                 <button className="close-btn" onClick={() => setSelectedRestaurant(null)} style={{ alignSelf: 'flex-start' }}>
