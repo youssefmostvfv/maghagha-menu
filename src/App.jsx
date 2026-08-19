@@ -19,6 +19,26 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+const resolveImage = (imgName) => {
+  if (!imgName) return '/favicon.png';
+  if (imgName.startsWith('http') || imgName.startsWith('data:') || imgName.startsWith('/') || imgName.startsWith('blob:')) {
+    return imgName;
+  }
+  let filename = imgName;
+  if (!filename.includes('.')) {
+    if (filename === 'avatar-men') {
+      filename = `${filename}.avif`;
+    } else {
+      filename = `${filename}.jpg`;
+    }
+  }
+  try {
+    return new URL(`./assets/${filename}`, import.meta.url).href;
+  } catch (e) {
+    return imgName;
+  }
+};
+
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -977,7 +997,7 @@ function App() {
                       onClick={() => setSelectedRestaurant(restaurant)}
                     >
                       <img 
-                        src={restaurant.logo} 
+                        src={resolveImage(restaurant.logo)} 
                         alt={restaurant.name} 
                         className="restaurant-logo" 
                         loading="lazy"
@@ -1067,7 +1087,7 @@ function App() {
                   >
                     <div className="captain-avatar-wrapper">
                       <img 
-                        src={captain.avatar} 
+                        src={resolveImage(captain.avatar)} 
                         alt={captain.name} 
                         className="captain-avatar" 
                         loading="lazy"
@@ -1128,13 +1148,13 @@ function App() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%', flexWrap: 'wrap' }}>
                   {isCaptain ? (
                     <img 
-                      src={selectedRestaurant.avatar} 
+                      src={resolveImage(selectedRestaurant.avatar)} 
                       alt={selectedRestaurant.name} 
                       style={{ width: '70px', height: '70px', borderRadius: 'var(--radius-md)', objectFit: 'cover', border: '2px solid var(--border-color)', flexShrink: 0 }}
                     />
                   ) : (
                     <img 
-                      src={selectedRestaurant.logo} 
+                      src={resolveImage(selectedRestaurant.logo)} 
                       alt={selectedRestaurant.name} 
                       style={{ width: '70px', height: '70px', borderRadius: 'var(--radius-md)', objectFit: 'cover', border: '2px solid var(--border-color)', flexShrink: 0 }}
                     />
@@ -1374,11 +1394,11 @@ function App() {
                       key={idx} 
                       className="menu-thumbnail-wrapper"
                       onClick={() => {
-                        setActiveMenuImage(img);
+                        setActiveMenuImage(resolveImage(img));
                         setZoomScale(1);
                       }}
                     >
-                      <img src={img} alt={`منيو صفحة ${idx + 1}`} className="menu-thumbnail" />
+                      <img src={resolveImage(img)} alt={`منيو صفحة ${idx + 1}`} className="menu-thumbnail" />
                     </div>
                   ))}
                 </div>
