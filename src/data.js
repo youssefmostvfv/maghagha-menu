@@ -26,10 +26,22 @@ import elshraeaMenu3 from './assets/elshraea-menu3.jpg';
 import elshraeaOffer from './assets/elshraea-offer.jpg';
 import elshraea2Menu1 from './assets/elshraea2-menu1.jpg';
 import elshraea2Menu2 from './assets/elshraea2-menu2.jpg';
-import koshiLogo from './assets/Koshi-Sushi-logo.jpg';
-import koshiMenu from './assets/Koshi-Sushi-menu.jpg';
 import babaLogo from './assets/baba-food-logo.jpg';
 import babaMenu from './assets/baba-food-menu.jpg';
+import arousLogo from './assets/arous-alsham-logo.jpg';
+import arousMenu1 from './assets/arous-alsham-menu1.jpg';
+import arousMenu2 from './assets/arous-alsham-menu2.jpg';
+import hyLogo from './assets/hy-brosted-logo.jpg';
+import hyMenu1 from './assets/hy-brosted-menu1.jpg';
+import hyMenu2 from './assets/hy-brosted-menu2.jpg';
+import hindLogo from './assets/hind-logo.jpg';
+import hindMenu1 from './assets/hind-menu1.jpg';
+import hindMenu2 from './assets/hind-menu2.jpg';
+import hindMenu3 from './assets/hind-menu3.jpg';
+import hindMenu4 from './assets/hind-menu4.jpg';
+import gedoLogo from './assets/gedo-logo.jpg';
+import gedoMenu1 from './assets/gedo-menu1.jpg';
+import gedoMenu2 from './assets/gedo-menu2.jpg';
 
 // بيانات المطاعم والمحلات النموذجية لموقع دليل مغاغة للمطاعم
 export const CATEGORIES = [
@@ -40,10 +52,99 @@ export const CATEGORIES = [
   { id: 'sweets', name: 'وافل/حلويات', icon: 'fa-ice-cream' },
   { id: 'chicken', name: 'فرايد تشكن /بروست', icon: 'fa-drumstick-bite' },
   { id: 'burger', name: 'سماش برجر', icon: 'fa-burger' },
-  { id: 'sushi', name: 'سوشي', icon: 'fa-shrimp' }
+  { id: 'koshary', name: 'كشري', icon: 'fa-bowl-food' }
 ];
 
 export const RESTAURANTS = [
+  {
+    id: 20,
+    name: 'جدو الشام - Gedo Elsham',
+    category: 'syrian',
+    logo: gedoLogo,
+    description: 'أفضل شاورما سوري، فتة، ساندوتشات غربية، وأكلات شامية لذيذة في مغاغة.',
+    phones: ['01002405348'],
+    whatsApp: '',
+    deliveryFee: 'من 20 لـ 30 جنيه',
+    address: 'مغاغة - شارع الشعبة (أمام بن الأسمر)',
+    workingHours: {
+      start: '11:00',
+      end: '02:00',
+      display: 'من 11:00 صباحاً إلى 2:00 بعد منتصف الليل'
+    },
+    popularItems: [
+      { name: 'ساندوتش شاورما دجاج سوبر عربي', price: 80, description: 'شاورما دجاج، تومية، مخلل، خبز صاج مقرمش مع بطاطس فارم فريتس' },
+      { name: 'فتة شاورما دجاج وسط', price: 95, description: 'أرز بسمتي مبهر، شاورما دجاج، خبز محمص، وصوص التومية الغني' },
+      { name: 'وجبة نصف دجاجة بروستد', price: 135, description: '2 قطعة دجاج بروستد مقرمش، بطاطس، تومية، كول سلو، خبز سوري' }
+    ],
+    menuImages: [gedoMenu1, gedoMenu2]
+  },
+  {
+    id: 19,
+    name: 'كشري هند - Koshary Hend',
+    category: 'koshary',
+    logo: hindLogo,
+    description: 'أشهر وألذ أطباق الكشري المصري الأصيل والطواجن المتنوعة في مغاغة بفرعيه.',
+    phones: ['01210195153', '01015061338'],
+    secondBranchPhones: ['01206500071', '01116816266'],
+    whatsApp: '',
+    deliveryFee: 'من 20 لـ 30 جنيه',
+    address: 'مغاغة - فرع شارع الثورة (أمام أسواق سيف) | فرع شارع المحطة',
+    workingHours: {
+      start: '10:00',
+      end: '02:00',
+      display: 'من 10:00 صباحاً إلى 2:00 بعد منتصف الليل'
+    },
+    popularItems: [
+      { name: 'علبة كشري هند خصوصي', price: 40, description: 'أرز، مكرونة، عدس، حمص، بصل مقرمش مع الصلصة والتقلية المميزة' },
+      { name: 'طاجن لحمة مفرومة بالفرن', price: 55, description: 'مكرونة فرن باللحمة المفرومة والصلصة الحمراء الغنية' },
+      { name: 'طاجن فراخ بالجبنة الموتزاريلا', price: 65, description: 'مكرونة بقطع الدجاج والصلصة مغطاة بطبقة غنية من الموزاريلا' }
+    ],
+    menuImages: [hindMenu1, hindMenu2, hindMenu3, hindMenu4]
+  },
+  {
+    id: 18,
+    name: 'هاي بروست - Hy Broasted',
+    category: 'chicken',
+    logo: hyLogo,
+    description: 'أقوى بروست مقرمش ووجبات فرايد تشيكن غنية بخلطات وتتبيلات هاي المميزة في مغاغة.',
+    phones: ['01287877563', '01110771334', '01020020965'],
+    whatsApp: '',
+    deliveryFee: 'من 20 لـ 30 جنيه',
+    address: 'مغاغة - شارع الشعبة / الزهور، متفرع من شارع السلام',
+    workingHours: {
+      start: '12:00',
+      end: '02:00',
+      display: 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'
+    },
+    popularItems: [
+      { name: 'وجبة سوبر هاي بروست (4 قطع)', price: 145, description: '4 قطع دجاج بروست مقرمش، بطاطس فارم فريتس، تومية، كول سلو، خبز' },
+      { name: 'وجبة العيلة هاي (8 قطع)', price: 270, description: '8 قطع بروست مقرمش، بطاطس عائلية، لتر كولا، كول سلو كبير وخبز' },
+      { name: 'ساندوتش تشيكن رويال العملاق', price: 90, description: 'صدور دجاج كريسبي، جبنة شيدر سايحة، خس، خيار مخلل وصوص هاي السري' }
+    ],
+    menuImages: [hyMenu1, hyMenu2]
+  },
+  {
+    id: 17,
+    name: 'مطعم عروس الشام - Arous El Sham',
+    category: 'syrian',
+    logo: arousLogo,
+    description: 'أشهى المأكولات السورية، الشاورما، الفتات، والوجبات المتنوعة بطعم الشام الأصيل في مغاغة.',
+    phones: ['01031115114', '01128904090'],
+    whatsApp: '',
+    deliveryFee: 'من 20 لـ 30 جنيه',
+    address: 'مغاغة - شارع السلام، ميدان الحمامة',
+    workingHours: {
+      start: '11:00',
+      end: '02:00',
+      display: 'من 11:00 صباحاً إلى 2:00 بعد منتصف الليل'
+    },
+    popularItems: [
+      { name: 'ماريا شاورما دجاج سبيشال', price: 85, description: 'خبز صاج محشو شاورما دجاج، جبنة موزاريلا، تومية ومخلل مشوي على الجريل' },
+      { name: 'فتة شاورما مشكل (دبل)', price: 110, description: 'أرز بسمتي مبهر، شاورما لحم ودجاج، خبز مقرمش وصوص تومية مميز' },
+      { name: 'وجبة عربي سوبر دجاج', price: 95, description: 'قطع رول شاورما مقطعة تقدم مع بطاطس فارم فريتس، تومية، مخلل وكول سلو' }
+    ],
+    menuImages: [arousMenu1, arousMenu2]
+  },
   {
     id: 16,
     name: 'بابا برجر - Baba Burger',
@@ -52,7 +153,7 @@ export const RESTAURANTS = [
     description: 'أفضل وأجود ساندوتشات السماش برجر اللحم والدجاج الطازج بخلطتنا الفريدة في مغاغة.',
     phones: ['01118487387'],
     whatsApp: '201118487387',
-    deliveryFee: '20 جنيه',
+    deliveryFee: 'من 20 لـ 30 جنيه',
     address: 'مغاغة - شارع الثورة، بجوار حلو الشام',
     workingHours: {
       start: '12:00',
@@ -66,28 +167,7 @@ export const RESTAURANTS = [
     ],
     menuImages: [babaMenu]
   },
-  {
-    id: 15,
-    name: 'سوشي كوشي - Koshi Sushi',
-    category: 'sushi',
-    logo: koshiLogo,
-    description: 'أشهى ساندوتشات ولفائف السوشي اليابانية الطازجة والمحضرّة من أجود المكونات في مغاغة.',
-    phones: ['01287187786'],
-    whatsApp: '',
-    deliveryFee: '20 جنيه',
-    address: 'أونلاين (توصيل فقط)',
-    workingHours: {
-      start: '12:00',
-      end: '23:00',
-      display: 'من 12:00 ظهراً إلى 11:00 مساءً'
-    },
-    popularItems: [
-      { name: 'هوسو ماكي سالمون (6 قطع)', price: 95, description: 'لفائف سوشي كلاسيكية محشوة بالسلمون الطازج والأرز ونوري' },
-      { name: 'فيلادلفيا رول (8 قطع)', price: 150, description: 'سلمون، جبنة كريمي، خيار، أفوكادو، سمسم' },
-      { name: 'كومبو مشكل (16 قطعة)', price: 290, description: 'تشكيلة ممتازة من السوشي رولز والماكي والساشيمي تناسب جميع الأذواق' }
-    ],
-    menuImages: [koshiMenu]
-  },
+
   {
     id: 11,
     name: 'مزيكا كريب - Mazeka Crepe',
@@ -96,7 +176,7 @@ export const RESTAURANTS = [
     description: 'أطعم وأكبر كريب حادق وحلو وبيتزا إيطالي مميزة في مغاغة.',
     phones: ['01024716334', '01110672280'],
     whatsApp: '',
-    deliveryFee: '20 جنيه',
+    deliveryFee: 'من 20 لـ 30 جنيه',
     address: 'مغاغة - شارع الثورة - أمام مطعم زيزو',
     workingHours: {
       start: '12:00',
@@ -118,7 +198,7 @@ export const RESTAURANTS = [
     description: 'أشهى كريب وسندوتشات غربية متنوعة وبيتزا إيطالية مميزة.',
     phones: ['01128804535', '01032527269'],
     whatsApp: '',
-    deliveryFee: '20 جنيه',
+    deliveryFee: 'من 20 لـ 30 جنيه',
     address: 'مغاغة - شارع الثورة، بجوار قصر السلطان',
     workingHours: {
       start: '12:00',
@@ -140,7 +220,7 @@ export const RESTAURANTS = [
     description: 'أجود أنواع الكريب والبيتزا الإيطالية والسندوتشات الغربية اللذيذة.',
     phones: ['01201882717'],
     whatsApp: '',
-    deliveryFee: '20 جنيه',
+    deliveryFee: 'من 20 لـ 30 جنيه',
     address: 'مغاغة - شارع السلام، أمام مدرسة الراهبات',
     workingHours: {
       start: '12:00',
@@ -162,7 +242,7 @@ export const RESTAURANTS = [
     description: 'أفضل الكباب والكفتة والمشويات على الفحم بطعم مغاغي بلدي أصيل.',
     phones: ['01113567679', '01023449972'],
     whatsApp: '',
-    deliveryFee: '20 جنيه',
+    deliveryFee: 'من 20 لـ 30 جنيه',
     address: 'مغاغة - شارع السلام - بجوار مسجد السمسطاوي',
     workingHours: {
       start: '11:00',
@@ -184,7 +264,7 @@ export const RESTAURANTS = [
     description: 'أقوى بروست مقرمش ووجبات فرايد تشكن بخلطة أبو علي السرية المميزة.',
     phones: ['01035890038', '01240077763', '01144074480', '01233370023', '01035872002', '01100896009'],
     whatsApp: '',
-    deliveryFee: '20 جنيه',
+    deliveryFee: 'من 20 لـ 30 جنيه',
     address: 'مغاغة - شارع الثورة - بجوار مسجد السلام',
     workingHours: {
       start: '11:00',
@@ -206,7 +286,7 @@ export const RESTAURANTS = [
     description: 'وجبات تشيكن بروست وفرايد تشكن مقرمشة وساندوتشات عائلية متميزة.',
     phones: ['17818'],
     whatsApp: '',
-    deliveryFee: '20 جنيه',
+    deliveryFee: 'من 20 لـ 30 جنيه',
     address: 'مغاغة – شارع السلام، أمام مدرسة الصنايع',
     workingHours: {
       start: '11:30',
@@ -228,7 +308,7 @@ export const RESTAURANTS = [
     description: 'أقوى وجبات الفرايد تشيكن والبروست المقرمش بعروض وخلطات مميزة.',
     phones: ['01208696419'],
     whatsApp: '',
-    deliveryFee: '20 جنيه',
+    deliveryFee: 'من 20 لـ 30 جنيه',
     address: 'مغاغة - شارع السلام، أمام كوبري الصنائع',
     workingHours: {
       start: '12:00',
@@ -250,7 +330,7 @@ export const RESTAURANTS = [
     description: 'أجود وأطعم أنواع الوافل، الكريب الحلو، العصائر، والحلويات المنعشة.',
     phones: ['01113914972'],
     whatsApp: '',
-    deliveryFee: '20 جنيه',
+    deliveryFee: 'من 20 لـ 30 جنيه',
     address: 'مغاغة - شارع السلام، أمام الشعبة',
     workingHours: {
       start: '12:00',
@@ -263,31 +343,6 @@ export const RESTAURANTS = [
       { name: 'عصير كوكتيل كوكب السعادة', price: 40, description: 'طبقات من المانجو والفراولة والجوافة مع قطع الفواكه الطازجة' }
     ],
     menuImages: [kokapMenu1]
-  },
-  {
-    id: 5,
-    name: 'كافيه لافازا - Lavazza Cafe',
-    category: 'cafe',
-    logo: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=150&auto=format&fit=crop&q=60',
-    description: 'مكان هادئ، مشروبات ساخنة وباردة، وميلك شيك منعش.',
-    phones: ['01555566677'],
-    whatsApp: '',
-    deliveryFee: '20 جنيه',
-    address: 'مغاغة - كورنيش النيل الجديد',
-    workingHours: {
-      start: '08:00',
-      end: '02:00',
-      display: 'من 8:00 صباحاً إلى 2:00 بعد منتصف الليل'
-    },
-    popularItems: [
-      { name: 'سبانيش لاتيه بارد', price: 50, description: 'إسبريسو مع الحليب المكثف المحلى والحليب الطازج والثلج' },
-      { name: 'كابتشينو مزدوج', price: 35, description: 'قهوة إسبريسو غنية مع رغوة الحليب الكثيفة' },
-      { name: 'وافل نوتيلا فواكه', price: 60, description: 'وافل بلجيكي دافئ مغطى بالنوتيلا وقطع الموز والفراولة' },
-      { name: 'عصير مانجو فريش', price: 40, description: 'مانجو طبيعي 100% بدون إضافات ألوان' }
-    ],
-    menuImages: [
-      'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=800&auto=format&fit=crop&q=80'
-    ]
   }
 ];
 
