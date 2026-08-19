@@ -21,10 +21,18 @@ const db = getDatabase(app);
 
 const resolveImage = (imgName) => {
   if (!imgName) return '/favicon.png';
-  if (imgName.startsWith('http') || imgName.startsWith('data:') || imgName.startsWith('/') || imgName.startsWith('blob:')) {
-    return imgName;
-  }
+  
   let filename = imgName;
+  
+  // Clean up development paths from older database seeds
+  if (typeof filename === 'string' && filename.includes('src/assets/')) {
+    filename = filename.substring(filename.lastIndexOf('/') + 1);
+  }
+
+  if (filename.startsWith('http') || filename.startsWith('data:') || filename.startsWith('/') || filename.startsWith('blob:')) {
+    return filename;
+  }
+  
   if (!filename.includes('.')) {
     if (filename === 'avatar-men') {
       filename = `${filename}.avif`;
