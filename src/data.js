@@ -363,25 +363,34 @@ export const CAPTAINS = [
 ];
 
 export function isRestaurantOpen(workingHours) {
-  const now = new Date();
-  const currentHour = now.getHours();
-  const currentMinute = now.getMinutes();
-  const currentTimeInMinutes = currentHour * 60 + currentMinute;
+  if (!workingHours || !workingHours.start || !workingHours.end) {
+    return true;
+  }
+  try {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+    const currentTimeInMinutes = currentHour * 60 + currentMinute;
 
-  const parseTimeToMinutes = (timeStr) => {
-    const [hours, minutes] = timeStr.split(':').map(Number);
-    return hours * 60 + minutes;
-  };
+    const parseTimeToMinutes = (timeStr) => {
+      if (!timeStr) return 0;
+      const [hours, minutes] = timeStr.split(':').map(Number);
+      return hours * 60 + (minutes || 0);
+    };
 
-  const startMinutes = parseTimeToMinutes(workingHours.start);
-  let endMinutes = parseTimeToMinutes(workingHours.end);
+    const startMinutes = parseTimeToMinutes(workingHours.start);
+    let endMinutes = parseTimeToMinutes(workingHours.end);
 
-  if (endMinutes < startMinutes) {
-    if (currentTimeInMinutes >= startMinutes || currentTimeInMinutes < endMinutes) {
-      return true;
+    if (endMinutes < startMinutes) {
+      if (currentTimeInMinutes >= startMinutes || currentTimeInMinutes < endMinutes) {
+        return true;
+      }
+      return false;
+    } else {
+      return currentTimeInMinutes >= startMinutes && currentTimeInMinutes <= endMinutes;
     }
-    return false;
-  } else {
-    return currentTimeInMinutes >= startMinutes && currentTimeInMinutes <= endMinutes;
+  } catch (error) {
+    console.error('Error parsing working hours:', error);
+    return true;
   }
 }

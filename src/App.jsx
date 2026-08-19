@@ -571,6 +571,8 @@ function App() {
                             secondBranchPhones: (formData.get('secondBranchPhones') || '') ? (formData.get('secondBranchPhones') || '').split(',').map(p => p.trim()).filter(Boolean) : null,
                             whatsApp: formData.get('whatsApp') || '',
                             workingHours: {
+                              start: formData.get('workingHoursStart') || '12:00',
+                              end: formData.get('workingHoursEnd') || '02:00',
                               display: formData.get('workingHoursDisplay') || 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'
                             },
                             popularItems: popItems,
@@ -636,9 +638,19 @@ function App() {
                             </div>
                           </div>
 
-                          <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>مواعيد العمل (نص العرض):</label>
-                            <input type="text" name="workingHoursDisplay" defaultValue={targetRestaurant.workingHours ? targetRestaurant.workingHours.display : 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1.5fr', gap: '16px' }}>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>ساعة البدء (Start Time):</label>
+                              <input type="text" name="workingHoursStart" placeholder="مثال: 12:00" defaultValue={targetRestaurant.workingHours ? targetRestaurant.workingHours.start : '12:00'} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>ساعة الإغلاق (End Time):</label>
+                              <input type="text" name="workingHoursEnd" placeholder="مثال: 02:00" defaultValue={targetRestaurant.workingHours ? targetRestaurant.workingHours.end : '02:00'} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>مواعيد العمل (نص العرض):</label>
+                              <input type="text" name="workingHoursDisplay" defaultValue={targetRestaurant.workingHours ? targetRestaurant.workingHours.display : 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
                           </div>
 
                           <div>
