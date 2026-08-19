@@ -2,6 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { CATEGORIES, RESTAURANTS, isRestaurantOpen } from './data';
 import logo from './assets/logo.png';
 import logoTow from './assets/logo-tow.png';
+import { initializeApp } from 'firebase/app';
+import { getDatabase, ref, get, set } from 'firebase/database';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDeL-wGyed08dGASFBE5-ak_p3vUut_A0g",
+  authDomain: "maghagha-menu.firebaseapp.com",
+  databaseURL: "https://maghagha-menu-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "maghagha-menu",
+  storageBucket: "maghagha-menu.firebasestorage.app",
+  messagingSenderId: "107392502900",
+  appId: "1:107392502900:web:59d4c7c964a3c8d66ed521",
+  measurementId: "G-T7P3QQM8S9"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,9 +34,8 @@ function App() {
   const [ratings, setRatings] = useState({});
   const [userRatings, setUserRatings] = useState({});
   const [isRatingSubmitting, setIsRatingSubmitting] = useState(false);
+  const [ratingAnimationState, setRatingAnimationState] = useState(null);
   const [activeMainTab, setActiveMainTab] = useState('restaurants');
-
-  const KVDB_URL = 'https://kvdb.io/9d1yfbSFXNHqhxwRTpMsKE/all_ratings';
 
   useEffect(() => {
     // Load local ratings made by the user
@@ -33,16 +48,15 @@ function App() {
       }
     }
 
-    // Fetch global ratings
-    fetch(KVDB_URL)
-      .then(res => {
-        if (res.ok) return res.json();
-        return {};
+    // Fetch global ratings from Firebase
+    const ratingsRef = ref(db, 'ratings');
+    get(ratingsRef)
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          setRatings(snapshot.val() || {});
+        }
       })
-      .then(data => {
-        setRatings(data || {});
-      })
-      .catch(err => console.error('Error loading ratings:', err));
+      .catch((err) => console.error('Error loading ratings:', err));
   }, []);
 
   const [showBottomWhatsApp, setShowBottomWhatsApp] = useState(false);
@@ -75,12 +89,20 @@ function App() {
   const handleRate = async (restaurantId, ratingValue) => {
     if (userRatings[restaurantId] || isRatingSubmitting) return;
     setIsRatingSubmitting(true);
+    
+    setRatingAnimationState({
+      restaurantId,
+      clickedStar: ratingValue,
+      step: 'clicked'
+    });
 
     try {
-      const res = await fetch(KVDB_URL);
+      // Get latest ratings from Firebase to ensure concurrency safety
+      const ratingsRef = ref(db, 'ratings');
+      const snapshot = await get(ratingsRef);
       let currentRatings = {};
-      if (res.ok) {
-        currentRatings = await res.json();
+      if (snapshot.exists()) {
+        currentRatings = snapshot.val() || {};
       }
 
       const currentRestaurantRating = currentRatings[restaurantId] || { sum: 0, count: 0 };
@@ -94,25 +116,30 @@ function App() {
         [restaurantId]: updatedRestaurantRating
       };
 
-      const putRes = await fetch(KVDB_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newRatings)
-      });
+      // Save to Firebase
+      await set(ratingsRef, newRatings);
 
-      if (putRes.ok) {
-        setRatings(newRatings);
-        const newUserRatings = {
-          ...userRatings,
-          [restaurantId]: ratingValue
-        };
-        setUserRatings(newUserRatings);
-        localStorage.setItem('user_ratings', JSON.stringify(newUserRatings));
-      }
+      // Update local state
+      setRatings(newRatings);
+      const newUserRatings = {
+        ...userRatings,
+        [restaurantId]: ratingValue
+      };
+      setUserRatings(newUserRatings);
+      localStorage.setItem('user_ratings', JSON.stringify(newUserRatings));
+
+      // Transition to showing previous stars after 3 seconds
+      setTimeout(() => {
+        setRatingAnimationState(prev => {
+          if (prev && prev.restaurantId === restaurantId) {
+            return { ...prev, step: 'completed' };
+          }
+          return prev;
+        });
+      }, 3000);
     } catch (error) {
       console.error('Error saving rating:', error);
+      setRatingAnimationState(null);
     } finally {
       setIsRatingSubmitting(false);
     }
@@ -538,12 +565,28 @@ function App() {
                     const hasRated = !!userRatings[selectedRestaurant.id];
                     const userRating = userRatings[selectedRestaurant.id];
                     
-                    const isActive = hasRated ? (star <= userRating) : (star <= Math.round(avgRating));
+                    const rAnim = ratingAnimationState && ratingAnimationState.restaurantId === selectedRestaurant.id ? ratingAnimationState : null;
+                    
+                    let isActive = false;
+                    if (rAnim) {
+                      if (rAnim.step === 'clicked') {
+                        isActive = (star === rAnim.clickedStar);
+                      } else {
+                        isActive = (star <= userRating);
+                      }
+                    } else {
+                      isActive = hasRated ? (star <= userRating) : (star <= Math.round(avgRating));
+                    }
 
                     return (
                       <button
                         key={star}
                         className={`star-btn ${isActive ? 'active' : ''} ${hasRated ? 'disabled' : ''}`}
+                        style={
+                          rAnim && rAnim.step === 'completed' && star < rAnim.clickedStar
+                            ? { transitionDelay: `${star * 0.15}s` }
+                            : {}
+                        }
                         onClick={() => !hasRated && handleRate(selectedRestaurant.id, star)}
                         disabled={hasRated || isRatingSubmitting}
                         title={hasRated ? `تقييمك: ${userRating} نجوم` : `تقييم بـ ${star} نجوم`}
