@@ -1223,30 +1223,32 @@ function App() {
           <div className="drawer-overlay" onClick={() => setSelectedRestaurant(null)}>
             <div className="drawer-content" onClick={(e) => e.stopPropagation()}>
               <div className="drawer-header" style={{ alignItems: 'flex-start' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%', flexWrap: 'wrap' }}>
-                  {isCaptain ? (
-                    <img 
-                      src={resolveImage(selectedRestaurant.avatar)} 
-                      alt={selectedRestaurant.name} 
-                      style={{ width: '70px', height: '70px', borderRadius: 'var(--radius-md)', objectFit: 'cover', border: '2px solid var(--border-color)', flexShrink: 0 }}
-                    />
-                  ) : (
-                    <img 
-                      src={resolveImage(selectedRestaurant.logo)} 
-                      alt={selectedRestaurant.name} 
-                      style={{ width: '70px', height: '70px', borderRadius: 'var(--radius-md)', objectFit: 'cover', border: '2px solid var(--border-color)', flexShrink: 0 }}
-                    />
-                  )}
-                  <div style={{ flex: 1, minWidth: '200px' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px', width: '100%', flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
                     {isCaptain ? (
-                      <span className={`status-badge ${selectedRestaurant.isAvailable ? 'open' : 'closed'}`} style={{ marginBottom: '8px', display: 'inline-block' }}>
-                        {selectedRestaurant.isAvailable ? '🟢 متاح حالياً' : '🔴 غير متاح حالياً'}
+                      <img 
+                        src={resolveImage(selectedRestaurant.avatar)} 
+                        alt={selectedRestaurant.name} 
+                        style={{ width: '70px', height: '70px', borderRadius: 'var(--radius-md)', objectFit: 'cover', border: '2px solid var(--border-color)' }}
+                      />
+                    ) : (
+                      <img 
+                        src={resolveImage(selectedRestaurant.logo)} 
+                        alt={selectedRestaurant.name} 
+                        style={{ width: '70px', height: '70px', borderRadius: 'var(--radius-md)', objectFit: 'cover', border: '2px solid var(--border-color)' }}
+                      />
+                    )}
+                    {isCaptain ? (
+                      <span className={`status-badge ${selectedRestaurant.isAvailable ? 'open' : 'closed'}`} style={{ display: 'inline-block', fontSize: '10px', padding: '3px 8px', textAlign: 'center', whiteSpace: 'nowrap' }}>
+                        {selectedRestaurant.isAvailable ? '🟢 متاح' : '🔴 غير متاح'}
                       </span>
                     ) : (
-                      <span className={`status-badge ${isRestaurantOpen(selectedRestaurant.workingHours) ? 'open' : 'closed'}`} style={{ marginBottom: '8px', display: 'inline-block' }}>
+                      <span className={`status-badge ${isRestaurantOpen(selectedRestaurant.workingHours) ? 'open' : 'closed'}`} style={{ display: 'inline-block', fontSize: '10px', padding: '3px 8px', textAlign: 'center', whiteSpace: 'nowrap' }}>
                         {isRestaurantOpen(selectedRestaurant.workingHours) ? 'مفتوح الآن' : 'مغلق حالياً'}
                       </span>
                     )}
+                  </div>
+                  <div style={{ flex: 1, minWidth: '200px' }}>
                     <h2 className="restaurant-detail-title">{selectedRestaurant.name}</h2>
                     <p className="restaurant-desc" style={{ WebkitLineClamp: 'unset', marginTop: '4px' }}>{selectedRestaurant.description}</p>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px', flexWrap: 'wrap' }}>
@@ -1352,7 +1354,7 @@ function App() {
                       className="action-btn btn-call"
                     >
                       <i className="fa-solid fa-phone"></i>
-                      <span>اتصال بالدليفري</span>
+                      <span>اطلب الدليفري</span>
                     </button>
                     {selectedRestaurant.whatsApp ? (
                       <a 
@@ -1376,7 +1378,7 @@ function App() {
             {/* Rating Section */}
             <div className="rating-section">
               <div className="rating-header">
-                <h3 className="drawer-section-title">تقييم المكان</h3>
+                <h3 className="drawer-section-title">تقييمك للمكان</h3>
                 <div className="rating-stats">
                   {(() => {
                     const rData = ratings[selectedRestaurant.id] || { sum: 0, count: 0 };
@@ -1439,6 +1441,26 @@ function App() {
                 )}
               </div>
             </div>
+            {/* Menu Images List (Only for Restaurants) */}
+            {!isCaptain && selectedRestaurant.menuImages && (
+              <div>
+                <h3 className="drawer-section-title">المنيو  (اضغط للتكبير)</h3>
+                <div className="menu-thumbnails">
+                  {selectedRestaurant.menuImages.map((img, idx) => (
+                    <div 
+                      key={idx} 
+                      className="menu-thumbnail-wrapper"
+                      onClick={() => {
+                        setActiveMenuImage(resolveImage(img));
+                        setZoomScale(1);
+                      }}
+                    >
+                      <img src={resolveImage(img)} alt={`منيو صفحة ${idx + 1}`} className="menu-thumbnail" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* General Info */}
             <div>
@@ -1474,26 +1496,6 @@ function App() {
               </div>
             </div>
 
-            {/* Menu Images List (Only for Restaurants) */}
-            {!isCaptain && selectedRestaurant.menuImages && (
-              <div>
-                <h3 className="drawer-section-title">المنيو الورقي (اضغط للتكبير)</h3>
-                <div className="menu-thumbnails">
-                  {selectedRestaurant.menuImages.map((img, idx) => (
-                    <div 
-                      key={idx} 
-                      className="menu-thumbnail-wrapper"
-                      onClick={() => {
-                        setActiveMenuImage(resolveImage(img));
-                        setZoomScale(1);
-                      }}
-                    >
-                      <img src={resolveImage(img)} alt={`منيو صفحة ${idx + 1}`} className="menu-thumbnail" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* Services / Popular Items */}
             {isCaptain ? (
