@@ -1304,7 +1304,7 @@ function App() {
                         }}
                       >
                         <i className="fa-solid fa-share-nodes"></i>
-                        <span>{copySuccess ? 'تم نسخ الرابط! ✓' : 'مشاركة الرابط '}</span>
+                        <span>{copySuccess ? 'تم نسخ الرابط! ✓' : 'مشاركة  '}</span>
                       </button>
 
                       {!isCaptain && (
