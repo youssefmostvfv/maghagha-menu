@@ -1633,10 +1633,35 @@ body.body-scroll-lock {
 }
 
 @media (max-width: 480px) {
+  .app-header {
+    padding: 10px 12px;
+  }
+  .brand-title {
+    font-size: 16px;
+    gap: 4px;
+  }
+  .brand-logo-img {
+    width: 28px;
+    height: 28px;
+  }
+  .theme-toggle-btn {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+  }
   .install-app-btn {
-    padding: 6px 10px;
-    font-size: 10.5px;
-    height: 30px;
+    padding: 4px 8px;
+    font-size: 10px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+  }
+  .install-app-btn span {
+    display: inline; /* Keep text visible on mobile */
+    font-size: 10px;
+  }
+  .install-app-btn i {
+    font-size: 11px;
   }
 }
 
