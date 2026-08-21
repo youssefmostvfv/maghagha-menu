@@ -160,12 +160,9 @@ function App() {
     const dbRestaurantsRef = ref(db, 'restaurants');
     get(dbRestaurantsRef)
       .then((snapshot) => {
-        if (snapshot.exists() && snapshot.val()) {
-          setRestaurants(snapshot.val());
-        } else {
-          set(dbRestaurantsRef, INITIAL_RESTAURANTS);
-          setRestaurants(INITIAL_RESTAURANTS);
-        }
+        // Automatically merge/overwrite to ensure newly added local restaurants are present in database
+        set(dbRestaurantsRef, INITIAL_RESTAURANTS);
+        setRestaurants(INITIAL_RESTAURANTS);
       })
       .catch((err) => {
         console.error('Error loading restaurants:', err);

@@ -51,6 +51,11 @@ import tokyoMenu3 from './assets/tokyo-menu3.jpg';
 import tokyoMenu4 from './assets/tokyo-menu4.jpg';
 import tokyoMenu5 from './assets/tokyo-menu5.jpg';
 
+import houdaLogo from './assets/houda-logo.jpg';
+import houdaMenu1 from './assets/houda-menu1.jpg';
+import houdaMenu2 from './assets/houda-menu2.jpg';
+import houdaMenu3 from './assets/houda-menu3.jpg';
+
 // بيانات المطاعم والمحلات النموذجية لموقع دليل مغاغة للمطاعم
 export const CATEGORIES = [
   { id: 'all', name: 'الكل', icon: 'fa-store' },
@@ -84,6 +89,27 @@ export const RESTAURANTS = [
       { name: 'بيتزا تشيكن رانش وسط', price: 110, description: 'بيتزا وسط مغطاة بقطع الدجاج، صوص الرانش اللذيذ، فلفل ألوان، وموزاريلا' }
     ],
     menuImages: [tokyoMenu1, tokyoMenu2, tokyoMenu3, tokyoMenu4, tokyoMenu5]
+  },
+  {
+    id: 22,
+    name: 'تيك اوي حوده',
+    category: 'crepe',
+    logo: houdaLogo,
+    description: 'تيك اوي حوده يقدم أشهى وأفضل أنواع الكريب والبيتزا الإيطالية والسندوتشات الغربية اللذيذة في مغاغة.',
+    phones: ['01025850812'],
+    whatsApp: '',
+    deliveryFee: 'من 20 لـ 30 جنيه',
+    address: 'مغاغة - شارع الثورة - بجوار حلا بحليب',
+    workingHours: {
+      start: '12:00',
+      end: '03:00',
+      display: 'من 12:00 ظهراً إلى 3:00 بعد منتصف الليل'
+    },
+    popularItems: [
+      { name: 'كريب كرانشي سوبريم', price: 75, description: 'كريب مقرمش غني بقطع الفرايد تشكن، البطاطس، الموتزاريلا والصوصات' },
+      { name: 'بيتزا مارجريتا وسط', price: 70, description: 'عجينة بيتزا إيطالية مميزة بصلصة الطماطم الغنية والجبن الموزاريلا' }
+    ],
+    menuImages: [houdaMenu1, houdaMenu2, houdaMenu3]
   },
   {
     id: 20,
@@ -302,9 +328,9 @@ export const RESTAURANTS = [
       display: 'من 11:00 صباحاً إلى 2:00 بعد منتصف الليل'
     },
     popularItems: [
-      { name: 'وجبة بروست 4 قطع', price: 140, description: '4 قطع دجاج، بطاطس، ثومية، كول سلو، خبز' },
-      { name: 'وجبة عائلية 8 قطع', price: 260, description: '8 قطع دجاج بروست، بطاطس عائلية، لتر كولا، كول سلو كبير' },
-      { name: 'ساندوتش سوبر جامبو مقرمش', price: 85, description: 'صدور دجاج سبايسي، لحم رومي، جبنة سايحة، صوص أبو علي المميز' }
+      { name: 'العرض الأول | لَمّة محبي الفرايد تشيكن', price: 149, description: '2 قطعة فرايد تشيكن + 2 كرسبي استربس + 2 خبز + كاتشب 🔥' },
+      { name: '👑 العرض الثاني | صينية اللتاتة', price: 449, description: '8 قطع فرايد تشيكن + أرز بخلطة أبو علي + تومية وسط + كولسلو وسط + بطاطس بالجبنة + 4 خبز + كاتشب 😋🔥' },
+      { name: '❤️ العرض الثالث | صينية الطبطبة', price: 399, description: '4 قطع فرايد تشيكن + 4 كرسبي استربس + أرز بالخلطة + بطاطس بالجبنة + كولسلو وسط + تومية وسط + كاتشب + 3 خبز 🍗🧀' }
     ],
     menuImages: [aboAliMenu1, aboAliMenu2]
   },
