@@ -570,7 +570,7 @@ body {
 }
 
 .lightbox-close {
-  position: absolute;
+  position: fixed;
   top: 20px;
   right: 20px;
   background: rgba(255, 255, 255, 0.15);
@@ -583,6 +583,12 @@ body {
   justify-content: center;
   color: white;
   cursor: pointer;
+  z-index: 220;
+  transition: background-color 0.2s;
+}
+
+.lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.25);
 }
 
 .lightbox-image-container {
@@ -602,10 +608,14 @@ body {
 }
 
 .lightbox-controls {
-  margin-top: 20px;
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   gap: 16px;
   color: white;
+  z-index: 220;
 }
 
 .lightbox-control-btn {
@@ -619,6 +629,24 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.lightbox-control-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+@media (max-width: 480px) {
+  .lightbox-controls {
+    gap: 8px;
+    bottom: 16px;
+  }
+  .lightbox-control-btn {
+    font-size: 13px;
+    gap: 4px;
+  }
 }
 
 /* Popular dishes table */
@@ -1541,21 +1569,15 @@ body {
   box-shadow: 0 0 0 3px rgba(30, 144, 255, 0.15);
 }
 
-/* Daily Promo Code Styles & Sibling Share Button */
-.share-btn-detail,
+/* Daily Promo Code Styles */
 .promo-badge {
-  height: 32px !important; /* Perfect unified height */
-  box-sizing: border-box !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  padding: 0 12px !important; /* Fixed padding, no vertical padding to prevent mismatch */
-}
-
-.promo-badge {
+  display: inline-flex;
+  align-items: center;
   gap: 6px;
   background-color: var(--bg-primary);
   border: 1px solid var(--border-color);
   color: var(--text-secondary);
+  padding: 6px 12px;
   border-radius: var(--radius-sm);
   font-size: 11px;
   font-weight: 700;
@@ -1573,15 +1595,6 @@ body {
   color: var(--accent-color);
   font-weight: 800;
   margin-right: 2px;
-}
-
-@media (max-width: 480px) {
-  .share-btn-detail,
-  .promo-badge {
-    height: 30px !important;
-    padding: 0 10px !important;
-    font-size: 10.5px !important;
-  }
 }
 
 /* Prevent body scrolling when drawer or modal is active */

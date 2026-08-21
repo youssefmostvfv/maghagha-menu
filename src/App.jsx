@@ -173,28 +173,51 @@ function App() {
     }
   }, []);
 
-  // History popstate handling for closing drawer on back button
+  // Unified History popstate handling for closing drawer and lightbox on back button
+  useEffect(() => {
+    const handlePopState = (event) => {
+      const state = event.state;
+      if (!state || !state.lightboxOpen) {
+        setActiveMenuImage(null);
+      }
+      if (!state || !state.drawerOpen) {
+        setSelectedRestaurant(null);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
+  // Handle pushing state for selectedRestaurant
   useEffect(() => {
     if (selectedRestaurant) {
       const hasState = window.history.state && window.history.state.drawerOpen;
       if (!hasState) {
         window.history.pushState({ drawerOpen: true }, '');
       }
-
-      const handlePopState = () => {
-        setSelectedRestaurant(null);
-      };
-
-      window.addEventListener('popstate', handlePopState);
-      return () => {
-        window.removeEventListener('popstate', handlePopState);
-      };
     } else {
       if (window.history.state && window.history.state.drawerOpen) {
         window.history.back();
       }
     }
   }, [selectedRestaurant]);
+
+  // Handle pushing state for activeMenuImage
+  useEffect(() => {
+    if (activeMenuImage) {
+      const hasState = window.history.state && window.history.state.lightboxOpen;
+      if (!hasState) {
+        window.history.pushState({ lightboxOpen: true }, '');
+      }
+    } else {
+      if (window.history.state && window.history.state.lightboxOpen) {
+        window.history.back();
+      }
+    }
+  }, [activeMenuImage]);
 
   // Body Scroll Lock when modal/drawer/lightbox is open
   useEffect(() => {
