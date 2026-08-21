@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CATEGORIES, RESTAURANTS as INITIAL_RESTAURANTS, isRestaurantOpen, CAPTAINS as INITIAL_CAPTAINS } from './data';
+import { CATEGORIES, RESTAURANTS as INITIAL_RESTAURANTS, isRestaurantOpen, CAPTAINS as INITIAL_CAPTAINS, SUPERMARKETS as INITIAL_SUPERMARKETS } from './data';
 import logo from './assets/logo.png';
 import logoTow from './assets/logo-tow.png';
 import { initializeApp } from 'firebase/app';
@@ -69,6 +69,7 @@ function App() {
   const [selectedCaptainService, setSelectedCaptainService] = useState('all');
   const [restaurants, setRestaurants] = useState([]);
   const [captains, setCaptains] = useState([]);
+  const [supermarkets, setSupermarkets] = useState([]);
   
   const [isAdminPage, setIsAdminPage] = useState(false);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
@@ -173,16 +174,25 @@ function App() {
     const dbCaptainsRef = ref(db, 'captains');
     get(dbCaptainsRef)
       .then((snapshot) => {
-        if (snapshot.exists() && snapshot.val()) {
-          setCaptains(snapshot.val());
-        } else {
-          set(dbCaptainsRef, INITIAL_CAPTAINS);
-          setCaptains(INITIAL_CAPTAINS);
-        }
+        // Automatically merge/overwrite to ensure newly added local captains are present in database
+        set(dbCaptainsRef, INITIAL_CAPTAINS);
+        setCaptains(INITIAL_CAPTAINS);
       })
       .catch((err) => {
         console.error('Error loading captains:', err);
         setCaptains(INITIAL_CAPTAINS);
+      });
+
+    // Fetch and seed Supermarkets
+    const dbSupermarketsRef = ref(db, 'supermarkets');
+    get(dbSupermarketsRef)
+      .then((snapshot) => {
+        set(dbSupermarketsRef, INITIAL_SUPERMARKETS);
+        setSupermarkets(INITIAL_SUPERMARKETS);
+      })
+      .catch((err) => {
+        console.error('Error loading supermarkets:', err);
+        setSupermarkets(INITIAL_SUPERMARKETS);
       });
 
     // Parse Deep Link URL ID and page parameter on mount (using seed data for instant synchronous matching)
@@ -275,12 +285,21 @@ function App() {
 
   useEffect(() => {
     const handleScroll = () => {
+      // If a restaurant detail drawer or lightbox/image viewer is active, don't show the WhatsApp floating button
+      if (selectedRestaurant || activeMenuImage) {
+        setShowBottomWhatsApp(false);
+        return;
+      }
+
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
 
-      // Show if page is very short or scrolled near the bottom
-      if (documentHeight - windowHeight <= 100 || documentHeight - (scrollTop + windowHeight) < 180) {
+      // Show only when scrolled down more than 100px AND near the bottom or page is short
+      const isScrolledDown = scrollTop > 100;
+      const isNearBottom = documentHeight - windowHeight <= 100 || documentHeight - (scrollTop + windowHeight) < 180;
+
+      if (isScrolledDown && isNearBottom) {
         setShowBottomWhatsApp(true);
       } else {
         setShowBottomWhatsApp(false);
@@ -296,7 +315,7 @@ function App() {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
     };
-  }, [activeMainTab]); // re-run listener check when active tab changes
+  }, [activeMainTab, selectedRestaurant, activeMenuImage]); // re-run listener check when dependencies change
 
   const handleRate = async (restaurantId, ratingValue) => {
     if (userRatings[restaurantId] || isRatingSubmitting) return;
@@ -1038,11 +1057,21 @@ function App() {
             <span>المطاعم</span>
           </button>
           <button 
-            className={`service-tab ${activeMainTab === 'motorcycle' ? 'active' : ''}`}
-            onClick={() => setActiveMainTab('motorcycle')}
+            className={`service-tab ${activeMainTab === 'supermarket' ? 'active' : ''}`}
+            onClick={() => {
+              setActiveMainTab('supermarket');
+              setSearchTerm('');
+            }}
           >
-            <i className="fa-solid fa-motorcycle"></i>
-            <span>موتوسيكل</span>
+            <i className="fa-solid fa-cart-shopping"></i>
+            <span>سوبر ماركت</span>
+          </button>
+          <button 
+            className={`service-tab ${activeMainTab === 'doctors' ? 'active' : ''}`}
+            onClick={() => setActiveMainTab('doctors')}
+          >
+            <i className="fa-solid fa-user-doctor"></i>
+            <span>الأطباء</span>
           </button>
           <button 
             className={`service-tab ${activeMainTab === 'pharmacy' ? 'active' : ''}`}
@@ -1050,6 +1079,13 @@ function App() {
           >
             <i className="fa-solid fa-mortar-pestle"></i>
             <span>الصيدليات</span>
+          </button>
+          <button 
+            className={`service-tab ${activeMainTab === 'motorcycle' ? 'active' : ''}`}
+            onClick={() => setActiveMainTab('motorcycle')}
+          >
+            <i className="fa-solid fa-motorcycle"></i>
+            <span>موتوسيكل</span>
           </button>
         </div>
         {showServicesArrow && (
@@ -1067,13 +1103,17 @@ function App() {
             <img src={logoTow} alt="Menu Maghagha Logo" className="hero-logo-img" />
             <h2 className="hero-title">
               {activeMainTab === 'restaurants' && "دليل مطاعم مغاغة ف جيبك 🍔"}
+              {activeMainTab === 'supermarket' && "دليل السوبر ماركت ف جيبك 🛒"}
+              {activeMainTab === 'doctors' && "دليل عيادات وأطباء مغاغة 👨‍⚕️"}
+              {activeMainTab === 'pharmacy' && "دليل صيدليات مغاغة 💊"}
               {activeMainTab === 'motorcycle' && "كباتن دليفري مغاغة ف جيبك 🏍️"}
-              {activeMainTab === 'pharmacy' && "دليل صيدليات وأطباء مغاغة ⚕️"}
             </h2>
             <p className="hero-subtitle">
               {activeMainTab === 'restaurants' && "منصتك المتكاملة لتصفح منيو، أسعار، تليفونات وعناوين جميع مطاعم مغاغة بنقرة واحدة!"}
+              {activeMainTab === 'supermarket' && "تصفح أرقام، فروع، وعروض أفضل المحلات والسوبر ماركت في مغاغة!"}
+              {activeMainTab === 'doctors' && "دليل كامل لأشطر الأطباء والعيادات بمختلف التخصصات في مغاغة."}
+              {activeMainTab === 'pharmacy' && "دليل كامل للصيدليات المتاحة والعاملة في مغاغة لتلبية احتياجاتك الدوائية."}
               {activeMainTab === 'motorcycle' && "تواصل مباشرة مع أسرع كباتن توصيل طلبات ومشاوير وسفر داخل مغاغة وضواحيها!"}
-              {activeMainTab === 'pharmacy' && "دليل كامل للصيدليات المتاحة، عيادات الأطباء، ومواعيدها الرسمية لتسهيل خدماتك الطبية."}
             </p>
             
             {/* Integrated Search Input */}
@@ -1280,15 +1320,50 @@ function App() {
               })}
             </div>
           </>
+        ) : activeMainTab === 'supermarket' ? (
+          <div className="captains-grid">
+            {supermarkets.map(market => (
+              <div 
+                key={market.id} 
+                className="captain-card"
+                onClick={() => setSelectedRestaurant(market)}
+              >
+                <div className="captain-avatar-wrapper">
+                  <img 
+                    src={resolveImage(market.logo)} 
+                    alt={market.name} 
+                    className="captain-avatar" 
+                    loading="lazy"
+                  />
+                  <span className={`captain-status-dot ${isRestaurantOpen(market.workingHours) ? 'available' : 'unavailable'}`}></span>
+                </div>
+                
+                <div className="captain-info">
+                  <div className="captain-name-row">
+                    <h2 className="captain-name">{market.name}</h2>
+                  </div>
+                  
+                  <p className="captain-desc">{market.description}</p>
+                  
+                  <div className="captain-services">
+                    <span className="captain-service-badge">🏬 3 فروع في مغاغة</span>
+                    <span className="captain-service-badge">🛵 خدمة دليفري</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         ) : (
           <div className="coming-soon-container">
             <div className="coming-soon-card">
               <div className="coming-soon-icon">
-                <i className="fa-solid fa-house-chimney-medical coming-soon-pulse"></i>
+                {activeMainTab === 'doctors' && <i className="fa-solid fa-user-doctor coming-soon-pulse"></i>}
+                {activeMainTab === 'pharmacy' && <i className="fa-solid fa-mortar-pestle coming-soon-pulse"></i>}
               </div>
               <h3 className="coming-soon-title">هذه الخدمة ستتوفر قريباً 🚀</h3>
               <p className="coming-soon-text">
-                دليل كامل للصيدليات المتاحة، عيادات الأطباء، ومواعيدها لتصل لكل الخدمات الطبية بسهولة.
+                {activeMainTab === 'doctors' && "دليل شامل لأشطر الأطباء بمختلف التخصصات، العيادات والمواعيد الرسمية في مغاغة."}
+                {activeMainTab === 'pharmacy' && "دليل كامل للصيدليات المتاحة والعاملة في مغاغة لتلبية جميع احتياجاتك الدوائية."}
               </p>
               <div className="coming-soon-badge">قيد التطوير والتحضير</div>
             </div>
@@ -1299,6 +1374,7 @@ function App() {
       {/* Details Bottom Sheet (Drawer) */}
       {selectedRestaurant && (() => {
         const isCaptain = typeof selectedRestaurant.id === 'string' && selectedRestaurant.id.startsWith('captain_');
+        const isSupermarket = typeof selectedRestaurant.id === 'string' && selectedRestaurant.id.startsWith('supermarket_');
         return (
           <div className="drawer-overlay" onClick={() => setSelectedRestaurant(null)}>
             <div className="drawer-content" onClick={(e) => e.stopPropagation()}>
@@ -1355,7 +1431,7 @@ function App() {
                         <span>{copySuccess ? 'تم نسخ الرابط! ✓' : 'مشاركة  '}</span>
                       </button>
 
-                      {!isCaptain && (
+                      {!isCaptain && !isSupermarket && (
                         <div className="promo-badge">
                           <i className="fa-solid fa-tag promo-icon"></i>
                           <span>كود الخصم:</span>
@@ -1561,10 +1637,24 @@ function App() {
                   </>
                 ) : (
                   <>
-                    <div className="info-row">
-                      <i className="fa-solid fa-location-dot info-icon"></i>
-                      <span><strong>العنوان:</strong> {selectedRestaurant.address}</span>
-                    </div>
+                    {selectedRestaurant.branches ? (
+                      <div className="info-row" style={{ alignItems: 'flex-start' }}>
+                        <i className="fa-solid fa-location-dot info-icon" style={{ marginTop: '4px' }}></i>
+                        <div>
+                          <strong>فروع الهايبر:</strong>
+                          <ul style={{ margin: '4px 0 0 0', paddingRight: '16px', listStyleType: 'disc' }}>
+                            {selectedRestaurant.branches.map((b, bIdx) => (
+                              <li key={bIdx} style={{ marginBottom: '4px' }}>{b}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="info-row">
+                        <i className="fa-solid fa-location-dot info-icon"></i>
+                        <span><strong>العنوان:</strong> {selectedRestaurant.address}</span>
+                      </div>
+                    )}
                     <div className="info-row">
                       <i className="fa-solid fa-clock info-icon"></i>
                       <span><strong>مواعيد العمل:</strong> {selectedRestaurant.workingHours.display}</span>
@@ -1653,40 +1743,36 @@ function App() {
             />
           </div>
 
-          {zoomScale <= 1 && (
-            <>
-              <button className="lightbox-close" onClick={() => setActiveMenuImage(null)}>
-                <i className="fa-solid fa-xmark" style={{ fontSize: '20px' }}></i>
-              </button>
+          <button className="lightbox-close" onClick={() => setActiveMenuImage(null)}>
+            <i className="fa-solid fa-xmark" style={{ fontSize: '20px' }}></i>
+          </button>
 
-              <div className="lightbox-controls" onClick={(e) => e.stopPropagation()}>
-                {selectedRestaurant && selectedRestaurant.menuImages && selectedRestaurant.menuImages.length > 1 && currentImageIndex > 0 && (
-                  <button className="lightbox-control-btn" onClick={handlePrevImage} title="الصورة السابقة">
-                    <i className="fa-solid fa-chevron-right"></i>
-                    <span>السابق</span>
-                  </button>
-                )}
-                <button className="lightbox-control-btn" onClick={handleZoomIn}>
-                  <i className="fa-solid fa-magnifying-glass-plus"></i>
-                  <span>تكبير</span>
-                </button>
-                <button className="lightbox-control-btn" onClick={handleZoomOut}>
-                  <i className="fa-solid fa-magnifying-glass-minus"></i>
-                  <span>تصغير</span>
-                </button>
-                <button className="lightbox-control-btn" onClick={handleZoomReset}>
-                  <i className="fa-solid fa-rotate-left"></i>
-                  <span>إعادة ضبط</span>
-                </button>
-                {selectedRestaurant && selectedRestaurant.menuImages && selectedRestaurant.menuImages.length > 1 && currentImageIndex < selectedRestaurant.menuImages.length - 1 && (
-                  <button className="lightbox-control-btn" onClick={handleNextImage} title="الصورة التالية">
-                    <span>التالي</span>
-                    <i className="fa-solid fa-chevron-left"></i>
-                  </button>
-                )}
-              </div>
-            </>
-          )}
+          <div className="lightbox-controls" onClick={(e) => e.stopPropagation()}>
+            {selectedRestaurant && selectedRestaurant.menuImages && selectedRestaurant.menuImages.length > 1 && currentImageIndex > 0 && (
+              <button className="lightbox-control-btn" onClick={handlePrevImage} title="الصورة السابقة">
+                <i className="fa-solid fa-chevron-right"></i>
+                <span>السابق</span>
+              </button>
+            )}
+            <button className="lightbox-control-btn" onClick={handleZoomIn}>
+              <i className="fa-solid fa-magnifying-glass-plus"></i>
+              <span>تكبير</span>
+            </button>
+            <button className="lightbox-control-btn" onClick={handleZoomOut}>
+              <i className="fa-solid fa-magnifying-glass-minus"></i>
+              <span>تصغير</span>
+            </button>
+            <button className="lightbox-control-btn" onClick={handleZoomReset}>
+              <i className="fa-solid fa-rotate-left"></i>
+              <span>إعادة ضبط</span>
+            </button>
+            {selectedRestaurant && selectedRestaurant.menuImages && selectedRestaurant.menuImages.length > 1 && currentImageIndex < selectedRestaurant.menuImages.length - 1 && (
+              <button className="lightbox-control-btn" onClick={handleNextImage} title="الصورة التالية">
+                <span>التالي</span>
+                <i className="fa-solid fa-chevron-left"></i>
+              </button>
+            )}
+          </div>
         </div>
       )}
 

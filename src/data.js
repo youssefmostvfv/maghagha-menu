@@ -43,6 +43,7 @@ import gedoLogo from './assets/gedo-logo.jpg';
 import gedoMenu1 from './assets/gedo-menu1.jpg';
 import gedoMenu2 from './assets/gedo-menu2.jpg';
 import avatarMen from './assets/avatar-men.avif';
+import dlevarlkLogo from './assets/dlevarlk-logo.jpg';
 
 import tokyoLogo from './assets/tokyo-logo.jpg';
 import tokyoMenu1 from './assets/tokyo-menu1.jpg';
@@ -56,6 +57,13 @@ import houdaMenu1 from './assets/houda-menu1.jpg';
 import houdaMenu2 from './assets/houda-menu2.jpg';
 import houdaMenu3 from './assets/houda-menu3.jpg';
 
+import younsLogo from './assets/youns-logo.jpg';
+import younsMenu1 from './assets/youns-menu1.jpg';
+import younsMenu2 from './assets/youns-menu2.jpg';
+
+import elomdaLogo from './assets/elomda-logo.jpg';
+import alwakeelLogo from './assets/alwakeel-logo.jpg';
+
 // بيانات المطاعم والمحلات النموذجية لموقع دليل مغاغة للمطاعم
 export const CATEGORIES = [
   { id: 'all', name: 'الكل', icon: 'fa-store' },
@@ -65,7 +73,9 @@ export const CATEGORIES = [
   { id: 'sweets', name: 'وافل/حلويات', icon: 'fa-ice-cream' },
   { id: 'chicken', name: 'فرايد تشكن /بروست', icon: 'fa-drumstick-bite' },
   { id: 'burger', name: 'سماش برجر', icon: 'fa-burger' },
-  { id: 'koshary', name: 'كشري', icon: 'fa-bowl-food' }
+  { id: 'koshary', name: 'كشري', icon: 'fa-bowl-food' },
+  { id: 'fish', name: 'الأسماك', icon: 'fa-fish' },
+  { id: 'supermarket', name: 'سوبر ماركت', icon: 'fa-cart-shopping' }
 ];
 
 export const RESTAURANTS = [
@@ -80,15 +90,36 @@ export const RESTAURANTS = [
     deliveryFee: 'من 20 لـ 30 جنيه',
     address: 'مغاغة - شارع السلام - امام هارد روك',
     workingHours: {
-      start: '11:00',
+      start: '12:00',
       end: '02:00',
-      display: 'من 11:00 صباحاً إلى 2:00 بعد منتصف الليل'
+      display: 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'
     },
     popularItems: [
       { name: 'كريب نوتيلا بالموز', price: 65, description: 'كريب نوتيلا غني مع الموز الطازج والمكسرات' },
       { name: 'بيتزا تشيكن رانش وسط', price: 110, description: 'بيتزا وسط مغطاة بقطع الدجاج، صوص الرانش اللذيذ، فلفل ألوان، وموزاريلا' }
     ],
     menuImages: [tokyoMenu1, tokyoMenu2, tokyoMenu3, tokyoMenu4, tokyoMenu5]
+  },
+  {
+    id: 23,
+    name: 'اسماك يونس',
+    category: 'fish',
+    logo: younsLogo,
+    description: 'اسماك يونس لجميع المأكولات البحرية الطازجة، صواني فرن، طواجن، وألذ الوجبات في مغاغة.',
+    phones: ['01203504063', '01111475437', '01044280970'],
+    whatsApp: '201113826695',
+    deliveryFee: 'من 20 لـ 30 جنيه',
+    address: 'ش الثورة - امام كشري هند',
+    workingHours: {
+      start: '12:00',
+      end: '02:00',
+      display: 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'
+    },
+    popularItems: [
+      { name: 'كيلو سمك بلطي مشوي', price: 120, description: 'سمك بلطي طازج متبل ومشوي بالردة على اللهب' },
+      { name: 'طاجن فواكه البحر بالكريمة وسط', price: 160, description: 'تشكيلة جمبري، كاليماري، فيليه بخلطة الكريمة والجبنة في الفرن' }
+    ],
+    menuImages: [younsMenu1, younsMenu2]
   },
   {
     id: 22,
@@ -102,8 +133,8 @@ export const RESTAURANTS = [
     address: 'مغاغة - شارع الثورة - بجوار حلا بحليب',
     workingHours: {
       start: '12:00',
-      end: '03:00',
-      display: 'من 12:00 ظهراً إلى 3:00 بعد منتصف الليل'
+      end: '02:00',
+      display: 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'
     },
     popularItems: [
       { name: 'كريب كرانشي سوبريم', price: 75, description: 'كريب مقرمش غني بقطع الفرايد تشكن، البطاطس، الموتزاريلا والصوصات' },
@@ -122,9 +153,9 @@ export const RESTAURANTS = [
     deliveryFee: 'من 20 لـ 30 جنيه',
     address: 'مغاغة - شارع الشعبة (أمام بن الأسمر)',
     workingHours: {
-      start: '11:00',
+      start: '12:00',
       end: '02:00',
-      display: 'من 11:00 صباحاً إلى 2:00 بعد منتصف الليل'
+      display: 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'
     },
     popularItems: [
       { name: 'ساندوتش شاورما دجاج سوبر عربي', price: 80, description: 'شاورما دجاج، تومية، مخلل، خبز صاج مقرمش مع بطاطس فارم فريتس' },
@@ -145,9 +176,9 @@ export const RESTAURANTS = [
     deliveryFee: 'من 20 لـ 30 جنيه',
     address: 'مغاغة - فرع شارع الثورة (أمام أسواق سيف) | فرع شارع المحطة',
     workingHours: {
-      start: '10:00',
+      start: '12:00',
       end: '02:00',
-      display: 'من 10:00 صباحاً إلى 2:00 بعد منتصف الليل'
+      display: 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'
     },
     popularItems: [
       { name: 'علبة كشري هند خصوصي', price: 40, description: 'أرز، مكرونة، عدس، حمص، بصل مقرمش مع الصلصة والتقلية المميزة' },
@@ -189,9 +220,9 @@ export const RESTAURANTS = [
     deliveryFee: 'من 20 لـ 30 جنيه',
     address: 'مغاغة - شارع السلام، ميدان الحمامة',
     workingHours: {
-      start: '11:00',
+      start: '12:00',
       end: '02:00',
-      display: 'من 11:00 صباحاً إلى 2:00 بعد منتصف الليل'
+      display: 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'
     },
     popularItems: [
       { name: 'ماريا شاورما دجاج سبيشال', price: 85, description: 'خبز صاج محشو شاورما دجاج، جبنة موزاريلا، تومية ومخلل مشوي على الجريل' },
@@ -235,8 +266,8 @@ export const RESTAURANTS = [
     address: 'مغاغة - شارع الثورة - أمام مطعم زيزو',
     workingHours: {
       start: '12:00',
-      end: '03:00',
-      display: 'من 12:00 ظهراً إلى 3:00 بعد منتصف الليل'
+      end: '02:00',
+      display: 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'
     },
     popularItems: [
       { name: 'كريب سوبر كرانشي حار', price: 75, description: 'فرايد تشيكن مقرمش، بطاطس، جبن موزاريلا، صوصات مميزة' },
@@ -257,8 +288,8 @@ export const RESTAURANTS = [
     address: 'مغاغة - شارع الثورة، بجوار قصر السلطان',
     workingHours: {
       start: '12:00',
-      end: '02:30',
-      display: 'من 12:00 ظهراً إلى 2:30 بعد منتصف الليل'
+      end: '02:00',
+      display: 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'
     },
     popularItems: [
       { name: 'كريب زنجر سوبريم حار', price: 80, description: 'قطع زنجر الدجاج الحار، جبن موزاريلا، فلفل، زيتون، صوصات' },
@@ -279,8 +310,8 @@ export const RESTAURANTS = [
     address: 'مغاغة - شارع السلام، أمام مدرسة الراهبات',
     workingHours: {
       start: '12:00',
-      end: '02:30',
-      display: 'من 12:00 ظهراً إلى 2:30 بعد منتصف الليل'
+      end: '02:00',
+      display: 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'
     },
     popularItems: [
       { name: 'كريب زنجر سوبر سوبريم', price: 75, description: 'قطع زنجر الدجاج، بطاطس، موزاريلا، كاتشب، مايونيز، زيتون، فلفل' },
@@ -300,9 +331,9 @@ export const RESTAURANTS = [
     deliveryFee: 'من 20 لـ 30 جنيه',
     address: 'مغاغة - شارع السلام - بجوار مسجد السمسطاوي',
     workingHours: {
-      start: '11:00',
-      end: '01:00',
-      display: 'من 11:00 صباحاً إلى 1:00 بعد منتصف الليل'
+      start: '12:00',
+      end: '02:00',
+      display: 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'
     },
     popularItems: [
       { name: 'كيلو كفتة مشوية على الفحم', price: 390, description: 'لحم بلدي متبل على الطريقة الشرقية الأصيلة' },
@@ -323,9 +354,9 @@ export const RESTAURANTS = [
     deliveryFee: 'من 20 لـ 30 جنيه',
     address: 'مغاغة - شارع الثورة - بجوار مسجد السلام',
     workingHours: {
-      start: '11:00',
+      start: '12:00',
       end: '02:00',
-      display: 'من 11:00 صباحاً إلى 2:00 بعد منتصف الليل'
+      display: 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'
     },
     popularItems: [
       { name: 'العرض الأول | لَمّة محبي الفرايد تشيكن', price: 149, description: '2 قطعة فرايد تشيكن + 2 كرسبي استربس + 2 خبز + كاتشب 🔥' },
@@ -346,9 +377,9 @@ export const RESTAURANTS = [
     deliveryFee: 'من 20 لـ 30 جنيه',
     address: 'مغاغة – شارع السلام، أمام مدرسة الصنايع',
     workingHours: {
-      start: '11:30',
-      end: '02:30',
-      display: 'من 11:30 صباحاً إلى 2:30 بعد منتصف الليل'
+      start: '12:00',
+      end: '02:00',
+      display: 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'
     },
     popularItems: [
       { name: 'بوكس الوجبة الفردية (3 قطع)', price: 110, description: '3 قطع دجاج بروست، بطاطس، ثومية، خبز' },
@@ -413,6 +444,53 @@ export const CAPTAINS = [
     isAvailable: true,
     description: 'شاب ملتزم وموثوق، توصيل سريع وأمان كامل لطلباتكم ومأكولاتكم داخل مغاغة وضواحيها 24 ساعة.',
     tripsCount: 235
+  },
+  {
+    id: 'captain_2',
+    name: 'مكتب دليفري لك',
+    avatar: dlevarlkLogo,
+    phone: '01155435543',
+    whatsApp: '201155435543',
+    serviceTypes: ['توصيل طلبات'],
+    isAvailable: true,
+    description: 'مكتب توصيل طلبات فقط، يقدم خدمة سريعة ومتميزة تشمل مدينة مغاغة بالكامل لتوصيل جميع طلباتكم.',
+    tripsCount: 150
+  }
+];
+
+export const SUPERMARKETS = [
+  {
+    id: 'supermarket_1',
+    name: 'هايبر العمدة - El Omda Hypermarket',
+    logo: elomdaLogo,
+    description: 'سلسلة هايبر العمدة توفر جميع السلع الغذائية، المنتجات المنزلية والمستلزمات بأفضل الأسعار وخدمة دليفري لجميع مناطق مغاغة.',
+    phones: ['01224161001', '01288583389', '01040092445'],
+    branches: [
+      'فرع 1: مغاغة العبور - شارع الثورة',
+      'فرع 2: مغاغة - شارع السلام - بجوار مدرسة الراهبات',
+      'فرع 3: مغاغة - منشية المصري بجوار جامع ناصر'
+    ],
+    deliveryFee: 'خدمة توصيل فورية 🚀',
+    workingHours: {
+      start: '08:00',
+      end: '02:00',
+      display: 'من 8:00 صباحاً إلى 2:00 بعد منتصف الليل'
+    }
+  },
+  {
+    id: 'supermarket_2',
+    name: 'الوكيل لتجارة الجملة - Al Wakeel',
+    logo: alwakeelLogo,
+    description: 'محل الوكيل متخصص في بيع السلع الغذائية والبقالة الأساسية بالكامل، يقدم أسعار قطاعي بسعر الجملة لتلبية احتياجاتكم بأقل الأسعار.',
+    phones: ['01015838397', '01010279704'],
+    whatsApp: '201015838397',
+    address: 'مغاغة - شارع الزهور - بجوار شبكة المياه - خلف المطافي',
+    deliveryFee: 'خدمة توصيل طلبات 📦',
+    workingHours: {
+      start: '08:00',
+      end: '02:00',
+      display: 'من 8:00 صباحاً إلى 2:00 بعد منتصف الليل'
+    }
   }
 ];
 
