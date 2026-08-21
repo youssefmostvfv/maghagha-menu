@@ -173,6 +173,41 @@ function App() {
     }
   }, []);
 
+  // History popstate handling for closing drawer on back button
+  useEffect(() => {
+    if (selectedRestaurant) {
+      const hasState = window.history.state && window.history.state.drawerOpen;
+      if (!hasState) {
+        window.history.pushState({ drawerOpen: true }, '');
+      }
+
+      const handlePopState = () => {
+        setSelectedRestaurant(null);
+      };
+
+      window.addEventListener('popstate', handlePopState);
+      return () => {
+        window.removeEventListener('popstate', handlePopState);
+      };
+    } else {
+      if (window.history.state && window.history.state.drawerOpen) {
+        window.history.back();
+      }
+    }
+  }, [selectedRestaurant]);
+
+  // Body Scroll Lock when modal/drawer/lightbox is open
+  useEffect(() => {
+    if (selectedRestaurant || activeMenuImage || phoneSelectorList) {
+      document.body.classList.add('body-scroll-lock');
+    } else {
+      document.body.classList.remove('body-scroll-lock');
+    }
+    return () => {
+      document.body.classList.remove('body-scroll-lock');
+    };
+  }, [selectedRestaurant, activeMenuImage, phoneSelectorList]);
+
   const [showBottomWhatsApp, setShowBottomWhatsApp] = useState(false);
 
   useEffect(() => {

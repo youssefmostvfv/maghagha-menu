@@ -1584,5 +1584,12 @@ body {
   }
 }
 
+/* Prevent body scrolling when drawer or modal is active */
+body.body-scroll-lock {
+  overflow: hidden !important;
+  height: 100vh !important;
+}
+
+
 
 
