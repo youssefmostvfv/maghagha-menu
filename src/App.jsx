@@ -1191,29 +1191,41 @@ function App() {
                     )}
                     <h2 className="restaurant-detail-title">{selectedRestaurant.name}</h2>
                     <p className="restaurant-desc" style={{ WebkitLineClamp: 'unset', marginTop: '4px' }}>{selectedRestaurant.description}</p>
-                    <button 
-                      onClick={() => handleShare(selectedRestaurant.id)} 
-                      className="share-btn-detail"
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        backgroundColor: 'var(--bg-primary)',
-                        border: '1px solid var(--border-color)',
-                        color: 'var(--text-secondary)',
-                        padding: '6px 12px',
-                        borderRadius: 'var(--radius-sm)',
-                        cursor: 'pointer',
-                        fontSize: '11px',
-                        fontWeight: '700',
-                        marginTop: '10px',
-                        width: 'fit-content',
-                        transition: 'all 0.2s ease'
-                      }}
-                    >
-                      <i className="fa-solid fa-share-nodes"></i>
-                      <span>{copySuccess ? 'تم نسخ الرابط! ✓' : 'مشاركة الرابط المباشر'}</span>
-                    </button>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px', flexWrap: 'wrap' }}>
+                      <button 
+                        onClick={() => handleShare(selectedRestaurant.id)} 
+                        className="share-btn-detail"
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          backgroundColor: 'var(--bg-primary)',
+                          border: '1px solid var(--border-color)',
+                          color: 'var(--text-secondary)',
+                          padding: '6px 12px',
+                          borderRadius: 'var(--radius-sm)',
+                          cursor: 'pointer',
+                          fontSize: '11px',
+                          fontWeight: '700',
+                          width: 'fit-content',
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        <i className="fa-solid fa-share-nodes"></i>
+                        <span>{copySuccess ? 'تم نسخ الرابط! ✓' : 'مشاركة الرابط '}</span>
+                      </button>
+
+                      {!isCaptain && (
+                        <div className="promo-badge">
+                          <i className="fa-solid fa-tag promo-icon"></i>
+                          <span>كود الخصم:</span>
+                          <strong>{(() => {
+                            const today = new Date();
+                            return `${today.getMonth() + 1}${today.getDate()}`;
+                          })()}</strong>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
                 <button className="close-btn" onClick={() => setSelectedRestaurant(null)} style={{ alignSelf: 'flex-start' }}>
