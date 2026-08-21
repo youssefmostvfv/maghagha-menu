@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { CATEGORIES, RESTAURANTS as INITIAL_RESTAURANTS, isRestaurantOpen, CAPTAINS as INITIAL_CAPTAINS, SUPERMARKETS as INITIAL_SUPERMARKETS } from './data';
-import logo from './assets/logo.png';
-import logoTow from './assets/logo-tow.png';
+import logo from '../public/assets/logo.webp';
+import logoTow from '../public/assets/logo-tow.webp';
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, get, set } from 'firebase/database';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDeL-wGyed08dGASFBE5-ak_p3vUut_A0g",
-  authDomain: "maghagha-menu.firebaseapp.com",
-  databaseURL: "https://maghagha-menu-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "maghagha-menu",
-  storageBucket: "maghagha-menu.firebasestorage.app",
-  messagingSenderId: "107392502900",
-  appId: "1:107392502900:web:59d4c7c964a3c8d66ed521",
-  measurementId: "G-T7P3QQM8S9"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);
@@ -33,18 +33,16 @@ const resolveImage = (imgName) => {
     return filename;
   }
   
-  if (!filename.includes('.')) {
-    if (filename === 'avatar-men') {
-      filename = `${filename}.avif`;
-    } else {
-      filename = `${filename}.jpg`;
-    }
+  // Strip any old extension and force .webp
+  const dotIndex = filename.lastIndexOf('.');
+  const baseName = dotIndex !== -1 ? filename.substring(0, dotIndex) : filename;
+  
+  let finalExt = 'webp';
+  if (baseName === 'avatar-men') {
+    finalExt = 'webp';
   }
-  try {
-    return new URL(`./assets/${filename}`, import.meta.url).href;
-  } catch (e) {
-    return imgName;
-  }
+  
+  return `/assets/${baseName}.${finalExt}`;
 };
 
 function App() {
@@ -161,9 +159,12 @@ function App() {
     const dbRestaurantsRef = ref(db, 'restaurants');
     get(dbRestaurantsRef)
       .then((snapshot) => {
-        // Automatically merge/overwrite to ensure newly added local restaurants are present in database
-        set(dbRestaurantsRef, INITIAL_RESTAURANTS);
-        setRestaurants(INITIAL_RESTAURANTS);
+        if (snapshot.exists()) {
+          setRestaurants(snapshot.val());
+        } else {
+          set(dbRestaurantsRef, INITIAL_RESTAURANTS);
+          setRestaurants(INITIAL_RESTAURANTS);
+        }
       })
       .catch((err) => {
         console.error('Error loading restaurants:', err);
@@ -174,9 +175,12 @@ function App() {
     const dbCaptainsRef = ref(db, 'captains');
     get(dbCaptainsRef)
       .then((snapshot) => {
-        // Automatically merge/overwrite to ensure newly added local captains are present in database
-        set(dbCaptainsRef, INITIAL_CAPTAINS);
-        setCaptains(INITIAL_CAPTAINS);
+        if (snapshot.exists()) {
+          setCaptains(snapshot.val());
+        } else {
+          set(dbCaptainsRef, INITIAL_CAPTAINS);
+          setCaptains(INITIAL_CAPTAINS);
+        }
       })
       .catch((err) => {
         console.error('Error loading captains:', err);
@@ -187,8 +191,12 @@ function App() {
     const dbSupermarketsRef = ref(db, 'supermarkets');
     get(dbSupermarketsRef)
       .then((snapshot) => {
-        set(dbSupermarketsRef, INITIAL_SUPERMARKETS);
-        setSupermarkets(INITIAL_SUPERMARKETS);
+        if (snapshot.exists()) {
+          setSupermarkets(snapshot.val());
+        } else {
+          set(dbSupermarketsRef, INITIAL_SUPERMARKETS);
+          setSupermarkets(INITIAL_SUPERMARKETS);
+        }
       })
       .catch((err) => {
         console.error('Error loading supermarkets:', err);
