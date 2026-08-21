@@ -82,6 +82,8 @@ function App() {
   const [showAddRestaurantForm, setShowAddRestaurantForm] = useState(false);
   const [showAddCaptainForm, setShowAddCaptainForm] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [showServicesArrow, setShowServicesArrow] = useState(true);
+  const [showCategoriesArrow, setShowCategoriesArrow] = useState(true);
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e) => {
@@ -998,31 +1000,45 @@ function App() {
       </header>
 
       {/* Main Services Switcher */}
-      <div className="main-services-tabs">
-        <button 
-          className={`service-tab ${activeMainTab === 'restaurants' ? 'active' : ''}`}
-          onClick={() => {
-            setActiveMainTab('restaurants');
-            setSearchTerm('');
+      <div className="scroll-indicator-wrapper secondary-bg">
+        <div 
+          className="main-services-tabs"
+          onScroll={(e) => {
+            if (Math.abs(e.target.scrollLeft) > 10) {
+              setShowServicesArrow(false);
+            }
           }}
         >
-          <i className="fa-solid fa-utensils"></i>
-          <span>المطاعم</span>
-        </button>
-        <button 
-          className={`service-tab ${activeMainTab === 'motorcycle' ? 'active' : ''}`}
-          onClick={() => setActiveMainTab('motorcycle')}
-        >
-          <i className="fa-solid fa-motorcycle"></i>
-          <span>موتوسيكل</span>
-        </button>
-        <button 
-          className={`service-tab ${activeMainTab === 'pharmacy' ? 'active' : ''}`}
-          onClick={() => setActiveMainTab('pharmacy')}
-        >
-          <i className="fa-solid fa-mortar-pestle"></i>
-          <span>الصيدليات</span>
-        </button>
+          <button 
+            className={`service-tab ${activeMainTab === 'restaurants' ? 'active' : ''}`}
+            onClick={() => {
+              setActiveMainTab('restaurants');
+              setSearchTerm('');
+            }}
+          >
+            <i className="fa-solid fa-utensils"></i>
+            <span>المطاعم</span>
+          </button>
+          <button 
+            className={`service-tab ${activeMainTab === 'motorcycle' ? 'active' : ''}`}
+            onClick={() => setActiveMainTab('motorcycle')}
+          >
+            <i className="fa-solid fa-motorcycle"></i>
+            <span>موتوسيكل</span>
+          </button>
+          <button 
+            className={`service-tab ${activeMainTab === 'pharmacy' ? 'active' : ''}`}
+            onClick={() => setActiveMainTab('pharmacy')}
+          >
+            <i className="fa-solid fa-mortar-pestle"></i>
+            <span>الصيدليات</span>
+          </button>
+        </div>
+        {showServicesArrow && (
+          <div className="scroll-arrow-indicator">
+            <i className="fa-solid fa-chevron-left"></i>
+          </div>
+        )}
       </div>
 
       {/* Main Area */}
@@ -1082,17 +1098,31 @@ function App() {
         {activeMainTab === 'restaurants' ? (
           <>
             {/* Categories Carousel */}
-            <div className="categories-container">
-              {CATEGORIES.map(category => (
-                <button
-                  key={category.id}
-                  className={`category-chip ${selectedCategory === category.id ? 'active' : ''}`}
-                  onClick={() => setSelectedCategory(category.id)}
-                >
-                  {renderCategoryIcon(category.icon)}
-                  <span>{category.name}</span>
-                </button>
-              ))}
+            <div className="scroll-indicator-wrapper primary-bg">
+              <div 
+                className="categories-container"
+                onScroll={(e) => {
+                  if (Math.abs(e.target.scrollLeft) > 10) {
+                    setShowCategoriesArrow(false);
+                  }
+                }}
+              >
+                {CATEGORIES.map(category => (
+                  <button
+                    key={category.id}
+                    className={`category-chip ${selectedCategory === category.id ? 'active' : ''}`}
+                    onClick={() => setSelectedCategory(category.id)}
+                  >
+                    {renderCategoryIcon(category.icon)}
+                    <span>{category.name}</span>
+                  </button>
+                ))}
+              </div>
+              {showCategoriesArrow && (
+                <div className="scroll-arrow-indicator">
+                  <i className="fa-solid fa-chevron-left"></i>
+                </div>
+              )}
             </div>
 
             {/* Restaurants List */}

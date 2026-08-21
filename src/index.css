@@ -1665,6 +1665,61 @@ body.body-scroll-lock {
   }
 }
 
+@media (max-width: 768px) {
+  .main-services-tabs {
+    justify-content: flex-start !important;
+    overflow-x: auto;
+    scrollbar-width: none; /* Hide scrollbar Firefox */
+  }
+  .main-services-tabs::-webkit-scrollbar {
+    display: none; /* Hide scrollbar Webkit */
+  }
+}
+
+/* Scroll Arrow Indicator Styles */
+.scroll-indicator-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.scroll-arrow-indicator {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 16px;
+  z-index: 10;
+  pointer-events: none;
+  animation: pulseArrow 1.6s infinite ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes pulseArrow {
+  0% {
+    transform: translateY(-50%) translateX(0);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translateY(-50%) translateX(-6px);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-50%) translateX(0);
+    opacity: 0.2;
+  }
+}
+
+/* Hide helper on desktop screens */
+@media (min-width: 769px) {
+  .scroll-arrow-indicator {
+    display: none;
+  }
+}
+
+
 
 
 
