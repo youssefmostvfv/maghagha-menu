@@ -1346,7 +1346,7 @@ function App() {
                   <p className="captain-desc">{market.description}</p>
                   
                   <div className="captain-services">
-                    <span className="captain-service-badge">🏬 3 فروع في مغاغة</span>
+                    {market.branches && <span className="captain-service-badge">🏬 {market.branches.length} فروع في مغاغة</span>}
                     <span className="captain-service-badge">🛵 خدمة دليفري</span>
                   </div>
                 </div>
@@ -1687,7 +1687,7 @@ function App() {
             ) : (
               selectedRestaurant.popularItems && (
                 <div>
-                  <h3 className="drawer-section-title">الوجبات الأكثر مبيعاً والأسعار</h3>
+                  <h3 className="drawer-section-title">{isSupermarket ? 'المنتجات والأنواع المتاحة' : 'الوجبات الأكثر مبيعاً والأسعار'}</h3>
                   <div className="popular-menu-list">
                     {selectedRestaurant.popularItems.map((item, idx) => (
                       <div key={idx} className="popular-menu-item">
@@ -1695,7 +1695,9 @@ function App() {
                           <span className="popular-item-name">{item.name}</span>
                           <span className="popular-item-desc">{item.description}</span>
                         </div>
-                        <span className="popular-item-price">{item.price} ج.م</span>
+                        <span className="popular-item-price">
+                          {typeof item.price === 'number' ? `${item.price} ج.م` : item.price}
+                        </span>
                       </div>
                     ))}
                   </div>

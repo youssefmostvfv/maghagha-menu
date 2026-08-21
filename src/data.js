@@ -64,6 +64,13 @@ import younsMenu2 from './assets/youns-menu2.jpg';
 import elomdaLogo from './assets/elomda-logo.jpg';
 import alwakeelLogo from './assets/alwakeel-logo.jpg';
 
+import begebnaLogo from './assets/begebna-logo.webp';
+import begebnaMenu1 from './assets/begebna-menu1.webp';
+import begebnaMenu2 from './assets/begebna-menu2.webp';
+
+import halabhaleebLogo from './assets/halabhaleeb-logo.jpg';
+import halabhaleebMenu1 from './assets/halabhaleeb-menu1.jpg';
+
 // بيانات المطاعم والمحلات النموذجية لموقع دليل مغاغة للمطاعم
 export const CATEGORIES = [
   { id: 'all', name: 'الكل', icon: 'fa-store' },
@@ -74,8 +81,7 @@ export const CATEGORIES = [
   { id: 'chicken', name: 'فرايد تشكن /بروست', icon: 'fa-drumstick-bite' },
   { id: 'burger', name: 'سماش برجر', icon: 'fa-burger' },
   { id: 'koshary', name: 'كشري', icon: 'fa-bowl-food' },
-  { id: 'fish', name: 'الأسماك', icon: 'fa-fish' },
-  { id: 'supermarket', name: 'سوبر ماركت', icon: 'fa-cart-shopping' }
+  { id: 'fish', name: 'الأسماك', icon: 'fa-fish' }
 ];
 
 export const RESTAURANTS = [
@@ -225,6 +231,7 @@ export const RESTAURANTS = [
       display: 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'
     },
     popularItems: [
+      { name: '🎁 عرض عروس الشام الخاص', price: 'حسب الاختيار', description: 'اشتري 2 كريب من اختيارك وخد عليهم ساندوتش شاورما كبير هدية مجاناً! 🔥' },
       { name: 'ماريا شاورما دجاج سبيشال', price: 85, description: 'خبز صاج محشو شاورما دجاج، جبنة موزاريلا، تومية ومخلل مشوي على الجريل' },
       { name: 'فتة شاورما مشكل (دبل)', price: 110, description: 'أرز بسمتي مبهر، شاورما لحم ودجاج، خبز مقرمش وصوص تومية مميز' },
       { name: 'وجبة عربي سوبر دجاج', price: 95, description: 'قطع رول شاورما مقطعة تقدم مع بطاطس فارم فريتس، تومية، مخلل وكول سلو' }
@@ -431,6 +438,27 @@ export const RESTAURANTS = [
       { name: 'عصير كوكتيل كوكب السعادة', price: 40, description: 'طبقات من المانجو والفراولة والجوافة مع قطع الفواكه الطازجة' }
     ],
     menuImages: [kokapMenu1]
+  },
+  {
+    id: 24,
+    name: 'حلا بحليب - Hala B.Haleeb',
+    category: 'sweets',
+    logo: halabhaleebLogo,
+    description: 'حلا بحليب لألذ وأطيب الحلويات الشرقية والغربية، الوافل، الآيس كريم، وعصائر منعشة بأعلى جودة في مغاغة.',
+    phones: ['01040853091', '01228838016'],
+    whatsApp: '',
+    deliveryFee: 'من 20 لـ 30 جنيه',
+    address: 'مغاغة - ش الثورة بجوار حلو الشام',
+    workingHours: {
+      start: '12:00',
+      end: '02:00',
+      display: 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'
+    },
+    popularItems: [
+      { name: 'طبق حلا بحليب المشكل', price: 65, description: 'أرز بلبن غني مع قشطة، مكسرات، عسل وفواكه طازجة' },
+      { name: 'وافل نوتيلا دبل', price: 50, description: 'وافل مقرمش مغطى بطبقة غنية من الشوكولاتة النوتيلا والمكسرات' }
+    ],
+    menuImages: [halabhaleebMenu1]
   }
 ];
 
@@ -491,6 +519,30 @@ export const SUPERMARKETS = [
       end: '02:00',
       display: 'من 8:00 صباحاً إلى 2:00 بعد منتصف الليل'
     }
+  },
+  {
+    id: 'supermarket_3',
+    name: 'بـ جبنة - BeGebna',
+    logo: begebnaLogo,
+    description: 'محل بـ جبنة لجميع أنواع الأجبان، البقالة، والمنتجات الطبيعية 100%. جميع أنواع المربات الطبيعية متاحة بجميع الأطعام المميزة في مغاغة.',
+    phones: ['01156115709', '01038860273'],
+    whatsApp: '201156115709',
+    address: 'مغاغة - شارع الثورة - خلف أسواق سيف',
+    deliveryFee: 'خدمة توصيل طلبات 📦',
+    workingHours: {
+      start: '08:00',
+      end: '02:00',
+      display: 'من 8:00 صباحاً إلى 2:00 بعد منتصف الليل'
+    },
+    popularItems: [
+      { name: 'مربى توت طبيعي 100%', price: 'حسب الحجم', description: 'مربى توت طبيعي طازجة وبدون مواد حافظة 💛👌🏻' },
+      { name: 'مربى فراولة طبيعي 100%', price: 'حسب الحجم', description: 'مربى فراولة طازجة طبيعية 100% 💛👌🏻' },
+      { name: 'مربى مانجو طبيعي 100%', price: 'حسب الحجم', description: 'مربى مانجو طبيعية بطعم غني 💛👌🏻' },
+      { name: 'مربى كيوي طبيعي 100%', price: 'حسب الحجم', description: 'مربى كيوي طبيعي 100% 💛👌🏻' },
+      { name: 'مربى تين طبيعي 100%', price: 'حسب الحجم', description: 'مربى تين طبيعي طازجة وبدون مواد حافظة 💛👌🏻' },
+      { name: 'مربى مشمش طبيعي 100%', price: 'حسب الحجم', description: 'مربى مشمش طبيعية 100% 💛👌🏻' }
+    ],
+    menuImages: [begebnaMenu2, begebnaMenu1]
   }
 ];
 
