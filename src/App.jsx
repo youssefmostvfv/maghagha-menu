@@ -81,6 +81,26 @@ function App() {
   const [editingCaptain, setEditingCaptain] = useState(null);
   const [showAddRestaurantForm, setShowAddRestaurantForm] = useState(false);
   const [showAddCaptainForm, setShowAddCaptainForm] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleInstallApp = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`User response to PWA install: ${outcome}`);
+    setDeferredPrompt(null);
+  };
 
   useEffect(() => {
     // Load local ratings made by the user
@@ -955,14 +975,26 @@ function App() {
       {/* Header */}
       <header className="app-header">
         <h1 className="brand-title"><img src={logo} alt="Logo" className="brand-logo-img" /> منيو مغاغة</h1>
-        <button 
-          className="theme-toggle-btn" 
-          onClick={toggleTheme} 
-          aria-label="Toggle Theme"
-          title="تغيير المظهر"
-        >
-          {theme === 'light' ? <i className="fa-solid fa-moon"></i> : <i className="fa-solid fa-sun"></i>}
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {deferredPrompt && (
+            <button 
+              className="install-app-btn" 
+              onClick={handleInstallApp}
+              title="تثبيت التطبيق على الشاشة"
+            >
+              <i className="fa-solid fa-mobile-screen-button"></i>
+              <span>تثبيت التطبيق</span>
+            </button>
+          )}
+          <button 
+            className="theme-toggle-btn" 
+            onClick={toggleTheme} 
+            aria-label="Toggle Theme"
+            title="تغيير المظهر"
+          >
+            {theme === 'light' ? <i className="fa-solid fa-moon"></i> : <i className="fa-solid fa-sun"></i>}
+          </button>
+        </div>
       </header>
 
       {/* Main Services Switcher */}

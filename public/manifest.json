@@ -1,0 +1,22 @@
+{
+  "name": "منيو مغاغة الشامل",
+  "short_name": "منيو مغاغة",
+  "description": "دليلك الشامل لجميع خدمات ومطاعم مغاغة في جيبك 🍔",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f6f8fa",
+  "theme_color": "#006bf6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
