@@ -84,6 +84,27 @@ function App() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showServicesArrow, setShowServicesArrow] = useState(true);
   const [showCategoriesArrow, setShowCategoriesArrow] = useState(true);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const handleNextImage = () => {
+    if (selectedRestaurant && selectedRestaurant.menuImages && currentImageIndex < selectedRestaurant.menuImages.length - 1) {
+      const nextIdx = currentImageIndex + 1;
+      setCurrentImageIndex(nextIdx);
+      setActiveMenuImage(resolveImage(selectedRestaurant.menuImages[nextIdx]));
+      setZoomScale(1);
+      setPanOffset({ x: 0, y: 0 });
+    }
+  };
+
+  const handlePrevImage = () => {
+    if (selectedRestaurant && selectedRestaurant.menuImages && currentImageIndex > 0) {
+      const prevIdx = currentImageIndex - 1;
+      setCurrentImageIndex(prevIdx);
+      setActiveMenuImage(resolveImage(selectedRestaurant.menuImages[prevIdx]));
+      setZoomScale(1);
+      setPanOffset({ x: 0, y: 0 });
+    }
+  };
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e) => {
@@ -1514,7 +1535,9 @@ function App() {
                       className="menu-thumbnail-wrapper"
                       onClick={() => {
                         setActiveMenuImage(resolveImage(img));
+                        setCurrentImageIndex(idx);
                         setZoomScale(1);
+                        setPanOffset({ x: 0, y: 0 });
                       }}
                     >
                       <img src={resolveImage(img)} alt={`منيو صفحة ${idx + 1}`} className="menu-thumbnail" />
@@ -1600,10 +1623,6 @@ function App() {
       {/* Lightbox / Image Viewer */}
       {activeMenuImage && (
         <div className="lightbox-overlay" onClick={() => setActiveMenuImage(null)}>
-          <button className="lightbox-close" onClick={() => setActiveMenuImage(null)}>
-            <i className="fa-solid fa-xmark" style={{ fontSize: '20px' }}></i>
-          </button>
-          
           <div 
             className="lightbox-image-container" 
             onClick={(e) => e.stopPropagation()}
@@ -1632,25 +1651,45 @@ function App() {
                 transform: `translate(${panOffset.x}px, ${panOffset.y}px) scale(${zoomScale})`,
                 transition: isDragging ? 'none' : 'transform 0.1s ease-out',
                 userSelect: 'none',
-                pointerEvents: 'none'
+                pointerEvents: zoomScale > 1 ? 'auto' : 'none'
               }}
             />
           </div>
 
-          <div className="lightbox-controls" onClick={(e) => e.stopPropagation()}>
-            <button className="lightbox-control-btn" onClick={handleZoomIn}>
-              <i className="fa-solid fa-magnifying-glass-plus"></i>
-              <span>تكبير</span>
-            </button>
-            <button className="lightbox-control-btn" onClick={handleZoomOut}>
-              <i className="fa-solid fa-magnifying-glass-minus"></i>
-              <span>تصغير</span>
-            </button>
-            <button className="lightbox-control-btn" onClick={handleZoomReset}>
-              <i className="fa-solid fa-rotate-left"></i>
-              <span>إعادة ضبط</span>
-            </button>
-          </div>
+          {zoomScale <= 1 && (
+            <>
+              <button className="lightbox-close" onClick={() => setActiveMenuImage(null)}>
+                <i className="fa-solid fa-xmark" style={{ fontSize: '20px' }}></i>
+              </button>
+
+              <div className="lightbox-controls" onClick={(e) => e.stopPropagation()}>
+                {selectedRestaurant && selectedRestaurant.menuImages && selectedRestaurant.menuImages.length > 1 && currentImageIndex > 0 && (
+                  <button className="lightbox-control-btn" onClick={handlePrevImage} title="الصورة السابقة">
+                    <i className="fa-solid fa-chevron-right"></i>
+                    <span>السابق</span>
+                  </button>
+                )}
+                <button className="lightbox-control-btn" onClick={handleZoomIn}>
+                  <i className="fa-solid fa-magnifying-glass-plus"></i>
+                  <span>تكبير</span>
+                </button>
+                <button className="lightbox-control-btn" onClick={handleZoomOut}>
+                  <i className="fa-solid fa-magnifying-glass-minus"></i>
+                  <span>تصغير</span>
+                </button>
+                <button className="lightbox-control-btn" onClick={handleZoomReset}>
+                  <i className="fa-solid fa-rotate-left"></i>
+                  <span>إعادة ضبط</span>
+                </button>
+                {selectedRestaurant && selectedRestaurant.menuImages && selectedRestaurant.menuImages.length > 1 && currentImageIndex < selectedRestaurant.menuImages.length - 1 && (
+                  <button className="lightbox-control-btn" onClick={handleNextImage} title="الصورة التالية">
+                    <span>التالي</span>
+                    <i className="fa-solid fa-chevron-left"></i>
+                  </button>
+                )}
+              </div>
+            </>
+          )}
         </div>
       )}
 

@@ -44,6 +44,13 @@ import gedoMenu1 from './assets/gedo-menu1.jpg';
 import gedoMenu2 from './assets/gedo-menu2.jpg';
 import avatarMen from './assets/avatar-men.avif';
 
+import tokyoLogo from './assets/tokyo-logo.jpg';
+import tokyoMenu1 from './assets/tokyo-menu1.jpg';
+import tokyoMenu2 from './assets/tokyo-menu2.jpg';
+import tokyoMenu3 from './assets/tokyo-menu3.jpg';
+import tokyoMenu4 from './assets/tokyo-menu4.jpg';
+import tokyoMenu5 from './assets/tokyo-menu5.jpg';
+
 // بيانات المطاعم والمحلات النموذجية لموقع دليل مغاغة للمطاعم
 export const CATEGORIES = [
   { id: 'all', name: 'الكل', icon: 'fa-store' },
@@ -57,6 +64,27 @@ export const CATEGORIES = [
 ];
 
 export const RESTAURANTS = [
+  {
+    id: 21,
+    name: 'مطعم توكيو - Tokyo',
+    category: 'crepe',
+    logo: tokyoLogo,
+    description: 'مطعم توكيو لجميع أنواع الكريب الإيطالي المميز والبيتزا الغنية بأجود المكونات في مغاغة.',
+    phones: ['01221104263'],
+    whatsApp: '',
+    deliveryFee: 'من 20 لـ 30 جنيه',
+    address: 'مغاغة - شارع السلام - امام هارد روك',
+    workingHours: {
+      start: '11:00',
+      end: '02:00',
+      display: 'من 11:00 صباحاً إلى 2:00 بعد منتصف الليل'
+    },
+    popularItems: [
+      { name: 'كريب نوتيلا بالموز', price: 65, description: 'كريب نوتيلا غني مع الموز الطازج والمكسرات' },
+      { name: 'بيتزا تشيكن رانش وسط', price: 110, description: 'بيتزا وسط مغطاة بقطع الدجاج، صوص الرانش اللذيذ، فلفل ألوان، وموزاريلا' }
+    ],
+    menuImages: [tokyoMenu1, tokyoMenu2, tokyoMenu3, tokyoMenu4, tokyoMenu5]
+  },
   {
     id: 20,
     name: 'جدو الشام - Gedo Elsham',

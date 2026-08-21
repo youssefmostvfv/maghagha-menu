@@ -567,6 +567,7 @@ body {
   justify-content: center;
   align-items: center;
   animation: fadeIn 0.2s;
+  touch-action: none; /* Block page-level pinch zoom to keep elements fixed */
 }
 
 .lightbox-close {
