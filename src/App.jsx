@@ -1251,57 +1251,32 @@ function App() {
                   {expandedCallsRestaurantId === item.id && (
                     <tr>
                       <td colSpan={6} style={{ padding: '16px 20px', background: 'var(--bg-tertiary)', borderBottom: '1px solid var(--border-color)' }}>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                          {/* Daily Summary */}
-                          <div>
-                            <h4 style={{ margin: '0 0 8px 0', fontSize: '13.5px', color: 'var(--text-primary)' }}>📊 ملخص الاتصالات اليومي:</h4>
-                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                              {Object.keys(item.daily).length > 0 ? (
-                                Object.entries(item.daily).sort(([a], [b]) => b.localeCompare(a)).map(([date, count]) => {
-                                  const times = Object.values(item.logs)
-                                    .filter(ts => typeof ts === 'string' && ts.startsWith(date))
-                                    .map(ts => ts.split(' ')[1])
-                                    .map(timeStr => timeStr ? timeStr.substring(0, 5) : '')
-                                    .filter(Boolean)
-                                    .sort((t1, t2) => t2.localeCompare(t1))
-                                    .map(formatTo12Hour);
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          <h4 style={{ margin: '0 0 4px 0', fontSize: '13.5px', color: 'var(--text-primary)' }}>📊 سجل الاتصالات اليومي بالأوقات:</h4>
+                          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                            {Object.keys(item.daily).length > 0 ? (
+                              Object.entries(item.daily).sort(([a], [b]) => b.localeCompare(a)).map(([date, count]) => {
+                                const times = Object.values(item.logs)
+                                  .filter(ts => typeof ts === 'string' && ts.startsWith(date))
+                                  .map(ts => ts.split(' ')[1])
+                                  .map(timeStr => timeStr ? timeStr.substring(0, 5) : '')
+                                  .filter(Boolean)
+                                  .sort((t1, t2) => t2.localeCompare(t1))
+                                  .map(formatTo12Hour);
 
-                                  const timesStr = times.length > 0 ? ` (${times.join(', ')})` : '';
+                                const displayContent = times.length > 0 
+                                  ? times.join(' ، ') 
+                                  : `${count} اتصال`;
 
-                                  return (
-                                    <span key={date} style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', padding: '6px 12px', borderRadius: 'var(--radius-sm)', fontSize: '12.5px' }}>
-                                      🗓️ <strong>{date}:</strong> {count} اتصال{timesStr}
-                                    </span>
-                                  );
-                                })
-                              ) : (
-                                <span style={{ color: 'var(--text-muted)', fontSize: '12.5px' }}>لا يوجد سجل يومي بعد.</span>
-                              )}
-                            </div>
-                          </div>
-                          
-                          {/* Exact Log Times */}
-                          <div>
-                            <h4 style={{ margin: '0 0 8px 0', fontSize: '13.5px', color: 'var(--text-primary)' }}>🕒 أوقات وتواريخ الاتصالات بالتفصيل (الأحدث أولاً):</h4>
-                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', maxHeight: '180px', overflowY: 'auto', padding: '4px' }}>
-                              {Object.keys(item.logs).length > 0 ? (
-                                Object.entries(item.logs).sort(([a], [b]) => b.localeCompare(a)).map(([logId, timestamp]) => {
-                                  if (typeof timestamp !== 'string') return null;
-                                  const parts = timestamp.split(' ');
-                                  const datePart = parts[0];
-                                  const timePart = parts[1] ? parts[1].substring(0, 5) : '';
-                                  const formattedTime = formatTo12Hour(timePart);
-                                  const displayStr = `${datePart} ${formattedTime}`;
-                                  return (
-                                    <span key={logId} style={{ background: 'var(--accent-light)', border: '1px solid var(--border-color)', color: 'var(--accent-color)', padding: '6px 12px', borderRadius: 'var(--radius-sm)', fontSize: '12px', fontWeight: 'bold' }}>
-                                      📞 {displayStr}
-                                    </span>
-                                  );
-                                })
-                              ) : (
-                                <span style={{ color: 'var(--text-muted)', fontSize: '12.5px' }}>لا توجد تفاصيل مكالمات مسجلة بالوقت والتاريخ بعد.</span>
-                              )}
-                            </div>
+                                return (
+                                  <span key={date} style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', padding: '6px 12px', borderRadius: 'var(--radius-sm)', fontSize: '12.5px' }}>
+                                    🗓️ <strong>{date}:</strong> {displayContent}
+                                  </span>
+                                );
+                              })
+                            ) : (
+                              <span style={{ color: 'var(--text-muted)', fontSize: '12.5px' }}>لا توجد اتصالات مسجلة بعد.</span>
+                            )}
                           </div>
                         </div>
                       </td>
