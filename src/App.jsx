@@ -29,13 +29,26 @@ const resolveImage = (imgName) => {
     filename = filename.substring(filename.lastIndexOf('/') + 1);
   }
 
-  if (filename.startsWith('http') || filename.startsWith('data:') || filename.startsWith('/') || filename.startsWith('blob:')) {
+  if (filename.startsWith('http') || filename.startsWith('data:') || filename.startsWith('blob:')) {
     return filename;
   }
   
+  // Strip any leading '/assets/', 'assets/', or '/'
+  let cleanName = filename;
+  if (cleanName.startsWith('/assets/')) {
+    cleanName = cleanName.substring(8);
+  } else if (cleanName.startsWith('assets/')) {
+    cleanName = cleanName.substring(7);
+  } else if (cleanName.startsWith('/')) {
+    cleanName = cleanName.substring(1);
+  }
+  
+  // Strip Vite production build hashes (e.g., -D_mkwAT5)
+  cleanName = cleanName.replace(/-[a-zA-Z0-9_-]{8}(\.[a-zA-Z0-9]+)?$/, '$1');
+  
   // Strip any old extension and force .webp
-  const dotIndex = filename.lastIndexOf('.');
-  const baseName = dotIndex !== -1 ? filename.substring(0, dotIndex) : filename;
+  const dotIndex = cleanName.lastIndexOf('.');
+  const baseName = dotIndex !== -1 ? cleanName.substring(0, dotIndex) : cleanName;
   
   let finalExt = 'webp';
   if (baseName === 'avatar-men') {
@@ -65,9 +78,9 @@ function App() {
   const [activeMainTab, setActiveMainTab] = useState('restaurants');
   const [copySuccess, setCopySuccess] = useState(false);
   const [selectedCaptainService, setSelectedCaptainService] = useState('all');
-  const [restaurants, setRestaurants] = useState([]);
-  const [captains, setCaptains] = useState([]);
-  const [supermarkets, setSupermarkets] = useState([]);
+  const [restaurants, setRestaurants] = useState(INITIAL_RESTAURANTS);
+  const [captains, setCaptains] = useState(INITIAL_CAPTAINS);
+  const [supermarkets, setSupermarkets] = useState(INITIAL_SUPERMARKETS);
   
   const [isAdminPage, setIsAdminPage] = useState(false);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
@@ -155,12 +168,25 @@ function App() {
       })
       .catch((err) => console.error('Error loading trips counts:', err));
 
+    // Helper to normalize snapshot to array
+    const normalizeData = (data) => {
+      if (!data) return [];
+      return Array.isArray(data) ? data.filter(Boolean) : Object.values(data).filter(Boolean);
+    };
+
     // Fetch and seed Restaurants
     const dbRestaurantsRef = ref(db, 'restaurants');
     get(dbRestaurantsRef)
       .then((snapshot) => {
         if (snapshot.exists()) {
-          setRestaurants(snapshot.val());
+          const fetched = normalizeData(snapshot.val());
+          const existingIds = new Set(fetched.map(item => String(item.id)));
+          const missing = INITIAL_RESTAURANTS.filter(item => !existingIds.has(String(item.id)));
+          const merged = [...fetched, ...missing];
+          setRestaurants(merged);
+          if (missing.length > 0) {
+            set(dbRestaurantsRef, merged);
+          }
         } else {
           set(dbRestaurantsRef, INITIAL_RESTAURANTS);
           setRestaurants(INITIAL_RESTAURANTS);
@@ -176,7 +202,14 @@ function App() {
     get(dbCaptainsRef)
       .then((snapshot) => {
         if (snapshot.exists()) {
-          setCaptains(snapshot.val());
+          const fetched = normalizeData(snapshot.val());
+          const existingIds = new Set(fetched.map(item => String(item.id)));
+          const missing = INITIAL_CAPTAINS.filter(item => !existingIds.has(String(item.id)));
+          const merged = [...fetched, ...missing];
+          setCaptains(merged);
+          if (missing.length > 0) {
+            set(dbCaptainsRef, merged);
+          }
         } else {
           set(dbCaptainsRef, INITIAL_CAPTAINS);
           setCaptains(INITIAL_CAPTAINS);
@@ -192,7 +225,14 @@ function App() {
     get(dbSupermarketsRef)
       .then((snapshot) => {
         if (snapshot.exists()) {
-          setSupermarkets(snapshot.val());
+          const fetched = normalizeData(snapshot.val());
+          const existingIds = new Set(fetched.map(item => String(item.id)));
+          const missing = INITIAL_SUPERMARKETS.filter(item => !existingIds.has(String(item.id)));
+          const merged = [...fetched, ...missing];
+          setSupermarkets(merged);
+          if (missing.length > 0) {
+            set(dbSupermarketsRef, merged);
+          }
         } else {
           set(dbSupermarketsRef, INITIAL_SUPERMARKETS);
           setSupermarkets(INITIAL_SUPERMARKETS);
@@ -1075,6 +1115,13 @@ function App() {
             <span>سوبر ماركت</span>
           </button>
           <button 
+            className={`service-tab ${activeMainTab === 'motorcycle' ? 'active' : ''}`}
+            onClick={() => setActiveMainTab('motorcycle')}
+          >
+            <i className="fa-solid fa-motorcycle"></i>
+            <span>موتوسيكل</span>
+          </button>
+          <button 
             className={`service-tab ${activeMainTab === 'doctors' ? 'active' : ''}`}
             onClick={() => setActiveMainTab('doctors')}
           >
@@ -1087,13 +1134,6 @@ function App() {
           >
             <i className="fa-solid fa-mortar-pestle"></i>
             <span>الصيدليات</span>
-          </button>
-          <button 
-            className={`service-tab ${activeMainTab === 'motorcycle' ? 'active' : ''}`}
-            onClick={() => setActiveMainTab('motorcycle')}
-          >
-            <i className="fa-solid fa-motorcycle"></i>
-            <span>موتوسيكل</span>
           </button>
         </div>
         {showServicesArrow && (
