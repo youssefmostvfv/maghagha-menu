@@ -899,3 +899,42 @@ export function isRestaurantOpen(workingHours) {
     return true;
   }
 }
+
+export function getPromoCode(restaurant) {
+  if (!restaurant) return '';
+  if (restaurant.promoCode) return restaurant.promoCode;
+
+  const today = new Date();
+  const dateStr = `${today.getMonth() + 1}${today.getDate()}`;
+
+  const singleLetterMap = {
+    '21': 'T',   // مطعم توكيو -> T-822
+    '23': 'Y',   // اسماك يونس -> Y-822
+    '24': 'K',   // كوكو دريم -> K-822
+    '22': 'S',   // سيزلر -> S-822
+    '1': 'H',    // هدير -> H-822
+    '2': 'B',    // الشبراوي -> B-822
+    '3': 'F',    // أصل الفول -> F-822
+    '4': 'Z',    // بازوكا -> Z-822
+    '5': 'C',    // كاستيلو -> C-822
+    '6': 'N',    // السلطان -> N-822
+    '7': 'A',    // الأكيل -> A-822
+    '8': 'P',    // البرنس -> P-822
+    '9': 'Q',    // كتاكيت -> Q-822
+    '10': 'R'    // روستو -> R-822
+  };
+
+  let letter = singleLetterMap[String(restaurant.id)];
+
+  if (!letter) {
+    const englishMatch = restaurant.name.match(/[a-zA-Z]/);
+    if (englishMatch) {
+      letter = englishMatch[0].toUpperCase();
+    } else {
+      const cleanName = restaurant.name.replace(/مطعم|أسماك|كريب|بيتزا|ساندوتشات|حلواني/g, '').trim();
+      letter = cleanName[0] ? cleanName[0].toUpperCase() : 'M';
+    }
+  }
+
+  return `${letter}-${dateStr}`;
+}

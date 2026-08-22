@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CATEGORIES, RESTAURANTS as INITIAL_RESTAURANTS, isRestaurantOpen, CAPTAINS as INITIAL_CAPTAINS, SUPERMARKETS as INITIAL_SUPERMARKETS, INITIAL_JOB_SEEKERS, INITIAL_JOB_VACANCIES, DOCTOR_CATEGORIES, INITIAL_DOCTORS } from './data';
+import { CATEGORIES, RESTAURANTS as INITIAL_RESTAURANTS, isRestaurantOpen, getPromoCode, CAPTAINS as INITIAL_CAPTAINS, SUPERMARKETS as INITIAL_SUPERMARKETS, INITIAL_JOB_SEEKERS, INITIAL_JOB_VACANCIES, DOCTOR_CATEGORIES, INITIAL_DOCTORS } from './data';
 import logo from '../public/assets/logo.webp';
 import logoTow from '../public/assets/logo-tow.webp';
 import { initializeApp } from 'firebase/app';
@@ -1992,10 +1992,7 @@ function App() {
                         <div className="promo-badge">
                           <i className="fa-solid fa-tag promo-icon"></i>
                           <span>كود الخصم:</span>
-                          <strong>{(() => {
-                            const today = new Date();
-                            return `${today.getMonth() + 1}${today.getDate()}`;
-                          })()}</strong>
+                          <strong>{getPromoCode(selectedRestaurant)}</strong>
                         </div>
                       )}
                     </div>
@@ -2435,7 +2432,14 @@ function App() {
       {/* Floating Bottom WhatsApp Button */}
       <div className={`floating-whatsapp-bottom ${showBottomWhatsApp ? 'show' : ''}`}>
         <a 
-          href={`https://wa.me/201062049652?text=${encodeURIComponent("عاوز اضيف بياناتي في الموقع")}`}
+          href={`https://wa.me/201062049652?text=${encodeURIComponent(
+            activeMainTab === 'restaurants' ? "أهلاً، أريد إضافة بيانات المطعم أو المنيو الخاص بي في دليل مغاغة 🍔" :
+            activeMainTab === 'supermarket' ? "أهلاً، أريد إضافة بيانات وعروض المحل / السوبر ماركت الخاص بي في دليل مغاغة 🛒" :
+            activeMainTab === 'jobs' ? "أهلاً، أريد إضافة فرصة عمل / الإعلان عن وظيفة شاغرة في دليل مغاغة 💼" :
+            activeMainTab === 'doctors' ? "أهلاً، أريد إضافة بيانات عيادتي / معملي في قسم الأطباء بدليل مغاغة 👨‍⚕️" :
+            activeMainTab === 'motorcycle' ? "أهلاً، أريد الانضمام والتسجيل ككابتن توصيل في دليل مغاغة 🏍️" :
+            "أهلاً، أريد إضافة بياناتي في موقع دليل مغاغة 📱✨"
+          )}`}
           target="_blank" 
           rel="noopener noreferrer" 
           className="bottom-whatsapp-btn"
