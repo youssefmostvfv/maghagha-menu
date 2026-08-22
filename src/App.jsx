@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CATEGORIES, RESTAURANTS as INITIAL_RESTAURANTS, isRestaurantOpen, CAPTAINS as INITIAL_CAPTAINS, SUPERMARKETS as INITIAL_SUPERMARKETS, INITIAL_JOB_SEEKERS, INITIAL_JOB_VACANCIES } from './data';
+import { CATEGORIES, RESTAURANTS as INITIAL_RESTAURANTS, isRestaurantOpen, CAPTAINS as INITIAL_CAPTAINS, SUPERMARKETS as INITIAL_SUPERMARKETS, INITIAL_JOB_SEEKERS, INITIAL_JOB_VACANCIES, DOCTOR_CATEGORIES, INITIAL_DOCTORS } from './data';
 import logo from '../public/assets/logo.webp';
 import logoTow from '../public/assets/logo-tow.webp';
 import { initializeApp } from 'firebase/app';
@@ -84,6 +84,8 @@ function App() {
   const [jobSeekers, setJobSeekers] = useState(INITIAL_JOB_SEEKERS);
   const [jobVacancies, setJobVacancies] = useState(INITIAL_JOB_VACANCIES);
   const [activeJobSubTab, setActiveJobSubTab] = useState('seekers'); // 'seekers' | 'vacancies'
+  const [selectedDoctorCategory, setSelectedDoctorCategory] = useState('surgery_urology');
+  const [doctors, setDoctors] = useState(INITIAL_DOCTORS);
   
   const [isAdminPage, setIsAdminPage] = useState(false);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
@@ -102,6 +104,7 @@ function App() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showQrModal, setShowQrModal] = useState(false);
   const [qrShareCopied, setQrShareCopied] = useState(false);
+  const [phoneModalData, setPhoneModalData] = useState(null);
 
   const handleShareQr = async () => {
     const shareData = {
@@ -277,6 +280,11 @@ function App() {
     const dbJobVacanciesRef = ref(db, 'job_vacancies');
     set(dbJobVacanciesRef, INITIAL_JOB_VACANCIES);
     setJobVacancies(INITIAL_JOB_VACANCIES);
+
+    // Fetch and seed Doctors
+    const dbDoctorsRef = ref(db, 'doctors');
+    set(dbDoctorsRef, INITIAL_DOCTORS);
+    setDoctors(INITIAL_DOCTORS);
 
     // Parse Deep Link URL ID and page parameter on mount (using seed data for instant synchronous matching)
     const params = new URLSearchParams(window.location.search);
@@ -1209,13 +1217,17 @@ function App() {
             </p>
             
             {/* Integrated Search Input */}
-            {activeMainTab === 'restaurants' && (
+            {(activeMainTab === 'restaurants' || activeMainTab === 'doctors' || activeMainTab === 'supermarket') && (
               <div className="search-wrapper hero-search-box">
                 <i className="fa-solid fa-magnifying-glass search-icon"></i>
                 <input
                   type="text"
                   className="search-input"
-                  placeholder="ابحث عن خدمة، طبيب، صيدلية، مطعم، كريب، شاورما..."
+                  placeholder={
+                    activeMainTab === 'doctors'
+                      ? "ابحث باسم الطبيب، الشارع، أو التخصص ف مغاغة..."
+                      : "ابحث عن خدمة، مطعم، كريب، شاورما..."
+                  }
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -1588,17 +1600,139 @@ function App() {
               </a>
             </div>
           </div>
+        ) : activeMainTab === 'doctors' ? (
+          <div className="doctors-section-container" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            {/* Doctor Categories Filter Carousel (Sticky) */}
+            <div className="scroll-indicator-wrapper primary-bg">
+              <div className="categories-container">
+                {DOCTOR_CATEGORIES.map((cat) => (
+                  <button
+                    key={cat.id}
+                    className={`category-chip ${selectedDoctorCategory === cat.id ? 'active' : ''}`}
+                    onClick={() => setSelectedDoctorCategory(cat.id)}
+                  >
+                    <i className={`fa-solid ${cat.icon}`}></i>
+                    <span>{cat.name}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Doctors Cards Grid */}
+            {(() => {
+              const filteredDoctors = doctors.filter((doc) => {
+                const matchesSearch = !searchTerm || 
+                  doc.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                  doc.specialty.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                  doc.address.toLowerCase().includes(searchTerm.toLowerCase());
+                const matchesCategory = searchTerm.trim() ? true : (doc.specialtyId === selectedDoctorCategory);
+                return matchesCategory && matchesSearch;
+              });
+
+              if (filteredDoctors.length === 0) {
+                return (
+                  <div className="empty-state">
+                    <i className="fa-solid fa-user-doctor" style={{ fontSize: '48px', marginBottom: '10px', opacity: 0.5 }}></i>
+                    <h3 className="empty-state-title">لا يزال جارٍ إضافة عيادات وأطباء هذا التخصص</h3>
+                    <p>يمكنك التبديل إلى تخصص آخر أو البحث باسم الدكتور / العيادة.</p>
+                  </div>
+                );
+              }
+
+              return (
+                <div className="jobs-grid">
+                  {filteredDoctors.map((doc) => {
+                    const rawPhone = doc.phone && doc.phone !== '—' ? doc.phone : null;
+                    const phoneNumbers = rawPhone ? rawPhone.split('/').map(n => n.trim()).filter(Boolean) : [];
+
+                    return (
+                      <div key={doc.id} className="job-card vacancy-card">
+                        <div className="vacancy-header-bar">
+                          <h3 className="vacancy-title" style={{ margin: 0 }}>{doc.name}</h3>
+                          <span className="vacancy-tag-badge">
+                            <i className="fa-solid fa-stethoscope"></i> {doc.specialty}
+                          </span>
+                        </div>
+
+                        {doc.title && (
+                          <h4 className="vacancy-business-name" style={{ marginTop: '4px' }}>
+                            <i className="fa-solid fa-user-doctor"></i> {doc.title}
+                          </h4>
+                        )}
+
+                        <div className="job-card-details">
+                          <div className="job-detail-row-inline" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap', fontSize: '13.5px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <i className="fa-solid fa-location-dot" style={{ color: 'var(--accent-color)' }}></i>
+                              <span><strong>العنوان:</strong> {doc.address}</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <i className="fa-solid fa-phone" style={{ color: 'var(--accent-color)' }}></i>
+                              <span><strong>التليفون:</strong> {doc.phone || 'غير مسجل'}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="job-card-actions" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          {phoneNumbers.length === 1 ? (
+                            <a href={`tel:${phoneNumbers[0]}`} className="job-action-btn btn-call" style={{ flex: '0 0 auto', padding: '10px 18px' }}>
+                              <i className="fa-solid fa-phone"></i>
+                              <span>اتصال</span>
+                            </a>
+                          ) : phoneNumbers.length > 1 ? (
+                            <button 
+                              className="job-action-btn btn-call" 
+                              style={{ flex: '0 0 auto', padding: '10px 18px', cursor: 'pointer' }}
+                              onClick={() => setPhoneSelectorList(phoneNumbers.map((num, idx) => ({ label: `اتصال بالخط ${idx + 1}: ${num}`, number: num })))}
+                            >
+                              <i className="fa-solid fa-phone"></i>
+                              <span>اتصال ({phoneNumbers.length})</span>
+                            </button>
+                          ) : (
+                            <div className="job-action-btn" style={{ flex: '0 0 auto', background: 'var(--bg-tertiary)', color: 'var(--text-muted)', cursor: 'default', padding: '10px 14px' }}>
+                              <i className="fa-solid fa-phone-slash"></i>
+                              <span>بدون تليفون</span>
+                            </div>
+                          )}
+
+                          <div className="doc-working-hours-badge" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', background: 'var(--accent-light)', color: 'var(--accent-color)', padding: '10px 12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', fontSize: '12.5px', fontWeight: '700' }}>
+                            <i className="fa-regular fa-clock" style={{ fontSize: '13.5px' }}></i>
+                            <span>{doc.workingHours || 'من 12 ظهراً - 7 مساءً'}</span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })()}
+
+            {/* Doctor CTA Banner */}
+            <div className="job-cta-banner">
+              <div className="job-cta-text">
+                <h3>هل أنت طبيب أو صاحب عيادة/معمل في مغاغة؟ 👨‍⚕️</h3>
+                <p>أضف بيانات عيادتك ومواعيد كشفك مجاناً لتسهيل وصول المرضى إليك!</p>
+              </div>
+              <a 
+                href={`https://wa.me/201062049652?text=${encodeURIComponent("أريد إضافة بيانات عيادتي / معملي في قسم الأطباء بدليل مغاغة")}`}
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="job-cta-btn"
+              >
+                <i className="fa-brands fa-whatsapp"></i>
+                <span>أضف عيادتك الآن</span>
+              </a>
+            </div>
+          </div>
         ) : (
           <div className="coming-soon-container">
             <div className="coming-soon-card">
               <div className="coming-soon-icon">
-                {activeMainTab === 'doctors' && <i className="fa-solid fa-user-doctor coming-soon-pulse"></i>}
-                {activeMainTab === 'pharmacy' && <i className="fa-solid fa-mortar-pestle coming-soon-pulse"></i>}
+                <i className="fa-solid fa-mortar-pestle coming-soon-pulse"></i>
               </div>
               <h3 className="coming-soon-title">هذه الخدمة ستتوفر قريباً 🚀</h3>
               <p className="coming-soon-text">
-                {activeMainTab === 'doctors' && "دليل شامل لأشطر الأطباء بمختلف التخصصات، العيادات والمواعيد الرسمية في مغاغة."}
-                {activeMainTab === 'pharmacy' && "دليل كامل للصيدليات المتاحة والعاملة في مغاغة لتلبية جميع احتياجاتك الدوائية."}
+                دليل كامل للصيدليات المتاحة والعاملة في مغاغة لتلبية جميع احتياجاتك الدوائية.
               </p>
               <div className="coming-soon-badge">قيد التطوير والتحضير</div>
             </div>
