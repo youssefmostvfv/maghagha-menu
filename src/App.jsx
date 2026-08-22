@@ -153,7 +153,17 @@ function App() {
   const handleRecordRestaurantCall = (restaurantId) => {
     if (!restaurantId) return;
     const rIdStr = String(restaurantId);
-    const today = new Date().toISOString().split('T')[0];
+    
+    const now = new Date();
+    const today = now.toISOString().split('T')[0];
+    
+    const localDateTime = now.getFullYear() + '-' + 
+      String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+      String(now.getDate()).padStart(2, '0') + ' ' + 
+      String(now.getHours()).padStart(2, '0') + ':' + 
+      String(now.getMinutes()).padStart(2, '0') + ':' + 
+      String(now.getSeconds()).padStart(2, '0');
+
     const callsDbRef = ref(db, `restaurant_calls/${rIdStr}`);
     get(callsDbRef).then((snapshot) => {
       const data = snapshot.exists() ? snapshot.val() : { total: 0, daily: {} };
@@ -162,6 +172,9 @@ function App() {
       
       set(ref(db, `restaurant_calls/${rIdStr}/total`), currentTotal + 1);
       set(ref(db, `restaurant_calls/${rIdStr}/daily/${today}`), currentDaily + 1);
+      
+      const logId = now.getTime();
+      set(ref(db, `restaurant_calls/${rIdStr}/logs/${logId}`), localDateTime);
     }).catch((err) => console.error('Call tracking error:', err));
   };
 
@@ -1101,8 +1114,8 @@ function App() {
     let todayCallsAll = 0;
     let yesterdayCallsAll = 0;
 
-    const restaurantCallStats = INITIAL_RESTAURANTS.map((rest) => {
-      const stats = callsData[rest.id] || { total: 0, daily: {} };
+     const restaurantCallStats = INITIAL_RESTAURANTS.map((rest) => {
+      const stats = callsData[rest.id] || { total: 0, daily: {}, logs: {} };
       const total = stats.total || 0;
       const todayCalls = (stats.daily && stats.daily[todayStr]) || 0;
       const yesterdayCalls = (stats.daily && stats.daily[yesterdayStr]) || 0;
@@ -1127,7 +1140,8 @@ function App() {
         todayCalls,
         yesterdayCalls,
         last7DaysSum,
-        daily: stats.daily || {}
+        daily: stats.daily || {},
+        logs: stats.logs || {}
       };
     }).sort((a, b) => b.total - a.total);
 
@@ -1224,17 +1238,39 @@ function App() {
                   </tr>
                   {expandedCallsRestaurantId === item.id && (
                     <tr>
-                      <td colSpan={6} style={{ padding: '14px 16px', background: 'var(--bg-tertiary)' }}>
-                        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                          {Object.keys(item.daily).length > 0 ? (
-                            Object.entries(item.daily).sort(([a], [b]) => b.localeCompare(a)).map(([date, count]) => (
-                              <span key={date} style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', padding: '6px 12px', borderRadius: 'var(--radius-sm)', fontSize: '12.5px' }}>
-                                🗓️ <strong>{date}:</strong> {count} اتصال
-                              </span>
-                            ))
-                          ) : (
-                            <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>لا توجد اتصالات مسجلة بعد لهذا المطعم.</span>
-                          )}
+                      <td colSpan={6} style={{ padding: '16px 20px', background: 'var(--bg-tertiary)', borderBottom: '1px solid var(--border-color)' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                          {/* Daily Summary */}
+                          <div>
+                            <h4 style={{ margin: '0 0 8px 0', fontSize: '13.5px', color: 'var(--text-primary)' }}>📊 ملخص الاتصالات اليومي:</h4>
+                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                              {Object.keys(item.daily).length > 0 ? (
+                                Object.entries(item.daily).sort(([a], [b]) => b.localeCompare(a)).map(([date, count]) => (
+                                  <span key={date} style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', padding: '6px 12px', borderRadius: 'var(--radius-sm)', fontSize: '12.5px' }}>
+                                    🗓️ <strong>{date}:</strong> {count} اتصال
+                                  </span>
+                                ))
+                              ) : (
+                                <span style={{ color: 'var(--text-muted)', fontSize: '12.5px' }}>لا يوجد سجل يومي بعد.</span>
+                              )}
+                            </div>
+                          </div>
+                          
+                          {/* Exact Log Times */}
+                          <div>
+                            <h4 style={{ margin: '0 0 8px 0', fontSize: '13.5px', color: 'var(--text-primary)' }}>🕒 أوقات وتواريخ الاتصالات بالتفصيل (الأحدث أولاً):</h4>
+                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', maxHeight: '180px', overflowY: 'auto', padding: '4px' }}>
+                              {Object.keys(item.logs).length > 0 ? (
+                                Object.entries(item.logs).sort(([a], [b]) => b.localeCompare(a)).map(([logId, timestamp]) => (
+                                  <span key={logId} style={{ background: 'var(--accent-light)', border: '1px solid var(--border-color)', color: 'var(--accent-color)', padding: '6px 12px', borderRadius: 'var(--radius-sm)', fontSize: '12px', fontWeight: 'bold' }}>
+                                    📞 {timestamp}
+                                  </span>
+                                ))
+                              ) : (
+                                <span style={{ color: 'var(--text-muted)', fontSize: '12.5px' }}>لا توجد تفاصيل مكالمات مسجلة بالوقت والتاريخ بعد.</span>
+                              )}
+                            </div>
+                          </div>
                         </div>
                       </td>
                     </tr>
