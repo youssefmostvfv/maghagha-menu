@@ -151,16 +151,17 @@ function App() {
   };
 
   const handleRecordRestaurantCall = (restaurantId) => {
-    if (!restaurantId || typeof restaurantId !== 'string') return;
+    if (!restaurantId) return;
+    const rIdStr = String(restaurantId);
     const today = new Date().toISOString().split('T')[0];
-    const callsDbRef = ref(db, `restaurant_calls/${restaurantId}`);
+    const callsDbRef = ref(db, `restaurant_calls/${rIdStr}`);
     get(callsDbRef).then((snapshot) => {
       const data = snapshot.exists() ? snapshot.val() : { total: 0, daily: {} };
       const currentTotal = data.total || 0;
       const currentDaily = (data.daily && data.daily[today]) || 0;
       
-      set(ref(db, `restaurant_calls/${restaurantId}/total`), currentTotal + 1);
-      set(ref(db, `restaurant_calls/${restaurantId}/daily/${today}`), currentDaily + 1);
+      set(ref(db, `restaurant_calls/${rIdStr}/total`), currentTotal + 1);
+      set(ref(db, `restaurant_calls/${rIdStr}/daily/${today}`), currentDaily + 1);
     }).catch((err) => console.error('Call tracking error:', err));
   };
 
@@ -2355,7 +2356,7 @@ function App() {
                     className="action-btn btn-call" 
                     style={{ fontSize: '16px', padding: '14px' }}
                     onClick={() => {
-                      if (selectedRestaurant && typeof selectedRestaurant.id === 'string' && !selectedRestaurant.id.startsWith('captain_')) {
+                      if (selectedRestaurant && !String(selectedRestaurant.id).startsWith('captain_')) {
                         handleRecordRestaurantCall(selectedRestaurant.id);
                       }
                       setPhoneSelectorList(null);
