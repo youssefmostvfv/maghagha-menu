@@ -105,6 +105,10 @@ function App() {
   const [showQrModal, setShowQrModal] = useState(false);
   const [qrShareCopied, setQrShareCopied] = useState(false);
   const [phoneModalData, setPhoneModalData] = useState(null);
+  const [isCallsPage, setIsCallsPage] = useState(false);
+  const [callsData, setCallsData] = useState({});
+  const [callsSearchTerm, setCallsSearchTerm] = useState('');
+  const [expandedCallsRestaurantId, setExpandedCallsRestaurantId] = useState(null);
 
   const handleShareQr = async () => {
     const shareData = {
@@ -145,6 +149,31 @@ function App() {
       setPanOffset({ x: 0, y: 0 });
     }
   };
+
+  const handleRecordRestaurantCall = (restaurantId) => {
+    if (!restaurantId || typeof restaurantId !== 'string') return;
+    const today = new Date().toISOString().split('T')[0];
+    const callsDbRef = ref(db, `restaurant_calls/${restaurantId}`);
+    get(callsDbRef).then((snapshot) => {
+      const data = snapshot.exists() ? snapshot.val() : { total: 0, daily: {} };
+      const currentTotal = data.total || 0;
+      const currentDaily = (data.daily && data.daily[today]) || 0;
+      
+      set(ref(db, `restaurant_calls/${restaurantId}/total`), currentTotal + 1);
+      set(ref(db, `restaurant_calls/${restaurantId}/daily/${today}`), currentDaily + 1);
+    }).catch((err) => console.error('Call tracking error:', err));
+  };
+
+  useEffect(() => {
+    if (isCallsPage || isAdminPage) {
+      const dbCallsRef = ref(db, 'restaurant_calls');
+      get(dbCallsRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          setCallsData(snapshot.val());
+        }
+      }).catch(console.error);
+    }
+  }, [isCallsPage, isAdminPage]);
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e) => {
@@ -296,6 +325,8 @@ function App() {
       if (isAuth === 'true') {
         setIsAdminLoggedIn(true);
       }
+    } else if (pageParam === 'calls' || window.location.pathname === '/calls') {
+      setIsCallsPage(true);
     }
 
     const idParam = params.get('id');
@@ -1054,6 +1085,163 @@ function App() {
               }
             })()
           )}
+        </div>
+      </div>
+    );
+  }
+
+  if (isCallsPage) {
+    const todayStr = new Date().toISOString().split('T')[0];
+    const yesterdayDate = new Date();
+    yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+    const yesterdayStr = yesterdayDate.toISOString().split('T')[0];
+
+    let totalCallsAll = 0;
+    let todayCallsAll = 0;
+    let yesterdayCallsAll = 0;
+
+    const restaurantCallStats = INITIAL_RESTAURANTS.map((rest) => {
+      const stats = callsData[rest.id] || { total: 0, daily: {} };
+      const total = stats.total || 0;
+      const todayCalls = (stats.daily && stats.daily[todayStr]) || 0;
+      const yesterdayCalls = (stats.daily && stats.daily[yesterdayStr]) || 0;
+
+      let last7DaysSum = 0;
+      for (let i = 0; i < 7; i++) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const dStr = d.toISOString().split('T')[0];
+        last7DaysSum += (stats.daily && stats.daily[dStr]) || 0;
+      }
+
+      totalCallsAll += total;
+      todayCallsAll += todayCalls;
+      yesterdayCallsAll += yesterdayCalls;
+
+      return {
+        id: rest.id,
+        name: rest.name,
+        logo: rest.logo,
+        total,
+        todayCalls,
+        yesterdayCalls,
+        last7DaysSum,
+        daily: stats.daily || {}
+      };
+    }).sort((a, b) => b.total - a.total);
+
+    const filteredStats = restaurantCallStats.filter((r) =>
+      !callsSearchTerm || r.name.toLowerCase().includes(callsSearchTerm.toLowerCase())
+    );
+
+    return (
+      <div className="admin-page-container" style={{ minHeight: '100vh', background: 'var(--bg-primary)', padding: '20px 16px', color: 'var(--text-primary)' }}>
+        <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
+          <div>
+            <h1 style={{ margin: 0, fontSize: '22px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <i className="fa-solid fa-phone-volume" style={{ color: 'var(--accent-color)' }}></i>
+              إحصائيات اتصالات المطاعم 🍔📞
+            </h1>
+            <p style={{ margin: '4px 0 0', color: 'var(--text-secondary)', fontSize: '13.5px' }}>
+              تتبع يومي ودقيق لكافة الاتصالات الواردة للمطاعم عبر دليل مغاغة
+            </p>
+          </div>
+          <a href="/" className="hero-tag-btn" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', fontSize: '14px' }}>
+            <i className="fa-solid fa-house"></i>
+            <span>الرئيسية</span>
+          </a>
+        </header>
+
+        {/* Summary KPI Cards */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '14px', marginBottom: '24px' }}>
+          <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>إجمالي اتصالات اليوم</span>
+              <i className="fa-solid fa-calendar-day" style={{ color: 'var(--accent-color)', fontSize: '18px' }}></i>
+            </div>
+            <h2 style={{ margin: '10px 0 0', fontSize: '26px' }}>{todayCallsAll}</h2>
+          </div>
+          <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>اتصالات أمس</span>
+              <i className="fa-solid fa-clock-rotate-left" style={{ color: '#f59e0b', fontSize: '18px' }}></i>
+            </div>
+            <h2 style={{ margin: '10px 0 0', fontSize: '26px' }}>{yesterdayCallsAll}</h2>
+          </div>
+          <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>إجمالي الاتصالات الكلي</span>
+              <i className="fa-solid fa-chart-line" style={{ color: '#10b981', fontSize: '18px' }}></i>
+            </div>
+            <h2 style={{ margin: '10px 0 0', fontSize: '26px' }}>{totalCallsAll}</h2>
+          </div>
+        </div>
+
+        {/* Search Input */}
+        <div className="search-wrapper" style={{ marginBottom: '16px' }}>
+          <i className="fa-solid fa-magnifying-glass search-icon"></i>
+          <input
+            type="text"
+            className="search-input"
+            placeholder="ابحث باسم المطعم..."
+            value={callsSearchTerm}
+            onChange={(e) => setCallsSearchTerm(e.target.value)}
+          />
+        </div>
+
+        {/* Stats Table */}
+        <div style={{ overflowX: 'auto', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'right', fontSize: '14px' }}>
+            <thead>
+              <tr style={{ background: 'var(--bg-tertiary)', borderBottom: '1px solid var(--border-color)' }}>
+                <th style={{ padding: '12px 16px' }}>المطعم</th>
+                <th style={{ padding: '12px 16px' }}>اتصالات اليوم</th>
+                <th style={{ padding: '12px 16px' }}>اتصالات أمس</th>
+                <th style={{ padding: '12px 16px' }}>آخر 7 أيام</th>
+                <th style={{ padding: '12px 16px' }}>الإجمالي الكلي</th>
+                <th style={{ padding: '12px 16px' }}>تفاصيل يومية</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredStats.map((item) => (
+                <React.Fragment key={item.id}>
+                  <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
+                    <td style={{ padding: '12px 16px', fontWeight: 'bold' }}>{item.name}</td>
+                    <td style={{ padding: '12px 16px', color: item.todayCalls > 0 ? 'var(--accent-color)' : 'var(--text-muted)', fontWeight: item.todayCalls > 0 ? 'bold' : 'normal' }}>{item.todayCalls}</td>
+                    <td style={{ padding: '12px 16px' }}>{item.yesterdayCalls}</td>
+                    <td style={{ padding: '12px 16px' }}>{item.last7DaysSum}</td>
+                    <td style={{ padding: '12px 16px', fontWeight: 'bold' }}>{item.total}</td>
+                    <td style={{ padding: '12px 16px' }}>
+                      <button
+                        className="hero-tag-btn"
+                        style={{ padding: '4px 10px', fontSize: '12px' }}
+                        onClick={() => setExpandedCallsRestaurantId(expandedCallsRestaurantId === item.id ? null : item.id)}
+                      >
+                        {expandedCallsRestaurantId === item.id ? 'إخفاء' : 'عرض السجل 📅'}
+                      </button>
+                    </td>
+                  </tr>
+                  {expandedCallsRestaurantId === item.id && (
+                    <tr>
+                      <td colSpan={6} style={{ padding: '14px 16px', background: 'var(--bg-tertiary)' }}>
+                        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                          {Object.keys(item.daily).length > 0 ? (
+                            Object.entries(item.daily).sort(([a], [b]) => b.localeCompare(a)).map(([date, count]) => (
+                              <span key={date} style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', padding: '6px 12px', borderRadius: 'var(--radius-sm)', fontSize: '12.5px' }}>
+                                🗓️ <strong>{date}:</strong> {count} اتصال
+                              </span>
+                            ))
+                          ) : (
+                            <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>لا توجد اتصالات مسجلة بعد لهذا المطعم.</span>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     );
@@ -1873,6 +2061,7 @@ function App() {
                         } else if (selectedRestaurant.phones && selectedRestaurant.phones.length === 1) {
                           const phone = selectedRestaurant.phones[0];
                           const number = typeof phone === 'object' && phone !== null ? phone.number : phone;
+                          handleRecordRestaurantCall(selectedRestaurant.id);
                           window.location.href = `tel:${number}`;
                         }
                       }} 
@@ -2168,7 +2357,12 @@ function App() {
                     href={`tel:${number}`} 
                     className="action-btn btn-call" 
                     style={{ fontSize: '16px', padding: '14px' }}
-                    onClick={() => setPhoneSelectorList(null)}
+                    onClick={() => {
+                      if (selectedRestaurant && typeof selectedRestaurant.id === 'string' && !selectedRestaurant.id.startsWith('captain_')) {
+                        handleRecordRestaurantCall(selectedRestaurant.id);
+                      }
+                      setPhoneSelectorList(null);
+                    }}
                   >
                     <i className="fa-solid fa-phone"></i>
                     <span>{label}</span>
