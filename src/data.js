@@ -555,6 +555,57 @@ export const SUPERMARKETS = [
   }
 ];
 
+export const INITIAL_JOB_SEEKERS = [
+  {
+    id: 'seeker_1',
+    name: 'باحث عن عمل (نموذج توضيحي 1)',
+    jobDesired: 'كاشير ومبيعات محلات',
+    age: '23 سنة',
+    education: 'مؤهل عالي تجاري',
+    skills: 'نموذج تجريبي توضيحي للمهارات والخبرات المتاحة للتقديم والتواصل عبر الدليل.',
+    phone: '01062049652',
+    whatsApp: '201062049652',
+    location: 'مغاغة'
+  },
+  {
+    id: 'seeker_2',
+    name: 'باحث عن عمل (نموذج توضيحي 2)',
+    jobDesired: 'سائق دليفري / مشاوير',
+    age: '25 سنة',
+    education: 'مؤهل متوسط',
+    skills: 'نموذج تجريبي يوضح إمكانية إضافة بيانات الباحثين عن عمل والخدمات.',
+    phone: '01062049652',
+    whatsApp: '201062049652',
+    location: 'مغاغة'
+  }
+];
+
+export const INITIAL_JOB_VACANCIES = [
+  {
+    id: 'vacancy_1',
+    title: 'طلب موظف كاشير (فرصة عمل تجريبية)',
+    businessName: 'نشاط تجاري (نموذج رقم 1)',
+    requirements: 'شروط تجريبية للتوضيح - حسن الأسلوب والالتزام بالعمل.',
+    workType: 'صباحي - 8 ساعات',
+    salary: 'مرتب مجزي + عمولة',
+    location: 'مغاغة',
+    phone: '01062049652',
+    whatsApp: '201062049652'
+  },
+  {
+    id: 'vacancy_2',
+    title: 'طلب مساعد مبيعات (فرصة عمل تجريبية)',
+    businessName: 'نشاط تجاري (نموذج رقم 2)',
+    requirements: 'متطلبات تجريبية - النظافة والسرعة في العمل.',
+    workType: 'مسائي - 8 ساعات',
+    salary: 'يحدد في المقابلة',
+    location: 'مغاغة',
+    phone: '01062049652',
+    whatsApp: '201062049652'
+  }
+];
+
+
 export function isRestaurantOpen(workingHours) {
   if (!workingHours || !workingHours.start || !workingHours.end) {
     return true;

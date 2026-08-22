@@ -176,7 +176,7 @@ body {
 /* Main Content Area */
 .app-content {
   flex: 1;
-  padding: 12px 20px 80px 20px;
+  padding: 12px 20px 130px 20px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -1356,15 +1356,17 @@ body {
 /* Floating Bottom WhatsApp Button */
 .floating-whatsapp-bottom {
   position: fixed;
-  bottom: 24px;
+  bottom: 20px;
   left: 50%;
   transform: translate(-50%, 100px);
-  width: 100%;
-  max-width: 500px;
+  width: auto;
+  max-width: 320px;
   display: flex;
+  align-items: center;
   justify-content: center;
+  gap: 10px;
   z-index: 150;
-  padding: 0 20px;
+  padding: 0 10px;
   opacity: 0;
   visibility: hidden;
   transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s, visibility 0.3s;
@@ -1376,22 +1378,64 @@ body {
   visibility: visible;
 }
 
-.bottom-whatsapp-btn {
-  width: 80%;
+/* Fixed Bottom Left QR Button */
+.fixed-qr-left-btn {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  cursor: pointer;
+  z-index: 140;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.fixed-qr-left-btn:hover {
+  transform: scale(1.1) translateY(-3px);
+  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.35);
+  background: #ffffff;
+  color: #2563eb;
+}
+
+.fixed-qr-left-btn:active {
+  transform: scale(0.95);
+}
+
+.fixed-qr-left-btn i {
+  font-size: 20px;
+  color: #0f172a;
+  transition: color 0.2s ease;
+}
+
+.fixed-qr-left-btn:hover i {
+  color: #2563eb;
+}
+
+
+.bottom-whatsapp-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   background-color: #25d366; /* WhatsApp Green */
   color: white;
-  padding: 14px 20px;
+  padding: 10px 18px;
   border-radius: var(--radius-full);
-  font-size: 15px;
+  font-size: 13.5px;
   font-weight: 700;
   text-decoration: none;
-  box-shadow: 0 10px 25px rgba(37, 211, 102, 0.45);
+  box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
   transition: all 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  white-space: nowrap;
 }
 
 .bottom-whatsapp-btn:hover {
@@ -1405,7 +1449,177 @@ body {
 }
 
 .bottom-whatsapp-btn i {
+  font-size: 18px;
+}
+
+/* Centered QR Code Modal Styling */
+.qr-centered-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.qr-centered-card {
+  background: var(--surface-color, #ffffff);
+  color: var(--text-main, #0f172a);
+  width: 100%;
+  max-width: 380px;
+  border-radius: 28px;
+  padding: 22px 20px 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  animation: qrPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@keyframes qrPop {
+  from {
+    opacity: 0;
+    transform: scale(0.85) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.qr-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.qr-card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.qr-card-title i {
+  color: #2563eb;
   font-size: 20px;
+}
+
+.qr-card-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(148, 163, 184, 0.15);
+  border: none;
+  color: var(--text-main, #0f172a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.qr-card-close:hover {
+  background: rgba(37, 99, 235, 0.15);
+  color: #2563eb;
+  transform: rotate(90deg);
+}
+
+.qr-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+}
+
+.qr-image-frame {
+  background: #ffffff;
+  padding: 14px;
+  border-radius: 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border: 3px solid #2563eb;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.qr-code-img {
+  width: 210px;
+  height: 210px;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+.qr-card-desc {
+  font-size: 13.5px;
+  color: var(--text-secondary, #64748b);
+  line-height: 1.6;
+  margin: 0;
+  padding: 0 5px;
+}
+
+.qr-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.qr-action-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: var(--radius-full, 9999px);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  white-space: nowrap;
+}
+
+.qr-action-btn.btn-download {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+}
+
+.qr-action-btn.btn-download:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.45);
+}
+
+.qr-action-btn.btn-share {
+  background: rgba(148, 163, 184, 0.15);
+  color: var(--text-main, #0f172a);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.qr-action-btn.btn-share:hover {
+  background: rgba(148, 163, 184, 0.25);
+  transform: translateY(-2px);
 }
 
 /* Captain Grid & Cards */
@@ -1677,10 +1891,55 @@ body.body-scroll-lock {
   }
 }
 
-/* Scroll Arrow Indicator Styles */
+/* Sub-Navigation Sticky Behavior */
 .scroll-indicator-wrapper {
   position: relative;
   width: 100%;
+}
+
+/* Main Services Bar (Normal Flow - Non Sticky) */
+.scroll-indicator-wrapper.secondary-bg {
+  position: relative;
+  top: auto;
+  z-index: 10;
+}
+
+/* Sub-Categories Bar (Sticky Under Header) */
+.scroll-indicator-wrapper.primary-bg {
+  position: sticky;
+  top: 78px;
+  z-index: 94;
+  background-color: var(--bg-primary);
+  padding-top: 8px;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+  transition: top 0.2s ease, background-color 0.3s ease;
+}
+
+/* Job Sub-Tabs Bar (Sticky Under Header) */
+.job-subtabs-wrapper {
+  position: sticky;
+  top: 78px;
+  z-index: 94;
+  display: flex;
+  gap: 10px;
+  background: var(--bg-secondary);
+  padding: 6px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-color);
+  max-width: 460px;
+  margin: 0 auto 12px;
+  width: 100%;
+  box-shadow: var(--shadow-md);
+  transition: top 0.2s ease, background-color 0.3s ease;
+}
+
+@media (max-width: 480px) {
+  .scroll-indicator-wrapper.primary-bg,
+  .job-subtabs-wrapper {
+    top: 52px;
+  }
 }
 
 .scroll-arrow-indicator {
@@ -1718,6 +1977,337 @@ body.body-scroll-lock {
   .scroll-arrow-indicator {
     display: none;
   }
+}
+
+/* Jobs Section Styling (Brand Aligned) */
+.jobs-section-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+
+.job-subtab-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: var(--radius-full);
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.job-subtab-btn.active {
+  background: var(--accent-color);
+  color: #ffffff;
+  box-shadow: 0 4px 15px var(--accent-light);
+}
+
+.jobs-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .jobs-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+.job-card {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.job-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent-color);
+}
+
+.job-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.job-avatar-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--accent-light);
+  color: var(--accent-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  border: 1px solid var(--border-color);
+}
+
+.job-user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.job-person-name {
+  font-size: 16.5px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.job-badge-desired {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-color);
+  background: var(--accent-light);
+  padding: 3px 10px;
+  border-radius: 12px;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.job-card-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+}
+
+.job-detail-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.5;
+}
+
+.job-detail-row i {
+  color: var(--accent-color);
+  font-size: 14px;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+.job-skills-box {
+  background: var(--bg-tertiary);
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  color: var(--text-primary);
+  border-right: 3px solid var(--accent-color);
+  margin: 4px 0 0;
+  line-height: 1.6;
+}
+
+/* Vacancy Card specific styling (Brand Aligned) */
+.vacancy-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.vacancy-tag-badge {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #047857;
+  background: #d1fae5;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  border: 1px solid #a7f3d0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+:root[data-theme="dark"] .vacancy-tag-badge {
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.vacancy-notice-badge {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #dc2626;
+  background: #fef2f2;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  border: 1px solid #fca5a5;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+:root[data-theme="dark"] .vacancy-notice-badge {
+  color: #f87171;
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.vacancy-type-badge {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #b45309;
+  background: #fef3c7;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  border: 1px solid #fde68a;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+:root[data-theme="dark"] .vacancy-type-badge {
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.15);
+  border-color: rgba(251, 191, 36, 0.3);
+}
+
+.vacancy-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.vacancy-sub-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: -2px;
+}
+
+.vacancy-business-name {
+  font-size: 13.5px;
+  color: var(--accent-color);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+}
+
+.job-detail-row strong {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.job-card-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.job-action-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  border: none;
+}
+
+.job-action-btn.btn-call {
+  background: var(--accent-color);
+  color: #ffffff;
+  box-shadow: 0 4px 12px var(--accent-light);
+}
+
+.job-action-btn.btn-call:hover {
+  background: var(--accent-color-hover);
+  transform: translateY(-2px);
+}
+
+.job-action-btn.btn-wa {
+  background: #25d366;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.25);
+}
+
+.job-action-btn.btn-wa:hover {
+  background: #20ba5a;
+  transform: translateY(-2px);
+}
+
+/* CTA Banner for Jobs */
+.job-cta-banner {
+  background: var(--bg-secondary);
+  border: 1px dashed var(--accent-color);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 10px;
+  box-shadow: var(--shadow-sm);
+}
+
+.job-cta-text h3 {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 6px;
+}
+
+.job-cta-text p {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.job-cta-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #25d366;
+  color: #ffffff;
+  padding: 12px 22px;
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(37, 211, 102, 0.35);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.job-cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(37, 211, 102, 0.45);
 }
 
 

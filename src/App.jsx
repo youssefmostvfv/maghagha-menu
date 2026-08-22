@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CATEGORIES, RESTAURANTS as INITIAL_RESTAURANTS, isRestaurantOpen, CAPTAINS as INITIAL_CAPTAINS, SUPERMARKETS as INITIAL_SUPERMARKETS } from './data';
+import { CATEGORIES, RESTAURANTS as INITIAL_RESTAURANTS, isRestaurantOpen, CAPTAINS as INITIAL_CAPTAINS, SUPERMARKETS as INITIAL_SUPERMARKETS, INITIAL_JOB_SEEKERS, INITIAL_JOB_VACANCIES } from './data';
 import logo from '../public/assets/logo.webp';
 import logoTow from '../public/assets/logo-tow.webp';
 import { initializeApp } from 'firebase/app';
@@ -81,6 +81,9 @@ function App() {
   const [restaurants, setRestaurants] = useState(INITIAL_RESTAURANTS);
   const [captains, setCaptains] = useState(INITIAL_CAPTAINS);
   const [supermarkets, setSupermarkets] = useState(INITIAL_SUPERMARKETS);
+  const [jobSeekers, setJobSeekers] = useState(INITIAL_JOB_SEEKERS);
+  const [jobVacancies, setJobVacancies] = useState(INITIAL_JOB_VACANCIES);
+  const [activeJobSubTab, setActiveJobSubTab] = useState('seekers'); // 'seekers' | 'vacancies'
   
   const [isAdminPage, setIsAdminPage] = useState(false);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
@@ -97,6 +100,28 @@ function App() {
   const [showServicesArrow, setShowServicesArrow] = useState(true);
   const [showCategoriesArrow, setShowCategoriesArrow] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showQrModal, setShowQrModal] = useState(false);
+  const [qrShareCopied, setQrShareCopied] = useState(false);
+
+  const handleShareQr = async () => {
+    const shareData = {
+      title: 'دليل مغاغة للمطاعم والخدمات 🍔🛒',
+      text: 'تصفح جميع منيو مطاعم وخدمات مغاغة بسهولة عبر دليل مغاغة 📱✨',
+      url: window.location.origin
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.log('Share cancelled or error:', err);
+      }
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.origin);
+      setQrShareCopied(true);
+      setTimeout(() => setQrShareCopied(false), 2500);
+    }
+  };
 
   const handleNextImage = () => {
     if (selectedRestaurant && selectedRestaurant.menuImages && currentImageIndex < selectedRestaurant.menuImages.length - 1) {
@@ -242,6 +267,16 @@ function App() {
         console.error('Error loading supermarkets:', err);
         setSupermarkets(INITIAL_SUPERMARKETS);
       });
+
+    // Fetch and seed Job Seekers
+    const dbJobSeekersRef = ref(db, 'job_seekers');
+    set(dbJobSeekersRef, INITIAL_JOB_SEEKERS);
+    setJobSeekers(INITIAL_JOB_SEEKERS);
+
+    // Fetch and seed Job Vacancies
+    const dbJobVacanciesRef = ref(db, 'job_vacancies');
+    set(dbJobVacanciesRef, INITIAL_JOB_VACANCIES);
+    setJobVacancies(INITIAL_JOB_VACANCIES);
 
     // Parse Deep Link URL ID and page parameter on mount (using seed data for instant synchronous matching)
     const params = new URLSearchParams(window.location.search);
@@ -1122,6 +1157,13 @@ function App() {
             <span>موتوسيكل</span>
           </button>
           <button 
+            className={`service-tab ${activeMainTab === 'jobs' ? 'active' : ''}`}
+            onClick={() => setActiveMainTab('jobs')}
+          >
+            <i className="fa-solid fa-briefcase"></i>
+            <span>وظائف</span>
+          </button>
+          <button 
             className={`service-tab ${activeMainTab === 'doctors' ? 'active' : ''}`}
             onClick={() => setActiveMainTab('doctors')}
           >
@@ -1152,6 +1194,7 @@ function App() {
             <h2 className="hero-title">
               {activeMainTab === 'restaurants' && "دليل مطاعم مغاغة ف جيبك 🍔"}
               {activeMainTab === 'supermarket' && "دليل السوبر ماركت ف جيبك 🛒"}
+              {activeMainTab === 'jobs' && "دليل وظائف وفرص عمل مغاغة 💼"}
               {activeMainTab === 'doctors' && "دليل عيادات وأطباء مغاغة 👨‍⚕️"}
               {activeMainTab === 'pharmacy' && "دليل صيدليات مغاغة 💊"}
               {activeMainTab === 'motorcycle' && "كباتن دليفري مغاغة ف جيبك 🏍️"}
@@ -1159,6 +1202,7 @@ function App() {
             <p className="hero-subtitle">
               {activeMainTab === 'restaurants' && "منصتك المتكاملة لتصفح منيو، أسعار، تليفونات وعناوين جميع مطاعم مغاغة بنقرة واحدة!"}
               {activeMainTab === 'supermarket' && "تصفح أرقام، فروع، وعروض أفضل المحلات والسوبر ماركت في مغاغة!"}
+              {activeMainTab === 'jobs' && "منصتك للتواصل المباشر بين الباحثين عن عمل وأصحاب الأعمال والمحلات في مغاغة!"}
               {activeMainTab === 'doctors' && "دليل كامل لأشطر الأطباء والعيادات بمختلف التخصصات في مغاغة."}
               {activeMainTab === 'pharmacy' && "دليل كامل للصيدليات المتاحة والعاملة في مغاغة لتلبية احتياجاتك الدوائية."}
               {activeMainTab === 'motorcycle' && "تواصل مباشرة مع أسرع كباتن توصيل طلبات ومشاوير وسفر داخل مغاغة وضواحيها!"}
@@ -1182,7 +1226,7 @@ function App() {
             {activeMainTab === 'restaurants' && (
               <div className="hero-tags">
                 <span className="tags-label">الأكثر بحثاً:</span>
-                {['كريب', 'بروست', 'سماش برجر', 'شاورما', 'مشويات'].map(tag => (
+                {['بروست', 'كريب', 'شاورما'].map(tag => (
                   <button 
                     key={tag} 
                     className="hero-tag-btn"
@@ -1296,28 +1340,30 @@ function App() {
         ) : activeMainTab === 'motorcycle' ? (
           <>
             {/* Captains Filter Chips */}
-            <div className="categories-container" style={{ margin: '10px 0 20px 0' }}>
-              <button 
-                className={`category-chip ${selectedCaptainService === 'all' ? 'active' : ''}`}
-                onClick={() => setSelectedCaptainService('all')}
-              >
-                <i className="fa-solid fa-motorcycle"></i>
-                <span>الكل</span>
-              </button>
-              <button 
-                className={`category-chip ${selectedCaptainService === 'توصيل طلبات' ? 'active' : ''}`}
-                onClick={() => setSelectedCaptainService('توصيل طلبات')}
-              >
-                <i className="fa-solid fa-truck-ramp-box"></i>
-                <span>توصيل طلبات</span>
-              </button>
-              <button 
-                className={`category-chip ${selectedCaptainService === 'مشاوير' ? 'active' : ''}`}
-                onClick={() => setSelectedCaptainService('مشاوير')}
-              >
-                <i className="fa-solid fa-route"></i>
-                <span>مشاوير</span>
-              </button>
+            <div className="scroll-indicator-wrapper primary-bg">
+              <div className="categories-container">
+                <button 
+                  className={`category-chip ${selectedCaptainService === 'all' ? 'active' : ''}`}
+                  onClick={() => setSelectedCaptainService('all')}
+                >
+                  <i className="fa-solid fa-motorcycle"></i>
+                  <span>الكل</span>
+                </button>
+                <button 
+                  className={`category-chip ${selectedCaptainService === 'توصيل طلبات' ? 'active' : ''}`}
+                  onClick={() => setSelectedCaptainService('توصيل طلبات')}
+                >
+                  <i className="fa-solid fa-truck-ramp-box"></i>
+                  <span>توصيل طلبات</span>
+                </button>
+                <button 
+                  className={`category-chip ${selectedCaptainService === 'مشاوير' ? 'active' : ''}`}
+                  onClick={() => setSelectedCaptainService('مشاوير')}
+                >
+                  <i className="fa-solid fa-route"></i>
+                  <span>مشاوير</span>
+                </button>
+              </div>
             </div>
 
             <div className="captains-grid">
@@ -1400,6 +1446,147 @@ function App() {
                 </div>
               </div>
             ))}
+          </div>
+        ) : activeMainTab === 'jobs' ? (
+          <div className="jobs-section-container">
+            {/* Sub Tabs Switcher */}
+            <div className="job-subtabs-wrapper">
+              <button 
+                className={`job-subtab-btn ${activeJobSubTab === 'seekers' ? 'active' : ''}`}
+                onClick={() => setActiveJobSubTab('seekers')}
+              >
+                <i className="fa-solid fa-user-tie"></i>
+                <span>باحثون عن عمل ({jobSeekers.length})</span>
+              </button>
+              <button 
+                className={`job-subtab-btn ${activeJobSubTab === 'vacancies' ? 'active' : ''}`}
+                onClick={() => setActiveJobSubTab('vacancies')}
+              >
+                <i className="fa-solid fa-bullhorn"></i>
+                <span>فرص عمل جديدة ({jobVacancies.length})</span>
+              </button>
+            </div>
+
+            {/* Job Seekers Grid */}
+            {activeJobSubTab === 'seekers' ? (
+              <div className="jobs-grid">
+                {jobSeekers.map((seeker) => (
+                  <div key={seeker.id} className="job-card seeker-card">
+                    <div className="job-card-header">
+                      <div className="job-avatar-icon">
+                        <i className="fa-solid fa-user"></i>
+                      </div>
+                      <div className="job-user-info">
+                        <h3 className="job-person-name">{seeker.name}</h3>
+                        <span className="job-badge-desired"><i className="fa-solid fa-briefcase"></i> {seeker.jobDesired}</span>
+                      </div>
+                      <span className="vacancy-notice-badge" style={{ marginRight: 'auto' }}><i className="fa-solid fa-flask"></i> نموذج تجريبي</span>
+                    </div>
+
+                    <div className="job-card-details">
+                      <div className="job-detail-row">
+                        <i className="fa-solid fa-cake-candles"></i>
+                        <span>السن: {seeker.age}</span>
+                      </div>
+                      <div className="job-detail-row">
+                        <i className="fa-solid fa-graduation-cap"></i>
+                        <span>المؤهل: {seeker.education}</span>
+                      </div>
+                      <div className="job-detail-row">
+                        <i className="fa-solid fa-location-dot"></i>
+                        <span>العنوان: {seeker.location}</span>
+                      </div>
+                      <p className="job-skills-box">
+                        <i className="fa-solid fa-star"></i> <strong>الخبرات والمهارات:</strong> {seeker.skills}
+                      </p>
+                    </div>
+
+                    <div className="job-card-actions">
+                      <a href={`tel:${seeker.phone}`} className="job-action-btn btn-call">
+                        <i className="fa-solid fa-phone"></i>
+                        <span>اتصال مباشر</span>
+                      </a>
+                      <a 
+                        href={`https://wa.me/${seeker.whatsApp}?text=${encodeURIComponent(`أهلاً ${seeker.name}، تواصلت معك من خلال قسم الوظائف في دليل مغاغة بشأن فرصة عمل.`)}`}
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="job-action-btn btn-wa"
+                      >
+                        <i className="fa-brands fa-whatsapp"></i>
+                        <span>واتساب</span>
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              /* Job Vacancies Grid */
+              <div className="jobs-grid">
+                {jobVacancies.map((vacancy) => (
+                  <div key={vacancy.id} className="job-card vacancy-card">
+                    <div className="vacancy-header-bar">
+                      <span className="vacancy-tag-badge"><i className="fa-solid fa-circle-check"></i> فرصة عمل متاحة</span>
+                      <span className="vacancy-notice-badge"><i className="fa-solid fa-flask"></i> نموذج تجريبي</span>
+                    </div>
+
+                    <h3 className="vacancy-title">{vacancy.title}</h3>
+                    <h4 className="vacancy-business-name"><i className="fa-solid fa-store"></i> {vacancy.businessName}</h4>
+
+                    <div className="job-card-details">
+                      <div className="job-detail-row">
+                        <i className="fa-solid fa-clock"></i>
+                        <span><strong>تفاصيل الشيفت:</strong> {vacancy.workType}</span>
+                      </div>
+                      <div className="job-detail-row">
+                        <i className="fa-solid fa-clipboard-list"></i>
+                        <span><strong>الشروط والمتطلبات:</strong> {vacancy.requirements}</span>
+                      </div>
+                      <div className="job-detail-row">
+                        <i className="fa-solid fa-money-bill-wave"></i>
+                        <span><strong>المرتب / النظام:</strong> {vacancy.salary}</span>
+                      </div>
+                      <div className="job-detail-row">
+                        <i className="fa-solid fa-location-dot"></i>
+                        <span><strong>العنوان:</strong> {vacancy.location}</span>
+                      </div>
+                    </div>
+
+                    <div className="job-card-actions">
+                      <a href={`tel:${vacancy.phone}`} className="job-action-btn btn-call">
+                        <i className="fa-solid fa-phone"></i>
+                        <span>اتصل للتقديم</span>
+                      </a>
+                      <a 
+                        href={`https://wa.me/${vacancy.whatsApp}?text=${encodeURIComponent(`أهلاً، تواصلت معكم بشأن إعلان (${vacancy.title}) المنشور في دليل مغاغة.`)}`}
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="job-action-btn btn-wa"
+                      >
+                        <i className="fa-brands fa-whatsapp"></i>
+                        <span>قدم عبر الواتساب</span>
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* CTA Banner to add Job Post */}
+            <div className="job-cta-banner">
+              <div className="job-cta-text">
+                <h3>هل تبحث عن عمل أو تطلب موظفين لمشروعك؟ 💼</h3>
+                <p>أضف بياناتك أو إعلان وظيفتك مجاناً ليصل لآلاف الأهالي في مغاغة!</p>
+              </div>
+              <a 
+                href={`https://wa.me/201062049652?text=${encodeURIComponent("أريد إضافة إعلان وظيفة / سيرتي الذاتية في قسم الوظائف بدليل مغاغة")}`}
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="job-cta-btn"
+              >
+                <i className="fa-brands fa-whatsapp"></i>
+                <span>أضف بياناتك الآن</span>
+              </a>
+            </div>
           </div>
         ) : (
           <div className="coming-soon-container">
@@ -1858,6 +2045,65 @@ function App() {
           </div>
         </div>
       )}
+      {/* Centered QR Code Modal */}
+      {showQrModal && (
+        <div className="qr-centered-overlay" onClick={() => setShowQrModal(false)}>
+          <div className="qr-centered-card" onClick={(e) => e.stopPropagation()}>
+            <div className="qr-card-header">
+              <div className="qr-card-title">
+                <i className="fa-solid fa-qrcode"></i>
+                <span>رمز QR للموقع</span>
+              </div>
+              <button className="qr-card-close" onClick={() => setShowQrModal(false)} aria-label="إغلاق">
+                <i className="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            
+            <div className="qr-card-body">
+              <div className="qr-image-frame">
+                <img src={resolveImage('qr-code.webp')} alt="رمز QR لدليل مغاغة" className="qr-code-img" />
+              </div>
+              
+              <p className="qr-card-desc">
+                امسح الـ QR كود بكاميرا الموبايل لفتح دليل مغاغة مباشرة ومشاركته مع أصدقائك! 📱✨
+              </p>
+              
+              <div className="qr-actions-row">
+                <a 
+                  href={resolveImage('qr-code.webp')} 
+                  download="maghagha-menu-qr.webp"
+                  className="qr-action-btn btn-download"
+                >
+                  <i className="fa-solid fa-download"></i>
+                  <span>تحميل</span>
+                </a>
+
+                <button 
+                  onClick={handleShareQr}
+                  className="qr-action-btn btn-share"
+                  type="button"
+                >
+                  <i className={qrShareCopied ? "fa-solid fa-check" : "fa-solid fa-share-nodes"}></i>
+                  <span>{qrShareCopied ? 'تم نسخ الرابط!' : 'مشاركة'}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Fixed Bottom Left QR Button (Hidden when opening restaurant menu / lightbox) */}
+      {!selectedRestaurant && !activeMenuImage && (
+        <button 
+          onClick={() => setShowQrModal(true)}
+          className="fixed-qr-left-btn"
+          title="عرض الـ QR Code الخاص بالموقع"
+          aria-label="QR Code"
+        >
+          <i className="fa-solid fa-qrcode"></i>
+        </button>
+      )}
+
       {/* Floating Bottom WhatsApp Button */}
       <div className={`floating-whatsapp-bottom ${showBottomWhatsApp ? 'show' : ''}`}>
         <a 
