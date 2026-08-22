@@ -405,69 +405,26 @@ export const RESTAURANTS = [
     ],
     menuImages: ['raghifkofta-menu1']
   },
+
   {
-    id: 10,
-    name: 'كوكب السعادة - Kawkab El Saada',
-    category: 'sweets',
-    logo: 'kokap-logo',
-    description: 'أجود وأطعم أنواع الوافل، الكريب الحلو، العصائر، والحلويات المنعشة.',
-    phones: ['01113914972'],
+    id: 27,
+    name: 'مطعم شطاح - Shatah',
+    category: 'syrian',
+    logo: 'shatah-logo',
+    description: 'مطعم شطاح لتقديم أشهى الوجبات السريعة، الكريب، وسندوتشات الشاورما السورية المميزة بمغاغة.',
+    phones: ['01062049652'],
     whatsApp: '',
     deliveryFee: 'من 20 لـ 30 جنيه',
-    address: 'مغاغة - شارع السلام، أمام الشعبة',
+    address: 'مغاغة - شارع السلام',
     workingHours: {
       start: '12:00',
       end: '02:00',
       display: 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'
     },
     popularItems: [
-      { name: 'وافل نوتيلا فواكه مشكل', price: 55, description: 'وافل مغطى بالنوتيلا مع قطع الفراولة والموز والكيوي' },
-      { name: 'كريب حلو نوتيلا بندق', price: 45, description: 'كريب رقيق محشو شوكولاتة نوتيلا وبندق محمص' },
-      { name: 'عصير كوكتيل كوكب السعادة', price: 40, description: 'طبقات من المانجو والفراولة والجوافة مع قطع الفواكه الطازجة' }
+      { name: 'ساندوتش شاورما شطاح سوبر', price: 85, description: 'شاورما سوري مميزة بخبز الصاج مع الثومية والمخلل' }
     ],
-    menuImages: ['kokap-meanu1.jpg']
-  },
-  {
-    id: 24,
-    name: 'حلا بحليب - Hala B.Haleeb',
-    category: 'sweets',
-    logo: 'halabhaleeb-logo',
-    description: 'حلا بحليب لألذ وأطيب الحلويات الشرقية والغربية، الوافل، الآيس كريم، وعصائر منعشة بأعلى جودة في مغاغة.',
-    phones: ['01040853091', '01228838016'],
-    whatsApp: '',
-    deliveryFee: 'من 20 لـ 30 جنيه',
-    address: 'مغاغة - ش الثورة بجوار حلو الشام',
-    workingHours: {
-      start: '12:00',
-      end: '02:00',
-      display: 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'
-    },
-    popularItems: [
-      { name: 'طبق حلا بحليب المشكل', price: 65, description: 'أرز بلبن غني مع قشطة، مكسرات، عسل وفواكه طازجة' },
-      { name: 'وافل نوتيلا دبل', price: 50, description: 'وافل مقرمش مغطى بطبقة غنية من الشوكولاتة النوتيلا والمكسرات' }
-    ],
-    menuImages: ['halabhaleeb-menu1']
-  },
-  {
-    id: 25,
-    name: 'رغيف كفتة - Raghif Kofta',
-    category: 'grill',
-    logo: 'raghifkofta-logo',
-    description: 'مطعم رغيف كفتة لأشهر ساندوتشات المشويات على الفحم، كفتة، كباب، وطواجن شرقية شهية بأجود أنواع اللحوم البلدي في مغاغة.',
-    phones: ['01144252519', '01095496696'],
-    whatsApp: '',
-    deliveryFee: 'من 20 لـ 30 جنيه',
-    address: 'مغاغة - شارع الثورة - امام كشرى هند',
-    workingHours: {
-      start: '12:00',
-      end: '02:00',
-      display: 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'
-    },
-    popularItems: [
-      { name: 'ساندوتش رغيف كفتة بلدي على الفحم', price: 45, description: 'كفتة بلدي مشوية على الفحم مع السلطات والطحينة في خبز بلدي طازج' },
-      { name: 'وجبة كفتة وكباب مكس', price: 120, description: 'مشويات بلدي متبلة تقدم مع الأرز والعيش والسلطات' }
-    ],
-    menuImages: ['raghifkofta-menu1']
+    menuImages: ['shatah-menu1', 'shatah-menu2']
   }
 ];
 
@@ -907,34 +864,47 @@ export function getPromoCode(restaurant) {
   const today = new Date();
   const dateStr = `${today.getMonth() + 1}${today.getDate()}`;
 
-  const singleLetterMap = {
-    '21': 'T',   // مطعم توكيو -> T-822
-    '23': 'Y',   // اسماك يونس -> Y-822
-    '24': 'K',   // كوكو دريم -> K-822
-    '22': 'S',   // سيزلر -> S-822
-    '1': 'H',    // هدير -> H-822
-    '2': 'B',    // الشبراوي -> B-822
-    '3': 'F',    // أصل الفول -> F-822
-    '4': 'Z',    // بازوكا -> Z-822
-    '5': 'C',    // كاستيلو -> C-822
-    '6': 'N',    // السلطان -> N-822
-    '7': 'A',    // الأكيل -> A-822
-    '8': 'P',    // البرنس -> P-822
-    '9': 'Q',    // كتاكيت -> Q-822
-    '10': 'R'    // روستو -> R-822
+  const knownPrefixes = {
+    '21': 'TK',   // مطعم توكيو
+    '23': 'YN',   // اسماك يونس
+    '22': 'HOU',  // تيك اوي حوده
+    '20': 'GDO',  // جدو الشام
+    '19': 'HND',  // كشري هند
+    '18': 'HYB',  // هاي بروست
+    '17': 'ARS',  // مطعم عروس الشام
+    '16': 'BBA',  // بابا برجر
+    '11': 'MZK',  // مزيكا كريب
+    '12': 'TWR',  // مطعم الثورة
+    '14': 'SHR',  // كريب وبيتزا الشريعي
+    '8': 'TLT',   // مشويات أبو طلعت
+    '7': 'ALI',   // أبو علي بروست
+    '9': 'DOC',   // دكتور بوكس
+    '13': 'SHC',  // الشريعي فرايد تشيكن
+    '10': 'KOK',  // كوكب السعادة
+    '24': 'HLB',  // حلا بحليب
+    '25': 'KFT',  // رغيف كفتة
+    '26': 'KSH',  // كوشي سوشي
+    '27': 'SHT'   // مطعم شطاح
   };
 
-  let letter = singleLetterMap[String(restaurant.id)];
+  let prefix = knownPrefixes[String(restaurant.id)];
 
-  if (!letter) {
-    const englishMatch = restaurant.name.match(/[a-zA-Z]/);
-    if (englishMatch) {
-      letter = englishMatch[0].toUpperCase();
+  if (!prefix) {
+    const englishMatch = restaurant.name.match(/[a-zA-Z]+/g);
+    if (englishMatch && englishMatch.length > 0) {
+      prefix = englishMatch[0].substring(0, 3).toUpperCase();
     } else {
       const cleanName = restaurant.name.replace(/مطعم|أسماك|كريب|بيتزا|ساندوتشات|حلواني/g, '').trim();
-      letter = cleanName[0] ? cleanName[0].toUpperCase() : 'M';
+      const words = cleanName.split(/\s+/);
+      if (words.length >= 2) {
+        prefix = (words[0][0] + words[1][0]).toUpperCase();
+      } else if (words.length === 1 && words[0].length >= 2) {
+        prefix = (words[0][0] + words[0][1]).toUpperCase();
+      } else {
+        prefix = 'MG';
+      }
     }
   }
 
-  return `${letter}-${dateStr}`;
+  return `${prefix}-${dateStr}`;
 }
