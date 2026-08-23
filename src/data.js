@@ -425,19 +425,39 @@ export const RESTAURANTS = [
       { name: 'ساندوتش شاورما شطاح سوبر', price: 85, description: 'شاورما سوري مميزة بخبز الصاج مع الثومية والمخلل' }
     ],
     menuImages: ['shatah-menu1', 'shatah-menu2']
+  },
+  {
+    id: 28,
+    name: 'مطعم سلوم-salom',
+    category: 'syrian',
+    logo: 'salom-logo',
+    description: 'مطعم سلوم يقدم أشهى المأكولات السورية، الشاورما، والوجبات المتنوعة بطعم مميز في مغاغة.',
+    phones: ['01101025654'],
+    whatsApp: '',
+    deliveryFee: 'من 20 لـ 30 جنيه',
+    address: 'مغاغة - شارع الثورة - امام ملوك النابلسية',
+    workingHours: {
+      start: '12:00',
+      end: '02:00',
+      display: 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'
+    },
+    popularItems: [
+      { name: 'ساندوتش شاورما سلوم سوبر عربي', price: 85, description: 'شاورما سوري مميزة بخبز الصاج مع الثومية والمخلل والبطاطس' }
+    ],
+    menuImages: ['salom-menu1', 'salom-menu2']
   }
 ];
 
 export const CAPTAINS = [
   {
     id: 'captain_1',
-    name: 'الكابتن أحمد الجارحي (أبو فهد)',
+    name: 'الكابتن أحمد الجارحي (تجريبي)',
     avatar: 'avatar-men',
     phone: '01062049652',
     serviceTypes: ['توصيل طلبات', 'مشاوير'],
     isAvailable: true,
     description: 'شاب ملتزم وموثوق، توصيل سريع وأمان كامل لطلباتكم ومأكولاتكم داخل مغاغة وضواحيها 24 ساعة.',
-    tripsCount: 235
+    tripsCount: 1
   },
   {
     id: 'captain_2',
@@ -448,7 +468,7 @@ export const CAPTAINS = [
     serviceTypes: ['توصيل طلبات'],
     isAvailable: true,
     description: 'مكتب توصيل طلبات فقط، يقدم خدمة سريعة ومتميزة تشمل مدينة مغاغة بالكامل لتوصيل جميع طلباتكم.',
-    tripsCount: 150
+    tripsCount: 1
   }
 ];
 
@@ -908,3 +928,62 @@ export function getPromoCode(restaurant) {
 
   return `${prefix}-${dateStr}`;
 }
+
+export const INITIAL_PHARMACIES = [
+  {
+    id: 'ph_1',
+    name: 'صيدليه مدنى',
+    address: 'شارع طه حسين',
+    phone: '011 52091052',
+    workingHours: 'مفتوح على مدار الساعة',
+    locationUrl: 'https://www.google.com/maps/dir//%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D9%87+%D9%85%D8%AF%D9%86%D9%89%D8%8C+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B7%D9%87+%D8%AD%D8%B3%D9%8A%D9%86%D8%8C+%D9%85%D8%AF%D9%8A%D9%86%D8%A9+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9%D8%8C+%D9%85%D8%B1%D9%83%D8%B2+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9%D8%8C+%D9%85%D8%AD%D8%A7%D9%81%D8%B8%D8%A9+%D8%A7%D9%84%D9%85%D9%86%D9%8A%D8%A7+61691%E2%80%AD/data=!4m6!4m5!1m1!4e2!1m2!1m1!1s0x145bada485437e5f:0x8b2f27f90e3ddb01?sa=X&ved=1t:57443&ictx=111'
+  },
+  {
+    id: 'ph_2',
+    name: 'صيدليات مدني',
+    address: 'تقاطع شارع صلاح الدين مع شارع عبد العظيم',
+    phone: '16791',
+    workingHours: 'مفتوح على مدار الساعة',
+    locationUrl: 'https://www.google.com/maps/dir//%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A7%D8%AA+%D9%85%D8%AF%D9%86%D9%8A16791,+sallah+el+din+street+with+abd+alazim+street,+%D9%85%D8%B1%D9%83%D8%B2+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9%D8%8C+%D9%85%D8%AD%D8%A7%D9%81%D8%B8%D8%A9+%D8%A7%D9%84%D9%85%D9%86%D9%8A%D8%A7+61691%E2%80%AD/data=!4m6!4m5!1m1!4e2!1m2!1m1!1s0x145bada413265735:0x4353212d9429b99c?sa=X&ved=1t:57443&ictx=111'
+  },
+  {
+    id: 'ph_3',
+    name: 'صيدلية د. شعبان بكير',
+    address: 'مدينة مغاغة',
+    phone: '011 18877202',
+    workingHours: 'يغلق عند الساعة ١٢ ص',
+    locationUrl: 'https://www.google.com/maps/dir//JRXQ%2B5GV+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AF.+%D8%B4%D8%B9%D8%A8%D8%A7%D9%86+%D8%A8%D9%83%D9%8A%D8%B1%D8%8C+%D9%85%D8%AF%D9%8A%D9%86%D8%A9+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9%D8%8C+%D9%85%D8%B1%D9%83%D8%B2+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9%D8%8C+%D9%85%D8%AD%D8%A7%D9%81%D8%B8%D8%A9+%D8%A7%D9%84%D9%85%D9%86%D9%8A%D8%A7+2547510%E2%80%AD/data=!4m6!4m5!1m1!4e2!1m2!1m1!1s0x145bac67d65b9509:0xba7a57328575672b?sa=X&ved=1t:57443&ictx=111'
+  },
+  {
+    id: 'ph_4',
+    name: 'صيدليات فضل',
+    address: 'مغاغه شارع السلام امام قاعة الماسه بجوار مسجد السمسطاوي',
+    phone: '011 49966075',
+    workingHours: 'مفتوح على مدار الساعة',
+    locationUrl: 'https://www.google.com/maps/dir//%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A7%D8%AA+%D9%81%D8%B6%D9%84%D8%8C+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A7%D8%AA+%D9%81%D8%B6%D9%84%D8%8C+%D9%85%D8%BA%D8%A7%D8%BA%D9%87+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85+%D8%A7%D9%84%D8%B9%D8%AF%D9%88%D9%87+%D8%A7%D9%85%D8%A7%D9%85+%D8%A7%D9%84%D9%86%D8%A7%D8%AF%D9%8A+%D8%A7%D9%84%D8%B1%D9%8A%D8%A7%D8%B6%D9%8A%D8%8C+%D9%85%D8%AD%D8%A7%D9%81%D8%B8%D8%A9+%D8%A7%D9%84%D9%85%D9%86%D9%8A%D8%A7%E2%80%AD/data=!4m6!4m5!1m1!4e2!1m2!1m1!1s0x145badf71f982a81:0x727647f1554e197d?sa=X&ved=1t:57443&ictx=111'
+  },
+  {
+    id: 'ph_5',
+    name: 'صيدلية الدكتور وليد عبد الماجد',
+    address: 'أطنيه، مركز مغاغة',
+    phone: '0867562952 / 01113401118 / 01010971100',
+    workingHours: 'مفتوح على مدار الساعة',
+    locationUrl: 'https://www.google.com/maps/dir//MR3P%2B244+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%AF%D9%83%D8%AA%D9%88%D8%B1+%D9%88%D9%84%D9%8A%D8%AF+%D8%B9%D8%A8%D8%AF+%D8%A7%D9%84%D9%85%D8%A7%D8%AC%D8%AF%D8%8C+%D8%A3%D8%B7%D9%86%D9%8A%D9%87%D8%8C+%D9%85%D8%B1%D9%83%D8%B2+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9%D8%8C+%D9%85%D8%AD%D8%A7%D9%81%D8%B8%D8%A9+%D8%A7%D9%84%D9%85%D9%86%D9%8A%D8%A7+2546260%E2%80%AD/data=!4m6!4m5!1m1!4e2!1m2!1m1!1s0x145bac4258bcd4d3:0x1049d0d2c42ec1c3?sa=X&ved=1t:57443&ictx=111'
+  },
+  {
+    id: 'ph_6',
+    name: 'صيدلية الزهور',
+    address: 'حي الزهور، مدينة مغاغة',
+    phone: '010 32220167',
+    workingHours: 'يغلق عند الساعة ١١ م',
+    locationUrl: 'https://www.google.com/maps/dir//JRWR%2BHQW+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B2%D9%87%D9%88%D8%B1%D8%8C+%D9%85%D8%AF%D9%8A%D9%86%D8%A9+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9%D8%8C+%D9%85%D8%B1%D9%83%D8%B2+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9%D8%8C+%D9%85%D8%AD%D8%A7%D9%81%D8%B8%D8%A9+%D8%A7%D9%84%D9%85%D9%86%D9%8A%D8%A7+2547545%E2%80%AD/data=!4m6!4m5!1m1!4e2!1m2!1m1!1s0x145badf18344d0af:0x32567d22233fd194?sa=X&ved=1t:57443&ictx=111'
+  },
+  {
+    id: 'ph_7',
+    name: 'صيدليه دكتور رمزي',
+    address: 'شارع الجمهورية، مدينة مغاغة',
+    phone: '010 26108766',
+    workingHours: 'مفتوح',
+    locationUrl: 'https://www.google.com/maps/dir//JRXR%2BFF9+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D9%87+%D8%AF%D9%83%D8%AA%D9%88%D8%B1+%D8%B1%D9%85%D8%B2%D9%8A%D8%8C+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D9%85%D9%87%D9%88%D8%B1%D9%8A%D8%A9%D8%8C+%D9%85%D8%AF%D9%8A%D9%86%D8%A9+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9%D8%8C+%D9%85%D8%B1%D9%83%D8%B2+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9%D8%8C+%D9%85%D8%AD%D8%A7%D9%81%D8%B8%D8%A9+%D8%A7%D9%84%D9%85%D9%86%D9%8A%D8%A7+2547541%E2%80%AD/data=!4m6!4m5!1m1!4e2!1m2!1m1!1s0x145bac679d4186af:0xd1877fd779a33def?sa=X&ved=1t:57443&ictx=111'
+  }
+];

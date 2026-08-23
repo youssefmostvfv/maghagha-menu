@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CATEGORIES, RESTAURANTS as INITIAL_RESTAURANTS, isRestaurantOpen, getPromoCode, CAPTAINS as INITIAL_CAPTAINS, SUPERMARKETS as INITIAL_SUPERMARKETS, INITIAL_JOB_SEEKERS, INITIAL_JOB_VACANCIES, DOCTOR_CATEGORIES, INITIAL_DOCTORS } from './data';
+import { CATEGORIES, RESTAURANTS as INITIAL_RESTAURANTS, isRestaurantOpen, getPromoCode, CAPTAINS as INITIAL_CAPTAINS, SUPERMARKETS as INITIAL_SUPERMARKETS, INITIAL_JOB_SEEKERS, INITIAL_JOB_VACANCIES, DOCTOR_CATEGORIES, INITIAL_DOCTORS, INITIAL_PHARMACIES } from './data';
 import logo from '../public/assets/logo.webp';
 import logoTow from '../public/assets/logo-tow.webp';
 import { initializeApp } from 'firebase/app';
@@ -98,6 +98,7 @@ function App() {
   const [activeJobSubTab, setActiveJobSubTab] = useState('seekers'); // 'seekers' | 'vacancies'
   const [selectedDoctorCategory, setSelectedDoctorCategory] = useState('surgery_urology');
   const [doctors, setDoctors] = useState(INITIAL_DOCTORS);
+  const [pharmacies, setPharmacies] = useState(INITIAL_PHARMACIES);
   
   const [isAdminPage, setIsAdminPage] = useState(false);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
@@ -282,26 +283,8 @@ function App() {
 
     // Fetch and seed Captains
     const dbCaptainsRef = ref(db, 'captains');
-    get(dbCaptainsRef)
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          const fetched = normalizeData(snapshot.val());
-          const existingIds = new Set(fetched.map(item => String(item.id)));
-          const missing = INITIAL_CAPTAINS.filter(item => !existingIds.has(String(item.id)));
-          const merged = [...fetched, ...missing];
-          setCaptains(merged);
-          if (missing.length > 0) {
-            set(dbCaptainsRef, merged);
-          }
-        } else {
-          set(dbCaptainsRef, INITIAL_CAPTAINS);
-          setCaptains(INITIAL_CAPTAINS);
-        }
-      })
-      .catch((err) => {
-        console.error('Error loading captains:', err);
-        setCaptains(INITIAL_CAPTAINS);
-      });
+    set(dbCaptainsRef, INITIAL_CAPTAINS);
+    setCaptains(INITIAL_CAPTAINS);
 
     // Fetch and seed Supermarkets
     const dbSupermarketsRef = ref(db, 'supermarkets');
@@ -340,6 +323,11 @@ function App() {
     const dbDoctorsRef = ref(db, 'doctors');
     set(dbDoctorsRef, INITIAL_DOCTORS);
     setDoctors(INITIAL_DOCTORS);
+
+    // Fetch and seed Pharmacies
+    const dbPharmaciesRef = ref(db, 'pharmacies');
+    set(dbPharmaciesRef, INITIAL_PHARMACIES);
+    setPharmacies(INITIAL_PHARMACIES);
 
     // Parse Deep Link URL ID and page parameter on mount (using seed data for instant synchronous matching)
     const params = new URLSearchParams(window.location.search);
@@ -1396,13 +1384,13 @@ function App() {
             <i className="fa-solid fa-motorcycle"></i>
             <span>موتوسيكل</span>
           </button>
-          <button 
+          {/* <button 
             className={`service-tab ${activeMainTab === 'jobs' ? 'active' : ''}`}
             onClick={() => setActiveMainTab('jobs')}
           >
             <i className="fa-solid fa-briefcase"></i>
             <span>وظائف</span>
-          </button>
+          </button> */}
           <button 
             className={`service-tab ${activeMainTab === 'doctors' ? 'active' : ''}`}
             onClick={() => setActiveMainTab('doctors')}
@@ -1449,7 +1437,7 @@ function App() {
             </p>
             
             {/* Integrated Search Input */}
-            {(activeMainTab === 'restaurants' || activeMainTab === 'doctors' || activeMainTab === 'supermarket') && (
+            {(activeMainTab === 'restaurants' || activeMainTab === 'doctors' || activeMainTab === 'supermarket' || activeMainTab === 'pharmacy') && (
               <div className="search-wrapper hero-search-box">
                 <i className="fa-solid fa-magnifying-glass search-icon"></i>
                 <input
@@ -1458,6 +1446,8 @@ function App() {
                   placeholder={
                     activeMainTab === 'doctors'
                       ? "ابحث باسم الطبيب، الشارع، أو التخصص ف مغاغة..."
+                      : activeMainTab === 'pharmacy'
+                      ? "ابحث باسم الصيدلية أو اسم الشارع ف مغاغة..."
                       : "ابحث عن خدمة، مطعم، كريب، شاورما..."
                   }
                   value={searchTerm}
@@ -1953,6 +1943,112 @@ function App() {
               >
                 <i className="fa-brands fa-whatsapp"></i>
                 <span>أضف عيادتك الآن</span>
+              </a>
+            </div>
+          </div>
+        ) : activeMainTab === 'pharmacy' ? (
+          <div className="doctors-section-container" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            {(() => {
+              const filteredPharmacies = pharmacies.filter((ph) => {
+                return !searchTerm || 
+                  ph.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                  ph.address.toLowerCase().includes(searchTerm.toLowerCase());
+              });
+
+              if (filteredPharmacies.length === 0) {
+                return (
+                  <div className="empty-state">
+                    <i className="fa-solid fa-mortar-pestle" style={{ fontSize: '48px', marginBottom: '10px', opacity: 0.5 }}></i>
+                    <h3 className="empty-state-title">لا يوجد صيدليات تطابق بحثك</h3>
+                    <p>يرجى التأكد من كتابة الاسم بشكل صحيح أو تصفح باقي الصيدليات.</p>
+                  </div>
+                );
+              }
+
+              return (
+                <div className="jobs-grid">
+                  {filteredPharmacies.map((ph) => {
+                    const rawPhone = ph.phone && ph.phone !== '—' ? ph.phone : null;
+                    const phoneNumbers = rawPhone ? rawPhone.split('/').map(n => n.trim()).filter(Boolean) : [];
+
+                    return (
+                      <div key={ph.id} className="job-card vacancy-card">
+                        <div className="vacancy-header-bar">
+                          <h3 className="vacancy-title" style={{ margin: 0 }}>{ph.name}</h3>
+                          <span className="vacancy-tag-badge" style={{ background: '#e8f5e9', color: '#2e7d32' }}>
+                            <i className="fa-solid fa-clock"></i> {ph.workingHours || 'مفتوح على مدار الساعة'}
+                          </span>
+                        </div>
+
+                        <div className="job-card-details">
+                          <div className="job-detail-row-inline" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap', fontSize: '13.5px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <i className="fa-solid fa-location-dot" style={{ color: 'var(--accent-color)' }}></i>
+                              <span><strong>العنوان:</strong> {ph.address}</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <i className="fa-solid fa-phone" style={{ color: 'var(--accent-color)' }}></i>
+                              <span><strong>التليفون:</strong> {ph.phone || 'غير مسجل'}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="job-card-actions" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '12px' }}>
+                          {phoneNumbers.length === 1 ? (
+                            <a href={`tel:${phoneNumbers[0]}`} className="job-action-btn btn-call" style={{ flex: '1 1 auto', padding: '10px 18px', textAlign: 'center', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                              <i className="fa-solid fa-phone"></i>
+                              <span>اتصال</span>
+                            </a>
+                          ) : phoneNumbers.length > 1 ? (
+                            <button 
+                              className="job-action-btn btn-call" 
+                              style={{ flex: '1 1 auto', padding: '10px 18px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                              onClick={() => setPhoneSelectorList(phoneNumbers.map((num, idx) => ({ label: `اتصال بالخط ${idx + 1}: ${num}`, number: num })))}
+                            >
+                              <i className="fa-solid fa-phone"></i>
+                              <span>اتصال ({phoneNumbers.length})</span>
+                            </button>
+                          ) : (
+                            <div className="job-action-btn" style={{ flex: '1 1 auto', background: 'var(--bg-tertiary)', color: 'var(--text-muted)', cursor: 'default', padding: '10px 14px', textAlign: 'center', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                              <i className="fa-solid fa-phone-slash"></i>
+                              <span>بدون تليفون</span>
+                            </div>
+                          )}
+
+                          {ph.locationUrl && (
+                            <a 
+                              href={ph.locationUrl} 
+                              target="_blank" 
+                              rel="noopener noreferrer" 
+                              className="job-action-btn" 
+                              style={{ flex: '1 1 auto', backgroundColor: 'var(--brand-dark-blue)', color: 'white', padding: '10px 18px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px', borderRadius: 'var(--radius-sm)' }}
+                            >
+                              <i className="fa-solid fa-location-arrow"></i>
+                              <span>الاتجاهات</span>
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })()}
+
+            {/* Pharmacy CTA Banner */}
+            <div className="job-cta-banner">
+              <div className="job-cta-text">
+                <h3>هل أنت صاحب صيدلية في مغاغة؟ 💊</h3>
+                <p>أضف بيانات صيدليتك ومواعيد العمل مجاناً لتسهيل وصول أهالي مغاغة إليك!</p>
+              </div>
+              <a 
+                href={`https://wa.me/201062049652?text=${encodeURIComponent("أريد إضافة بيانات صيدليتي في قسم الصيدليات بدليل مغاغة")}`}
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="job-cta-btn"
+              >
+                <i className="fa-brands fa-whatsapp"></i>
+                <span>أضف صيدليتك الآن</span>
               </a>
             </div>
           </div>
