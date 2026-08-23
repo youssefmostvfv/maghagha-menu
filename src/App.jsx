@@ -80,6 +80,10 @@ function App() {
   const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [touchStartDist, setTouchStartDist] = useState(0);
+  const [touchStartScale, setTouchStartScale] = useState(1);
+  const [touchStartX, setTouchStartX] = useState(0);
+  const [touchStartY, setTouchStartY] = useState(0);
   const [showPreloader, setShowPreloader] = useState(true);
   const [fadePreloader, setFadePreloader] = useState(false);
   const [ratings, setRatings] = useState({});
@@ -190,6 +194,34 @@ function App() {
       set(ref(db, `restaurant_calls/${rIdStr}/logs/${logId}`), localDateTime);
     }).catch((err) => console.error('Call tracking error:', err));
   };
+
+  // Handle browser/hardware back button navigation for tabs
+  useEffect(() => {
+    // Replace initial state so it has a default tab
+    if (window.history.state === null) {
+      window.history.replaceState({ tab: 'restaurants' }, '');
+    }
+
+    const handlePopState = (event) => {
+      if (event.state && event.state.tab) {
+        setActiveMainTab(event.state.tab);
+      } else {
+        setActiveMainTab('restaurants');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
+  useEffect(() => {
+    const currentState = window.history.state;
+    if (!currentState || currentState.tab !== activeMainTab) {
+      window.history.pushState({ tab: activeMainTab }, '');
+    }
+  }, [activeMainTab]);
 
   useEffect(() => {
     if (isCallsPage || isAdminPage) {
@@ -2414,19 +2446,53 @@ function App() {
             onMouseMove={(e) => handleDragMove(e.clientX, e.clientY)}
             onMouseUp={handleDragEnd}
             onMouseLeave={handleDragEnd}
-            onTouchStart={(e) => {
-              if (e.touches.length === 1) {
-                handleDragStart(e.touches[0].clientX, e.touches[0].clientY);
-              }
-            }}
-            onTouchMove={(e) => {
-              if (e.touches.length === 1) {
-                handleDragMove(e.touches[0].clientX, e.touches[0].clientY);
-              }
-            }}
-            onTouchEnd={handleDragEnd}
-            style={{ cursor: zoomScale > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default' }}
-          >
+             onTouchStart={(e) => {
+               if (e.touches.length === 1) {
+                 setTouchStartX(e.touches[0].clientX);
+                 setTouchStartY(e.touches[0].clientY);
+                 handleDragStart(e.touches[0].clientX, e.touches[0].clientY);
+               } else if (e.touches.length === 2) {
+                 const dist = Math.hypot(
+                   e.touches[0].clientX - e.touches[1].clientX,
+                   e.touches[0].clientY - e.touches[1].clientY
+                 );
+                 setTouchStartDist(dist);
+                 setTouchStartScale(zoomScale);
+               }
+             }}
+             onTouchMove={(e) => {
+               if (e.touches.length === 1) {
+                 handleDragMove(e.touches[0].clientX, e.touches[0].clientY);
+               } else if (e.touches.length === 2 && touchStartDist > 0) {
+                 const dist = Math.hypot(
+                   e.touches[0].clientX - e.touches[1].clientX,
+                   e.touches[0].clientY - e.touches[1].clientY
+                 );
+                 const factor = dist / touchStartDist;
+                 const newScale = Math.min(Math.max(touchStartScale * factor, 0.85), 3.5);
+                 setZoomScale(newScale);
+                 if (newScale <= 1.01) {
+                   setPanOffset({ x: 0, y: 0 });
+                 }
+               }
+             }}
+             onTouchEnd={(e) => {
+               handleDragEnd();
+               if (zoomScale <= 1.1 && e.changedTouches && e.changedTouches.length > 0) {
+                 const diffX = e.changedTouches[0].clientX - touchStartX;
+                 const diffY = e.changedTouches[0].clientY - touchStartY;
+                 if (Math.abs(diffX) > 60 && Math.abs(diffY) < 50) {
+                   if (diffX > 0) {
+                     handlePrevImage();
+                   } else {
+                     handleNextImage();
+                   }
+                 }
+               }
+               setTouchStartDist(0);
+             }}
+             style={{ cursor: zoomScale > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default' }}
+           >
             <img 
               src={activeMenuImage} 
               alt="صورة المنيو الكبيرة" 
