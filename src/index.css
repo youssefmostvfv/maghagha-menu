@@ -1419,6 +1419,43 @@ body {
   color: #2563eb;
 }
 
+/* Fixed Bottom Left WhatsApp Button */
+.fixed-whatsapp-left-btn {
+  position: fixed;
+  bottom: 74px;
+  left: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #25d366;
+  color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 140;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.fixed-whatsapp-left-btn:hover {
+  transform: scale(1.1) translateY(-3px);
+  box-shadow: 0 12px 28px rgba(37, 211, 102, 0.35);
+  background: #22c55e;
+  color: #ffffff;
+}
+
+.fixed-whatsapp-left-btn:active {
+  transform: scale(0.95);
+}
+
+.fixed-whatsapp-left-btn i {
+  font-size: 22px;
+  color: #ffffff;
+}
+
 
 .bottom-whatsapp-btn {
   display: flex;

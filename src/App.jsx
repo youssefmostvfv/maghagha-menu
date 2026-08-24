@@ -2834,16 +2834,28 @@ function App() {
         </div>
       )}
 
-      {/* Fixed Bottom Left QR Button (Hidden when opening restaurant menu / lightbox) */}
+      {/* Fixed Bottom Left QR & WhatsApp Buttons (Hidden when opening restaurant menu / lightbox) */}
       {!selectedRestaurant && !activeMenuImage && (
-        <button 
-          onClick={() => setShowQrModal(true)}
-          className="fixed-qr-left-btn"
-          title="عرض الـ QR Code الخاص بالموقع"
-          aria-label="QR Code"
-        >
-          <i className="fa-solid fa-qrcode"></i>
-        </button>
+        <>
+          {/* <a 
+            href={`https://wa.me/201062049652?text=${encodeURIComponent("أهلاً، أريد الاستفسار عن خدمات دليل مغاغة 📱✨")}`}
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="fixed-whatsapp-left-btn"
+            title="تواصل معنا عبر واتساب"
+            aria-label="WhatsApp"
+          >
+            <i className="fa-brands fa-whatsapp"></i>
+          </a> */}
+          <button 
+            onClick={() => setShowQrModal(true)}
+            className="fixed-qr-left-btn"
+            title="عرض الـ QR Code الخاص بالموقع"
+            aria-label="QR Code"
+          >
+            <i className="fa-solid fa-qrcode"></i>
+          </button>
+        </>
       )}
 
       {/* Floating Bottom WhatsApp Button */}
