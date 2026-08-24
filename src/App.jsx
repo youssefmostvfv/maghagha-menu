@@ -232,6 +232,61 @@ function App() {
     }
   };
 
+  // Dynamic SEO Meta Tags update depending on the selected tab
+  useEffect(() => {
+    const seoMap = {
+      restaurants: {
+        title: "منيو مغاغة - دليل مطاعم مغاغة وأرقام الدليفري 🍔",
+        description: "منصتك المتكاملة لتصفح منيو، أسعار، تليفونات وعناوين جميع مطاعم مغاغة بنقرة واحدة! اطلب دليفري الآن بسهولة."
+      },
+      supermarket: {
+        title: "دليل سوبر ماركت مغاغة - عناوين وأرقام التوصيل 🛒",
+        description: "تصفح أرقام، فروع، وعروض أفضل المحلات والسوبر ماركت في مغاغة للتسوق والتوصيل المنزلي السريع."
+      },
+      jobs: {
+        title: "وظائف مغاغة - دليل فرص العمل والوظائف الشاغرة 💼",
+        description: "منصتك للتواصل المباشر بين الباحثين عن عمل وأصحاب الأعمال والمحلات في مركز مغاغة. أضف إعلانك مجاناً."
+      },
+      doctors: {
+        title: "دليل أطباء مغاغة - عناوين وتليفونات عيادات مغاغة 👨‍⚕️",
+        description: "دليل كامل لأشطر الأطباء والعيادات ومراكز التحاليل والآشعة بمختلف التخصصات في مركز مغاغة بالمنيا."
+      },
+      pharmacy: {
+        title: "دليل صيدليات مغاغة - أرقام الصيدليات والعناوين 💊",
+        description: "دليل كامل للصيدليات المتاحة والعاملة في مغاغة لتلبية احتياجاتك الدوائية على مدار الساعة."
+      },
+      gov: {
+        title: "الدليل الحكومي والخدمي بمغاغة - أرقام ومواعيد المصالح 🏛️",
+        description: "دليل أرقام، عناوين، ومواعيد المصالح الحكومية والخدمات والمرافق العامة والكهرباء والشرطة والطوارئ بمغاغة."
+      },
+      motorcycle: {
+        title: "كباتن دليفري وتوصيل طلبات بمغاغة 🏍️",
+        description: "تواصل مباشرة مع أسرع كباتن توصيل طلبات ومشاوير وسفر داخل مغاغة وضواحيها بأفضل الأسعار."
+      }
+    };
+
+    const currentSeo = seoMap[activeMainTab] || seoMap.restaurants;
+    
+    // Update Title
+    document.title = currentSeo.title;
+
+    // Update Meta Description
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (!metaDesc) {
+      metaDesc = document.createElement('meta');
+      metaDesc.setAttribute('name', 'description');
+      document.head.appendChild(metaDesc);
+    }
+    metaDesc.setAttribute('content', currentSeo.description);
+
+    // Update Open Graph Tags (for Social Sharing on FB/WA)
+    let ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) ogTitle.setAttribute('content', currentSeo.title);
+
+    let ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc) ogDesc.setAttribute('content', currentSeo.description);
+  }, [activeMainTab]);
+
   // Handle browser/hardware back button navigation for tabs
   useEffect(() => {
     // Replace initial state so it has a default tab
