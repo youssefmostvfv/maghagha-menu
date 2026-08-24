@@ -17,7 +17,8 @@ export const RESTAURANTS = [
     name: "نموذج تجريبي",
     category: "grill",
     logo: "grill-logo",
-    description: "مطعم مشويات تجريبي لخدمات المشويات واللحوم البلدية الفاخرة في مغاغة.",
+    description:
+      "مطعم مشويات تجريبي لخدمات المشويات واللحوم البلدية الفاخرة في مغاغة.",
     phones: ["01000000000"],
     whatsApp: "01000000000",
     deliveryFee: "15 جنيه",
@@ -39,9 +40,7 @@ export const RESTAURANTS = [
         description: "ربع فرخة مشوية على الفحم مع أرز مبهر وسلطات",
       },
     ],
-    menuImages: [
-      "tokyo-menu1"
-    ],
+    menuImages: ["tokyo-menu1"],
   },
   {
     id: 21,
@@ -2891,7 +2890,7 @@ export const INITIAL_GOV_SERVICES = [
     phone: "086 3563474",
     workingHours: "من 8:00 ص إلى 2:00 م",
     locationUrl: "https://maps.app.goo.gl/DK4stG62yERpCF3v8",
-    category: "civil"
+    category: "civil",
   },
   {
     id: "gov_council",
@@ -2899,8 +2898,9 @@ export const INITIAL_GOV_SERVICES = [
     address: "مغاغة - بجوار مركز الشرطة",
     phone: "086 3562203",
     workingHours: "من 8:00 ص إلى 2:00 ظهراً (عدا الجمعة والسبت)",
-    locationUrl: "https://www.google.com/maps/search/?api=1&query=%D9%85%D8%AC%D9%84%D8%B3+%D9%85%D8%AF%D9%8A%D9%86%D8%A9+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9",
-    category: "civil"
+    locationUrl:
+      "https://www.google.com/maps/search/?api=1&query=%D9%85%D8%AC%D9%84%D8%B3+%D9%85%D8%AF%D9%8A%D9%86%D8%A9+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9",
+    category: "civil",
   },
   {
     id: "gov_post",
@@ -2908,8 +2908,9 @@ export const INITIAL_GOV_SERVICES = [
     address: "ش طه حسين، مغاغة، المنيا",
     phone: "086 7550016",
     workingHours: "السبت–الأربعاء 8ص–3م",
-    locationUrl: "https://www.google.com/maps/search/?api=1&query=%D8%A8%D8%B1%D9%8A%D8%AF+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9",
-    category: "civil"
+    locationUrl:
+      "https://www.google.com/maps/search/?api=1&query=%D8%A8%D8%B1%D9%8A%D8%AF+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9",
+    category: "civil",
   },
   {
     id: "gov_supply",
@@ -2918,7 +2919,7 @@ export const INITIAL_GOV_SERVICES = [
     phone: "",
     workingHours: "أيام العمل الرسمية",
     locationUrl: "",
-    category: "civil"
+    category: "civil",
   },
   {
     id: "gov_water",
@@ -2926,8 +2927,9 @@ export const INITIAL_GOV_SERVICES = [
     address: "مغاغة - طريق القاهرة أسيوط الزراعي",
     phone: "125 / 086 3562410",
     workingHours: "مفتوح على مدار الساعة (الطوارئ)",
-    locationUrl: "https://www.google.com/maps/search/?api=1&query=%D8%B4%D8%B1%D9%83%D8%A9+%D9%85%D9%8A%D8%A7%D9%87+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9",
-    category: "civil"
+    locationUrl:
+      "https://www.google.com/maps/search/?api=1&query=%D8%B4%D8%B1%D9%83%D8%A9+%D9%85%D9%8A%D8%A7%D9%87+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9",
+    category: "civil",
   },
   {
     id: "gov_electricity",
@@ -2935,8 +2937,9 @@ export const INITIAL_GOV_SERVICES = [
     address: "شارع المدارس",
     phone: "121 / 086 3562255",
     workingHours: "مفتوح على مدار الساعة (الطوارئ)",
-    locationUrl: "https://www.google.com/maps/search/?api=1&query=%D9%83%D9%87%D8%B1%D8%A8%D8%A7%D8%A1+%D9%85%D8%BA%D8%A7%D8%BA%D9%89",
-    category: "civil"
+    locationUrl:
+      "https://www.google.com/maps/search/?api=1&query=%D9%83%D9%87%D8%B1%D8%A8%D8%A7%D8%A1+%D9%85%D8%BA%D8%A7%D8%BA%D9%89",
+    category: "civil",
   },
   {
     id: "gov_traffic_office",
@@ -2945,7 +2948,7 @@ export const INITIAL_GOV_SERVICES = [
     phone: "",
     workingHours: "أيام العمل الرسمية",
     locationUrl: "",
-    category: "civil"
+    category: "civil",
   },
 
   // --- EMERGENCY SECTION ---
@@ -2956,7 +2959,7 @@ export const INITIAL_GOV_SERVICES = [
     phone: "122",
     workingHours: "24 ساعة",
     locationUrl: "",
-    category: "emergency"
+    category: "emergency",
   },
   {
     id: "gov_ambulance",
@@ -2965,7 +2968,7 @@ export const INITIAL_GOV_SERVICES = [
     phone: "123",
     workingHours: "24 ساعة",
     locationUrl: "",
-    category: "emergency"
+    category: "emergency",
   },
   {
     id: "gov_fire",
@@ -2974,7 +2977,7 @@ export const INITIAL_GOV_SERVICES = [
     phone: "180",
     workingHours: "24 ساعة",
     locationUrl: "",
-    category: "emergency"
+    category: "emergency",
   },
   {
     id: "gov_traffic_police",
@@ -2983,7 +2986,7 @@ export const INITIAL_GOV_SERVICES = [
     phone: "128",
     workingHours: "24 ساعة",
     locationUrl: "",
-    category: "emergency"
+    category: "emergency",
   },
   {
     id: "gov_tourism_police",
@@ -2992,7 +2995,7 @@ export const INITIAL_GOV_SERVICES = [
     phone: "126",
     workingHours: "24 ساعة",
     locationUrl: "",
-    category: "emergency"
+    category: "emergency",
   },
   {
     id: "gov_elec_emerg",
@@ -3001,7 +3004,7 @@ export const INITIAL_GOV_SERVICES = [
     phone: "121",
     workingHours: "24 ساعة",
     locationUrl: "",
-    category: "emergency"
+    category: "emergency",
   },
   {
     id: "gov_gas_emerg",
@@ -3010,7 +3013,7 @@ export const INITIAL_GOV_SERVICES = [
     phone: "129",
     workingHours: "24 ساعة",
     locationUrl: "",
-    category: "emergency"
+    category: "emergency",
   },
   {
     id: "gov_water_emerg",
@@ -3019,7 +3022,7 @@ export const INITIAL_GOV_SERVICES = [
     phone: "125",
     workingHours: "24 ساعة",
     locationUrl: "",
-    category: "emergency"
+    category: "emergency",
   },
   {
     id: "gov_minia_ops",
@@ -3028,7 +3031,7 @@ export const INITIAL_GOV_SERVICES = [
     phone: "114",
     workingHours: "24 ساعة",
     locationUrl: "",
-    category: "emergency"
+    category: "emergency",
   },
   {
     id: "gov_road_emerg",
@@ -3037,16 +3040,17 @@ export const INITIAL_GOV_SERVICES = [
     phone: "1221111111",
     workingHours: "24 ساعة",
     locationUrl: "",
-    category: "emergency"
+    category: "emergency",
   },
   {
     id: "gov_amb_minia",
     name: "أرقام الإسعاف البديلة (المنيا)",
     address: "محافظة المنيا",
-    phone: "086 2330053 / 086 2325264 / 086 2325265 / 086 2325266 / 086 2325267 / 086 2325268",
+    phone:
+      "086 2330053 / 086 2325264 / 086 2325265 / 086 2325266 / 086 2325267 / 086 2325268",
     workingHours: "24 ساعة",
     locationUrl: "",
-    category: "emergency"
+    category: "emergency",
   },
   {
     id: "gov_maghagha_police_station",
@@ -3055,7 +3059,7 @@ export const INITIAL_GOV_SERVICES = [
     phone: "",
     workingHours: "24 ساعة",
     locationUrl: "",
-    category: "emergency"
+    category: "emergency",
   },
   {
     id: "gov_hosp_maghagha",
@@ -3064,7 +3068,7 @@ export const INITIAL_GOV_SERVICES = [
     phone: "086 7550035",
     workingHours: "24 ساعة",
     locationUrl: "",
-    category: "emergency"
+    category: "emergency",
   },
   {
     id: "gov_hosp_fever",
@@ -3073,6 +3077,6 @@ export const INITIAL_GOV_SERVICES = [
     phone: "086 7550377",
     workingHours: "24 ساعة",
     locationUrl: "",
-    category: "emergency"
-  }
+    category: "emergency",
+  },
 ];

@@ -370,26 +370,8 @@ function App() {
 
     // Fetch and seed Supermarkets
     const dbSupermarketsRef = ref(db, 'supermarkets');
-    get(dbSupermarketsRef)
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          const fetched = normalizeData(snapshot.val());
-          const existingIds = new Set(fetched.map(item => String(item.id)));
-          const missing = INITIAL_SUPERMARKETS.filter(item => !existingIds.has(String(item.id)));
-          const merged = [...fetched, ...missing];
-          setSupermarkets(merged);
-          if (missing.length > 0) {
-            set(dbSupermarketsRef, merged);
-          }
-        } else {
-          set(dbSupermarketsRef, INITIAL_SUPERMARKETS);
-          setSupermarkets(INITIAL_SUPERMARKETS);
-        }
-      })
-      .catch((err) => {
-        console.error('Error loading supermarkets:', err);
-        setSupermarkets(INITIAL_SUPERMARKETS);
-      });
+    set(dbSupermarketsRef, INITIAL_SUPERMARKETS);
+    setSupermarkets(INITIAL_SUPERMARKETS);
 
     // Fetch and seed Job Seekers
     const dbJobSeekersRef = ref(db, 'job_seekers');
