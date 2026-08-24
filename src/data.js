@@ -13,6 +13,37 @@ export const CATEGORIES = [
 
 export const RESTAURANTS = [
   {
+    id: 999,
+    name: "نموذج تجريبي",
+    category: "grill",
+    logo: "grill-logo",
+    description: "مطعم مشويات تجريبي لخدمات المشويات واللحوم البلدية الفاخرة في مغاغة.",
+    phones: ["01000000000"],
+    whatsApp: "01000000000",
+    deliveryFee: "15 جنيه",
+    address: "مغاغة - الشارع التجريبي - بجوار الميدان",
+    workingHours: {
+      start: "11:00",
+      end: "23:59",
+      display: "من 11:00 صباحاً إلى 12:00 منتصف الليل",
+    },
+    popularItems: [
+      {
+        name: "كيلو كباب وكفتة مشكل",
+        price: 350,
+        description: "مشكل كباب وكفتة على الفحم مع السلطات والخبز",
+      },
+      {
+        name: "ربع فرخة مشوية صدر",
+        price: 90,
+        description: "ربع فرخة مشوية على الفحم مع أرز مبهر وسلطات",
+      },
+    ],
+    menuImages: [
+      "tokyo-menu1"
+    ],
+  },
+  {
     id: 21,
     name: "مطعم توكيو - Tokyo",
     category: "crepe",

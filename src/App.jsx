@@ -105,6 +105,7 @@ function App() {
   const [pharmacies, setPharmacies] = useState(INITIAL_PHARMACIES);
   const [govServices, setGovServices] = useState(INITIAL_GOV_SERVICES);
   const [activeGovSubTab, setActiveGovSubTab] = useState('civil'); // 'civil' | 'emergency'
+  const [promoAlert, setPromoAlert] = useState(null); // { phone: string, countdown: number }
   
   const [isAdminPage, setIsAdminPage] = useState(false);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
@@ -195,6 +196,39 @@ function App() {
       const logId = now.getTime();
       set(ref(db, `restaurant_calls/${rIdStr}/logs/${logId}`), localDateTime);
     }).catch((err) => console.error('Call tracking error:', err));
+  };
+
+  // Promo alert countdown timer and call initiation helper
+  useEffect(() => {
+    let timer;
+    if (promoAlert && promoAlert.countdown > 0) {
+      timer = setTimeout(() => {
+        setPromoAlert(prev => {
+          if (!prev) return null;
+          if (prev.countdown <= 1) {
+            window.location.href = `tel:${prev.phone}`;
+            return null;
+          }
+          return { ...prev, countdown: prev.countdown - 1 };
+        });
+      }, 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [promoAlert]);
+
+  const handleInitiateCall = (phoneNum, restaurant) => {
+    if (restaurant && String(restaurant.id) === '999') {
+      setPromoAlert({
+        phone: phoneNum,
+        countdown: 5
+      });
+      handleRecordRestaurantCall(restaurant.id);
+    } else {
+      if (restaurant) {
+        handleRecordRestaurantCall(restaurant.id);
+      }
+      window.location.href = `tel:${phoneNum}`;
+    }
   };
 
   // Handle browser/hardware back button navigation for tabs
@@ -2380,8 +2414,7 @@ function App() {
                         } else if (selectedRestaurant.phones && selectedRestaurant.phones.length === 1) {
                           const phone = selectedRestaurant.phones[0];
                           const number = typeof phone === 'object' && phone !== null ? phone.number : phone;
-                          handleRecordRestaurantCall(selectedRestaurant.id);
-                          window.location.href = `tel:${number}`;
+                          handleInitiateCall(number, selectedRestaurant);
                         }
                       }} 
                       className="action-btn btn-call"
@@ -2689,6 +2722,35 @@ function App() {
         </div>
       )}
 
+      {/* Promo Code Alert Modal */}
+      {promoAlert && (
+        <div className="drawer-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+          <div className="drawer-content" style={{ maxWidth: '400px', width: '90%', padding: '24px', textAlign: 'center', borderRadius: '16px', position: 'relative', transform: 'none', bottom: 'auto' }}>
+            <button 
+              className="close-btn" 
+              onClick={() => {
+                const phone = promoAlert.phone;
+                setPromoAlert(null);
+                window.location.href = `tel:${phone}`;
+              }} 
+              style={{ position: 'absolute', top: '16px', right: '16px', border: 'none', background: 'none', fontSize: '20px', cursor: 'pointer', color: 'var(--text-muted)' }}
+            >
+              <i className="fa-solid fa-xmark"></i>
+            </button>
+            <div style={{ fontSize: '48px', color: '#f59e0b', marginBottom: '16px' }}>
+              <i className="fa-solid fa-gift"></i>
+            </div>
+            <h3 style={{ fontSize: '18px', margin: '0 0 12px 0', color: 'var(--text-primary)', fontFamily: 'inherit' }}>كود خصم خاص! 🎁</h3>
+            <p style={{ fontSize: '14.5px', color: 'var(--text-secondary)', lineHeight: '1.6', margin: '0 0 20px 0', fontFamily: 'inherit' }}>
+              متنساش تستخدم كود خصم <strong style={{ color: '#f59e0b', fontSize: '17px' }}>k-824</strong> مع الكاشير وأنت بتتصل علشان تستفيد بالخصم!
+            </p>
+            <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
+              سيتم التحويل للاتصال تلقائياً خلال {promoAlert.countdown} ثوانٍ...
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Phone Selector Modal */}
       {phoneSelectorList && (
         <div className="drawer-overlay" onClick={() => setPhoneSelectorList(null)} style={{ zIndex: 300 }}>
@@ -2710,11 +2772,10 @@ function App() {
                     href={`tel:${number}`} 
                     className="action-btn btn-call" 
                     style={{ fontSize: '16px', padding: '14px' }}
-                    onClick={() => {
-                      if (selectedRestaurant && !String(selectedRestaurant.id).startsWith('captain_')) {
-                        handleRecordRestaurantCall(selectedRestaurant.id);
-                      }
+                    onClick={(e) => {
+                      e.preventDefault();
                       setPhoneSelectorList(null);
+                      handleInitiateCall(number, selectedRestaurant);
                     }}
                   >
                     <i className="fa-solid fa-phone"></i>
