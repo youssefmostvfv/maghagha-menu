@@ -119,6 +119,7 @@ function App() {
   const [showAddRestaurantForm, setShowAddRestaurantForm] = useState(false);
   const [showAddCaptainForm, setShowAddCaptainForm] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [showIOSInstallInstructions, setShowIOSInstallInstructions] = useState(false);
   const [showServicesArrow, setShowServicesArrow] = useState(true);
   const [showCategoriesArrow, setShowCategoriesArrow] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -281,7 +282,20 @@ function App() {
     };
   }, []);
 
+  // Check if iOS and not installed
+  const isIOSDevice = () => {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  };
+
+  const isAppStandalone = () => {
+    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  };
+
   const handleInstallApp = async () => {
+    if (isIOSDevice()) {
+      setShowIOSInstallInstructions(true);
+      return;
+    }
     if (!deferredPrompt) return;
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
@@ -1399,7 +1413,7 @@ function App() {
       <header className="app-header">
         <h1 className="brand-title"><img src={logo} alt="Logo" className="brand-logo-img" /> منيو مغاغة</h1>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          {deferredPrompt && (
+          {(deferredPrompt || (isIOSDevice() && !isAppStandalone())) && (
             <button 
               className="install-app-btn" 
               onClick={handleInstallApp}
@@ -2747,6 +2761,50 @@ function App() {
             <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
               سيتم التحويل للاتصال تلقائياً خلال {promoAlert.countdown} ثوانٍ...
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* iOS Safari PWA Install Instructions Modal */}
+      {showIOSInstallInstructions && (
+        <div className="drawer-overlay" onClick={() => setShowIOSInstallInstructions(false)} style={{ zIndex: 10000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="drawer-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '420px', width: '90%', padding: '24px', borderRadius: '20px', textAlign: 'center', position: 'relative', transform: 'none', bottom: 'auto' }}>
+            <button className="close-btn" onClick={() => setShowIOSInstallInstructions(false)} style={{ position: 'absolute', top: '16px', right: '16px', border: 'none', background: 'none', fontSize: '20px', cursor: 'pointer', color: 'var(--text-muted)' }}>
+              <i className="fa-solid fa-xmark"></i>
+            </button>
+            <div style={{ fontSize: '40px', color: '#007aff', marginBottom: '12px' }}>
+              <i className="fa-brands fa-apple"></i>
+            </div>
+            <h3 style={{ fontSize: '18px', margin: '0 0 16px 0', color: 'var(--text-primary)', fontFamily: 'inherit' }}>تثبيت التطبيق على آيفون 📱</h3>
+            <p style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '20px', fontFamily: 'inherit' }}>
+              لتثبيت دليل مغاغة على شاشة هاتفك وتصفحه كشكل تطبيق، اتبع الخطوات البسيطة التالية باستخدام متصفح <strong>Safari</strong>:
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', textAlign: 'right', fontSize: '14px', color: 'var(--text-primary)', fontFamily: 'inherit' }}>
+              <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+                <span style={{ background: '#007aff', color: '#fff', width: '22px', height: '22px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '12px', fontWeight: 'bold' }}>١</span>
+                <div>
+                  اضغط على زر **المشاركة** <i className="fa-solid fa-arrow-up-from-bracket" style={{ color: '#007aff', margin: '0 4px' }}></i> في أسفل شاشة المتصفح.
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+                <span style={{ background: '#007aff', color: '#fff', width: '22px', height: '22px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '12px', fontWeight: 'bold' }}>٢</span>
+                <div>
+                  اسحب القائمة للأعلى ثم اختر **\"إضافة إلى الصفحة الرئيسية\"** (Add to Home Screen) <i className="fa-regular fa-square-plus" style={{ margin: '0 4px' }}></i>.
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+                <span style={{ background: '#007aff', color: '#fff', width: '22px', height: '22px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '12px', fontWeight: 'bold' }}>٣</span>
+                <div>
+                  اضغط على **\"إضافة\"** (Add) في الزاوية العلوية اليمنى.
+                </div>
+              </div>
+            </div>
+            <button 
+              onClick={() => setShowIOSInstallInstructions(false)} 
+              style={{ marginTop: '24px', width: '100%', padding: '12px', background: '#007aff', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: 'bold', fontSize: '14px', cursor: 'pointer', fontFamily: 'inherit' }}
+            >
+              فهمت، جاهز للتثبيت
+            </button>
           </div>
         </div>
       )}
