@@ -2852,52 +2852,196 @@ export const INITIAL_PHARMACIES = [
 ];
 
 export const INITIAL_GOV_SERVICES = [
+  // --- CIVIL SECTION ---
   {
-    id: "gov_0",
+    id: "gov_court",
     name: "محكمة مغاغة",
     address: "مركز مغاغة، محافظة المنيا",
     phone: "086 3563474",
     workingHours: "من 8:00 ص إلى 2:00 م",
-    locationUrl: "https://maps.app.goo.gl/DK4stG62yERpCF3v8"
+    locationUrl: "https://maps.app.goo.gl/DK4stG62yERpCF3v8",
+    category: "civil"
   },
   {
-    id: "gov_1",
+    id: "gov_council",
     name: "مجلس مدينة مغاغة",
     address: "مغاغة - بجوار مركز الشرطة",
     phone: "086 3562203",
     workingHours: "من 8:00 ص إلى 2:00 ظهراً (عدا الجمعة والسبت)",
-    locationUrl: "https://www.google.com/maps/search/?api=1&query=%D9%85%D8%AC%D9%84%D8%B3+%D9%85%D8%AF%D9%8A%D9%86%D8%A9+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9"
+    locationUrl: "https://www.google.com/maps/search/?api=1&query=%D9%85%D8%AC%D9%84%D8%B3+%D9%85%D8%AF%D9%8A%D9%86%D8%A9+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9",
+    category: "civil"
   },
   {
-    id: "gov_2",
-    name: "مكتب بريد مغاغة الرئيسي",
-    address: "شارع الجمهورية - أمام المحكمة",
-    phone: "086 3561911",
-    workingHours: "من 8:00 ص إلى 3:00 ظهراً (عدا الجمعة والسبت)",
-    locationUrl: "https://www.google.com/maps/search/?api=1&query=%D8%A8%D8%B1%D9%8A%D8%AF+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9+%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A"
+    id: "gov_post",
+    name: "مكتب بريد مغاغة",
+    address: "ش طه حسين، مغاغة، المنيا",
+    phone: "086 7550016",
+    workingHours: "السبت–الأربعاء 8ص–3م",
+    locationUrl: "https://www.google.com/maps/search/?api=1&query=%D8%A8%D8%B1%D9%8A%D8%AF+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9",
+    category: "civil"
   },
   {
-    id: "gov_3",
-    name: "مستشفى مغاغة العام",
-    address: "شارع عبد العظيم",
-    phone: "086 3562103",
-    workingHours: "مفتوح على مدار الساعة (الطوارئ)",
-    locationUrl: "https://www.google.com/maps/search/?api=1&query=%D9%85%D8%B3%D8%AA%D8%B4%D9%81%D9%89+%D9%85%D8%BA%D8%A7%D8%BA%D9%87+%D8%A7%D9%84%D8%B9%D8%A7%D9%85"
+    id: "gov_supply",
+    name: "مكتب تموين مغاغة",
+    address: "9 ش طه حسين، مغاغة، المنيا",
+    phone: "",
+    workingHours: "أيام العمل الرسمية",
+    locationUrl: "",
+    category: "civil"
   },
   {
-    id: "gov_4",
+    id: "gov_water",
     name: "شركة مياه الشرب والصرف الصحي بمغاغة",
     address: "مغاغة - طريق القاهرة أسيوط الزراعي",
     phone: "125 / 086 3562410",
     workingHours: "مفتوح على مدار الساعة (الطوارئ)",
-    locationUrl: "https://www.google.com/maps/search/?api=1&query=%D8%B4%D8%B1%D9%83%D8%A9+%D9%85%D9%8A%D8%A7%D9%87+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9"
+    locationUrl: "https://www.google.com/maps/search/?api=1&query=%D8%B4%D8%B1%D9%83%D8%A9+%D9%85%D9%8A%D8%A7%D9%87+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9",
+    category: "civil"
   },
   {
-    id: "gov_5",
+    id: "gov_electricity",
     name: "هندسة كهرباء مغاغة",
     address: "شارع المدارس",
     phone: "121 / 086 3562255",
     workingHours: "مفتوح على مدار الساعة (الطوارئ)",
-    locationUrl: "https://www.google.com/maps/search/?api=1&query=%D9%83%D9%87%D8%B1%D8%A8%D8%A7%D8%A1+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9"
+    locationUrl: "https://www.google.com/maps/search/?api=1&query=%D9%83%D9%87%D8%B1%D8%A8%D8%A7%D8%A1+%D9%85%D8%BA%D8%A7%D8%BA%D9%89",
+    category: "civil"
+  },
+  {
+    id: "gov_traffic_office",
+    name: "إدارة مرور مغاغة",
+    address: "مساكن الفشنية، مغاغة، المنيا",
+    phone: "",
+    workingHours: "أيام العمل الرسمية",
+    locationUrl: "",
+    category: "civil"
+  },
+
+  // --- EMERGENCY SECTION ---
+  {
+    id: "gov_police",
+    name: "الشرطة (نجدة)",
+    address: "جمهورية مصر العربية",
+    phone: "122",
+    workingHours: "24 ساعة",
+    locationUrl: "",
+    category: "emergency"
+  },
+  {
+    id: "gov_ambulance",
+    name: "الإسعاف (وزارة الصحة)",
+    address: "جمهورية مصر العربية",
+    phone: "123",
+    workingHours: "24 ساعة",
+    locationUrl: "",
+    category: "emergency"
+  },
+  {
+    id: "gov_fire",
+    name: "إدارة الحماية المدنية (المطافئ)",
+    address: "جمهورية مصر العربية",
+    phone: "180",
+    workingHours: "24 ساعة",
+    locationUrl: "",
+    category: "emergency"
+  },
+  {
+    id: "gov_traffic_police",
+    name: "شرطة المرور",
+    address: "وزارة الداخلية",
+    phone: "128",
+    workingHours: "24 ساعة",
+    locationUrl: "",
+    category: "emergency"
+  },
+  {
+    id: "gov_tourism_police",
+    name: "شرطة السياحة",
+    address: "وزارة الداخلية",
+    phone: "126",
+    workingHours: "24 ساعة",
+    locationUrl: "",
+    category: "emergency"
+  },
+  {
+    id: "gov_elec_emerg",
+    name: "طوارئ الكهرباء",
+    address: "الهيئة القومية لكهرباء مصر",
+    phone: "121",
+    workingHours: "24 ساعة",
+    locationUrl: "",
+    category: "emergency"
+  },
+  {
+    id: "gov_gas_emerg",
+    name: "طوارئ الغاز",
+    address: "الشركة القابضة للغازات",
+    phone: "129",
+    workingHours: "24 ساعة",
+    locationUrl: "",
+    category: "emergency"
+  },
+  {
+    id: "gov_water_emerg",
+    name: "طوارئ المياه",
+    address: "شركة مياه الشرب والصرف الصحي (المنيا)",
+    phone: "125",
+    workingHours: "24 ساعة",
+    locationUrl: "",
+    category: "emergency"
+  },
+  {
+    id: "gov_minia_ops",
+    name: "غرفة عمليات محافظة المنيا",
+    address: "محافظة المنيا",
+    phone: "114",
+    workingHours: "24 ساعة",
+    locationUrl: "",
+    category: "emergency"
+  },
+  {
+    id: "gov_road_emerg",
+    name: "طوارئ الطرق والكباري",
+    address: "وزارة النقل (الطرق السريعة)",
+    phone: "1221111111",
+    workingHours: "24 ساعة",
+    locationUrl: "",
+    category: "emergency"
+  },
+  {
+    id: "gov_amb_minia",
+    name: "أرقام الإسعاف البديلة (المنيا)",
+    address: "محافظة المنيا",
+    phone: "086 2330053 / 086 2325264 / 086 2325265 / 086 2325266 / 086 2325267 / 086 2325268",
+    workingHours: "24 ساعة",
+    locationUrl: "",
+    category: "emergency"
+  },
+  {
+    id: "gov_maghagha_police_station",
+    name: "مركز شرطة مغاغة",
+    address: "ش الجمهورية، مغاغة، المنيا (بجوار محكمة الأسرة)",
+    phone: "",
+    workingHours: "24 ساعة",
+    locationUrl: "",
+    category: "emergency"
+  },
+  {
+    id: "gov_hosp_maghagha",
+    name: "مستشفى مغاغة العام",
+    address: "ش المدارس، حي قليني، مغاغة، المنيا",
+    phone: "086 7550035",
+    workingHours: "24 ساعة",
+    locationUrl: "",
+    category: "emergency"
+  },
+  {
+    id: "gov_hosp_fever",
+    name: "مستشفى حميات مغاغة",
+    address: "نهاية ش 26 يوليو، أطنيه، مغاغة، المنيا",
+    phone: "086 7550377",
+    workingHours: "24 ساعة",
+    locationUrl: "",
+    category: "emergency"
   }
 ];

@@ -104,6 +104,7 @@ function App() {
   const [doctors, setDoctors] = useState(INITIAL_DOCTORS);
   const [pharmacies, setPharmacies] = useState(INITIAL_PHARMACIES);
   const [govServices, setGovServices] = useState(INITIAL_GOV_SERVICES);
+  const [activeGovSubTab, setActiveGovSubTab] = useState('civil'); // 'civil' | 'emergency'
   
   const [isAdminPage, setIsAdminPage] = useState(false);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
@@ -2103,19 +2104,51 @@ function App() {
           </div>
         ) : activeMainTab === 'gov' ? (
           <div className="doctors-section-container" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            
+            {/* Gov Sub-Tabs Switcher */}
+            <div className="scroll-indicator-wrapper primary-bg" style={{ alignSelf: 'stretch', marginBottom: '8px' }}>
+              <div className="categories-container" style={{ justifyContent: 'center', gap: '12px' }}>
+                <button 
+                  className={`category-chip ${activeGovSubTab === 'civil' ? 'active' : ''}`}
+                  onClick={() => setActiveGovSubTab('civil')}
+                  style={{ padding: '10px 24px', fontSize: '14px', borderRadius: '30px' }}
+                >
+                  <i className="fa-solid fa-building-columns"></i>
+                  <span>المدني</span>
+                </button>
+                <button 
+                  className={`category-chip ${activeGovSubTab === 'emergency' ? 'active' : ''}`}
+                  onClick={() => setActiveGovSubTab('emergency')}
+                  style={{ 
+                    padding: '10px 24px', 
+                    fontSize: '14px', 
+                    borderRadius: '30px',
+                    backgroundColor: activeGovSubTab === 'emergency' ? '#dc2626' : 'var(--bg-secondary)',
+                    color: activeGovSubTab === 'emergency' ? '#ffffff' : 'var(--text-primary)',
+                    borderColor: activeGovSubTab === 'emergency' ? '#dc2626' : 'var(--border-color)'
+                  }}
+                >
+                  <i className="fa-solid fa-shield-heart"></i>
+                  <span>طوارئ</span>
+                </button>
+              </div>
+            </div>
+
             {(() => {
               const filteredGov = govServices.filter((gov) => {
-                return !searchTerm || 
+                const matchesCategory = gov.category === activeGovSubTab;
+                const matchesSearch = !searchTerm || 
                   gov.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                   gov.address.toLowerCase().includes(searchTerm.toLowerCase());
+                return matchesCategory && matchesSearch;
               });
 
               if (filteredGov.length === 0) {
                 return (
                   <div className="empty-state">
-                    <i className="fa-solid fa-building-columns" style={{ fontSize: '48px', marginBottom: '10px', opacity: 0.5 }}></i>
-                    <h3 className="empty-state-title">لا يوجد جهات تطابق بحثك</h3>
-                    <p>يرجى التأكد من كتابة الاسم بشكل صحيح أو البحث بعبارة أخرى.</p>
+                    <i className={activeGovSubTab === 'emergency' ? "fa-solid fa-shield-heart" : "fa-solid fa-building-columns"} style={{ fontSize: '48px', marginBottom: '10px', opacity: 0.5, color: activeGovSubTab === 'emergency' ? '#dc2626' : 'inherit' }}></i>
+                    <h3 className="empty-state-title">لا توجد جهات تطابق بحثك</h3>
+                    <p>يرجى التأكد من كتابة الاسم بشكل صحيح أو تصفح باقي العناصر.</p>
                   </div>
                 );
               }
