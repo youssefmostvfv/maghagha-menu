@@ -784,6 +784,22 @@ export const CAPTAINS = [
 
 export const SUPERMARKETS = [
   {
+    id: "supermarket_2",
+    name: "الوكيل لتجارة الجملة - Al Wakeel",
+    logo: "alwakeel-logo",
+    description:
+      "محل الوكيل متخصص في بيع السلع الغذائية والبقالة الأساسية بالكامل، يقدم أسعار قطاعي بسعر الجملة لتلبية احتياجاتكم بأقل الأسعار.",
+    phones: ["01015838397", "01010279704"],
+    whatsApp: "201015838397",
+    address: "مغاغة - شارع الزهور - بجوار شبكة المياه - خلف المطافي",
+    deliveryFee: "خدمة توصيل طلبات 📦",
+    workingHours: {
+      start: "08:00",
+      end: "02:00",
+      display: "من 8:00 صباحاً إلى 2:00 بعد منتصف الليل",
+    },
+  },
+  {
     id: "supermarket_1",
     name: "هايبر العمدة - El Omda Hypermarket",
     logo: "elomda-logo",
@@ -796,22 +812,6 @@ export const SUPERMARKETS = [
       "فرع 3: مغاغة - منشية المصري بجوار جامع ناصر",
     ],
     deliveryFee: "خدمة توصيل فورية 🚀",
-    workingHours: {
-      start: "08:00",
-      end: "02:00",
-      display: "من 8:00 صباحاً إلى 2:00 بعد منتصف الليل",
-    },
-  },
-  {
-    id: "supermarket_2",
-    name: "الوكيل لتجارة الجملة - Al Wakeel",
-    logo: "alwakeel-logo",
-    description:
-      "محل الوكيل متخصص في بيع السلع الغذائية والبقالة الأساسية بالكامل، يقدم أسعار قطاعي بسعر الجملة لتلبية احتياجاتكم بأقل الأسعار.",
-    phones: ["01015838397", "01010279704"],
-    whatsApp: "201015838397",
-    address: "مغاغة - شارع الزهور - بجوار شبكة المياه - خلف المطافي",
-    deliveryFee: "خدمة توصيل طلبات 📦",
     workingHours: {
       start: "08:00",
       end: "02:00",
