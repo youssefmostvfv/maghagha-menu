@@ -1487,7 +1487,7 @@ function App() {
               {activeMainTab === 'gov' && "الدليل الحكومي والخدمي بمغاغة 🏛️"}
               {activeMainTab === 'motorcycle' && "كباتن دليفري مغاغة ف جيبك 🏍️"}
             </h2>
-            <p className="hero-subtitle">
+            {/* <p className="hero-subtitle">
               {activeMainTab === 'restaurants' && "منصتك المتكاملة لتصفح منيو، أسعار، تليفونات وعناوين جميع مطاعم مغاغة بنقرة واحدة!"}
               {activeMainTab === 'supermarket' && "تصفح أرقام، فروع، وعروض أفضل المحلات والسوبر ماركت في مغاغة!"}
               {activeMainTab === 'jobs' && "منصتك للتواصل المباشر بين الباحثين عن عمل وأصحاب الأعمال والمحلات في مغاغة!"}
@@ -1495,7 +1495,7 @@ function App() {
               {activeMainTab === 'pharmacy' && "دليل كامل للصيدليات المتاحة والعاملة في مغاغة لتلبية احتياجاتك الدوائية."}
               {activeMainTab === 'gov' && "دليل أرقام، عناوين، ومواعيد المصالح الحكومية والخدمات والمرافق العامة بمغاغة."}
               {activeMainTab === 'motorcycle' && "تواصل مباشرة مع أسرع كباتن توصيل طلبات ومشاوير وسفر داخل مغاغة وضواحيها!"}
-            </p>
+            </p> */}
 
             {/* Quick Search Tag Helpers */}
             {activeMainTab === 'restaurants' && (
