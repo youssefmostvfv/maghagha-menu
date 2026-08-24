@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CATEGORIES, RESTAURANTS as INITIAL_RESTAURANTS, isRestaurantOpen, getPromoCode, CAPTAINS as INITIAL_CAPTAINS, SUPERMARKETS as INITIAL_SUPERMARKETS, INITIAL_JOB_SEEKERS, INITIAL_JOB_VACANCIES, DOCTOR_CATEGORIES, INITIAL_DOCTORS, INITIAL_PHARMACIES } from './data';
+import { CATEGORIES, RESTAURANTS as INITIAL_RESTAURANTS, isRestaurantOpen, getPromoCode, CAPTAINS as INITIAL_CAPTAINS, SUPERMARKETS as INITIAL_SUPERMARKETS, INITIAL_JOB_SEEKERS, INITIAL_JOB_VACANCIES, DOCTOR_CATEGORIES, INITIAL_DOCTORS, INITIAL_PHARMACIES, INITIAL_GOV_SERVICES } from './data';
 import logo from '../public/assets/logo.webp';
 import logoTow from '../public/assets/logo-tow.webp';
 import { initializeApp } from 'firebase/app';
@@ -103,6 +103,7 @@ function App() {
   const [selectedDoctorCategory, setSelectedDoctorCategory] = useState('surgery_urology');
   const [doctors, setDoctors] = useState(INITIAL_DOCTORS);
   const [pharmacies, setPharmacies] = useState(INITIAL_PHARMACIES);
+  const [govServices, setGovServices] = useState(INITIAL_GOV_SERVICES);
   
   const [isAdminPage, setIsAdminPage] = useState(false);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
@@ -360,6 +361,11 @@ function App() {
     const dbPharmaciesRef = ref(db, 'pharmacies');
     set(dbPharmaciesRef, INITIAL_PHARMACIES);
     setPharmacies(INITIAL_PHARMACIES);
+
+    // Fetch and seed Government Services
+    const dbGovServicesRef = ref(db, 'gov_services');
+    set(dbGovServicesRef, INITIAL_GOV_SERVICES);
+    setGovServices(INITIAL_GOV_SERVICES);
 
     // Parse Deep Link URL ID and page parameter on mount (using seed data for instant synchronous matching)
     const params = new URLSearchParams(window.location.search);
@@ -1437,12 +1443,33 @@ function App() {
             <i className="fa-solid fa-mortar-pestle"></i>
             <span>الصيدليات</span>
           </button>
+          <button 
+            className={`service-tab ${activeMainTab === 'gov' ? 'active' : ''}`}
+            onClick={() => setActiveMainTab('gov')}
+          >
+            <i className="fa-solid fa-building-columns"></i>
+            <span>حكومي</span>
+          </button>
         </div>
         {showServicesArrow && (
           <div className="scroll-arrow-indicator">
             <i className="fa-solid fa-chevron-left"></i>
           </div>
         )}
+      </div>
+
+      {/* Global Search Bar */}
+      <div className="global-search-container" style={{ maxWidth: '600px', margin: '16px auto 0 auto', padding: '0 16px', width: '100%', boxSizing: 'border-box' }}>
+        <div className="search-wrapper hero-search-box" style={{ margin: '0' }}>
+          <i className="fa-solid fa-magnifying-glass search-icon"></i>
+          <input
+            type="text"
+            className="search-input"
+            placeholder="ابحث في دليل مغاغة الشامل (مطاعم، أطباء، صيدليات، سوبر ماركت، خدمات...)"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
       </div>
 
       {/* Main Area */}
@@ -1457,6 +1484,7 @@ function App() {
               {activeMainTab === 'jobs' && "دليل وظائف وفرص عمل مغاغة 💼"}
               {activeMainTab === 'doctors' && "دليل عيادات وأطباء مغاغة 👨‍⚕️"}
               {activeMainTab === 'pharmacy' && "دليل صيدليات مغاغة 💊"}
+              {activeMainTab === 'gov' && "الدليل الحكومي والخدمي بمغاغة 🏛️"}
               {activeMainTab === 'motorcycle' && "كباتن دليفري مغاغة ف جيبك 🏍️"}
             </h2>
             <p className="hero-subtitle">
@@ -1465,28 +1493,9 @@ function App() {
               {activeMainTab === 'jobs' && "منصتك للتواصل المباشر بين الباحثين عن عمل وأصحاب الأعمال والمحلات في مغاغة!"}
               {activeMainTab === 'doctors' && "دليل كامل لأشطر الأطباء والعيادات بمختلف التخصصات في مغاغة."}
               {activeMainTab === 'pharmacy' && "دليل كامل للصيدليات المتاحة والعاملة في مغاغة لتلبية احتياجاتك الدوائية."}
+              {activeMainTab === 'gov' && "دليل أرقام، عناوين، ومواعيد المصالح الحكومية والخدمات والمرافق العامة بمغاغة."}
               {activeMainTab === 'motorcycle' && "تواصل مباشرة مع أسرع كباتن توصيل طلبات ومشاوير وسفر داخل مغاغة وضواحيها!"}
             </p>
-            
-            {/* Integrated Search Input */}
-            {(activeMainTab === 'restaurants' || activeMainTab === 'doctors' || activeMainTab === 'supermarket' || activeMainTab === 'pharmacy') && (
-              <div className="search-wrapper hero-search-box">
-                <i className="fa-solid fa-magnifying-glass search-icon"></i>
-                <input
-                  type="text"
-                  className="search-input"
-                  placeholder={
-                    activeMainTab === 'doctors'
-                      ? "ابحث باسم الطبيب، الشارع، أو التخصص ف مغاغة..."
-                      : activeMainTab === 'pharmacy'
-                      ? "ابحث باسم الصيدلية أو اسم الشارع ف مغاغة..."
-                      : "ابحث عن خدمة، مطعم، كريب، شاورما..."
-                  }
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-            )}
 
             {/* Quick Search Tag Helpers */}
             {activeMainTab === 'restaurants' && (
@@ -1633,51 +1642,71 @@ function App() {
             </div>
 
             <div className="captains-grid">
-              {captains.filter(captain => selectedCaptainService === 'all' || captain.serviceTypes.includes(selectedCaptainService)).map(captain => {
-                const rData = ratings[captain.id] || { sum: 0, count: 0 };
-                const avgRating = rData.count > 0 ? (rData.sum / rData.count).toFixed(1) : null;
-                
-                return (
-                  <div 
-                    key={captain.id} 
-                    className="captain-card"
-                    onClick={() => setSelectedRestaurant(captain)}
-                  >
-                    <div className="captain-avatar-wrapper">
-                      <img 
-                        src={resolveImage(captain.avatar)} 
-                        alt={captain.name} 
-                        className="captain-avatar" 
-                        loading="lazy"
-                      />
-                      <span className={`captain-status-dot ${captain.isAvailable ? 'available' : 'unavailable'}`}></span>
+              {(() => {
+                const filteredCaptains = captains.filter(captain => {
+                  const matchesService = selectedCaptainService === 'all' || captain.serviceTypes.includes(selectedCaptainService);
+                  const matchesSearch = !searchTerm || 
+                    captain.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    (captain.description && captain.description.toLowerCase().includes(searchTerm.toLowerCase()));
+                  return matchesService && matchesSearch;
+                });
+
+                if (filteredCaptains.length === 0) {
+                  return (
+                    <div className="empty-state" style={{ gridColumn: '1 / -1', padding: '40px 20px' }}>
+                      <i className="fa-solid fa-motorcycle" style={{ fontSize: '48px', marginBottom: '10px', opacity: 0.5 }}></i>
+                      <h3 className="empty-state-title">لا توجد نتائج بحث تطابق مدخلاتك</h3>
+                      <p>جرّب البحث باسم الكابتن أو ميزة أخرى.</p>
                     </div>
-                    
-                    <div className="captain-info">
-                      <div className="captain-name-row">
-                        <h2 className="captain-name">{captain.name}</h2>
-                        {avgRating && (
-                          <div className="captain-rating">
-                            <i className="fa-solid fa-star"></i>
-                            <span>{avgRating}</span>
-                          </div>
-                        )}
+                  );
+                }
+
+                return filteredCaptains.map(captain => {
+                  const rData = ratings[captain.id] || { sum: 0, count: 0 };
+                  const avgRating = rData.count > 0 ? (rData.sum / rData.count).toFixed(1) : null;
+                  
+                  return (
+                    <div 
+                      key={captain.id} 
+                      className="captain-card"
+                      onClick={() => setSelectedRestaurant(captain)}
+                    >
+                      <div className="captain-avatar-wrapper">
+                        <img 
+                          src={resolveImage(captain.avatar)} 
+                          alt={captain.name} 
+                          className="captain-avatar" 
+                          loading="lazy"
+                        />
+                        <span className={`captain-status-dot ${captain.isAvailable ? 'available' : 'unavailable'}`}></span>
                       </div>
                       
-                      <p className="captain-desc">{captain.description}</p>
-                      
-                      <div className="captain-services">
-                        {captain.serviceTypes.slice(0, 2).map((srv, sIdx) => (
-                          <span key={sIdx} className="captain-service-badge">{srv}</span>
-                        ))}
-                        {captain.serviceTypes.length > 2 && (
-                          <span className="captain-service-badge">+{captain.serviceTypes.length - 2} المزيد</span>
-                        )}
+                      <div className="captain-info">
+                        <div className="captain-name-row">
+                          <h2 className="captain-name">{captain.name}</h2>
+                          {avgRating && (
+                            <div className="captain-rating">
+                              <i className="fa-solid fa-star"></i>
+                              <span>{avgRating}</span>
+                            </div>
+                          )}
+                        </div>
+                        
+                        <p className="captain-desc">{captain.description}</p>
+                        
+                        <div className="captain-services">
+                          {captain.serviceTypes.slice(0, 2).map((srv, sIdx) => (
+                            <span key={sIdx} className="captain-service-badge">{srv}</span>
+                          ))}
+                          {captain.serviceTypes.length > 2 && (
+                            <span className="captain-service-badge">+{captain.serviceTypes.length - 2} المزيد</span>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                });
+              })()}
             </div>
           </>
         ) : activeMainTab === 'supermarket' ? (
@@ -1915,15 +1944,9 @@ function App() {
                         )}
 
                         <div className="job-card-details">
-                          <div className="job-detail-row-inline" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap', fontSize: '13.5px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                              <i className="fa-solid fa-location-dot" style={{ color: 'var(--accent-color)' }}></i>
-                              <span><strong>العنوان:</strong> {doc.address}</span>
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                              <i className="fa-solid fa-phone" style={{ color: 'var(--accent-color)' }}></i>
-                              <span><strong>التليفون:</strong> {doc.phone || 'غير مسجل'}</span>
-                            </div>
+                          <div className="job-detail-row-inline" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13.5px' }}>
+                            <i className="fa-solid fa-location-dot" style={{ color: 'var(--accent-color)' }}></i>
+                            <span><strong>العنوان:</strong> {doc.address}</span>
                           </div>
                         </div>
 
@@ -2013,15 +2036,9 @@ function App() {
                         </div>
 
                         <div className="job-card-details">
-                          <div className="job-detail-row-inline" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap', fontSize: '13.5px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                              <i className="fa-solid fa-location-dot" style={{ color: 'var(--accent-color)' }}></i>
-                              <span><strong>العنوان:</strong> {ph.address}</span>
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                              <i className="fa-solid fa-phone" style={{ color: 'var(--accent-color)' }}></i>
-                              <span><strong>التليفون:</strong> {ph.phone || 'غير مسجل'}</span>
-                            </div>
+                          <div className="job-detail-row-inline" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13.5px' }}>
+                            <i className="fa-solid fa-location-dot" style={{ color: 'var(--accent-color)' }}></i>
+                            <span><strong>العنوان:</strong> {ph.address}</span>
                           </div>
                         </div>
 
@@ -2081,6 +2098,106 @@ function App() {
               >
                 <i className="fa-brands fa-whatsapp"></i>
                 <span>أضف صيدليتك الآن</span>
+              </a>
+            </div>
+          </div>
+        ) : activeMainTab === 'gov' ? (
+          <div className="doctors-section-container" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            {(() => {
+              const filteredGov = govServices.filter((gov) => {
+                return !searchTerm || 
+                  gov.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                  gov.address.toLowerCase().includes(searchTerm.toLowerCase());
+              });
+
+              if (filteredGov.length === 0) {
+                return (
+                  <div className="empty-state">
+                    <i className="fa-solid fa-building-columns" style={{ fontSize: '48px', marginBottom: '10px', opacity: 0.5 }}></i>
+                    <h3 className="empty-state-title">لا يوجد جهات تطابق بحثك</h3>
+                    <p>يرجى التأكد من كتابة الاسم بشكل صحيح أو البحث بعبارة أخرى.</p>
+                  </div>
+                );
+              }
+
+              return (
+                <div className="jobs-grid">
+                  {filteredGov.map((gov) => {
+                    const rawPhone = gov.phone && gov.phone !== '—' ? gov.phone : null;
+                    const phoneNumbers = rawPhone ? rawPhone.split('/').map(n => n.trim()).filter(Boolean) : [];
+
+                    return (
+                      <div key={gov.id} className="job-card vacancy-card">
+                        <div className="vacancy-header-bar">
+                          <h3 className="vacancy-title" style={{ margin: 0 }}>{gov.name}</h3>
+                          <span className="vacancy-tag-badge" style={{ background: '#e0f2fe', color: '#0369a1' }}>
+                            <i className="fa-solid fa-clock"></i> {gov.workingHours || 'مفتوح'}
+                          </span>
+                        </div>
+
+                        <div className="job-card-details">
+                          <div className="job-detail-row-inline" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13.5px' }}>
+                            <i className="fa-solid fa-location-dot" style={{ color: 'var(--accent-color)' }}></i>
+                            <span><strong>العنوان:</strong> {gov.address}</span>
+                          </div>
+                        </div>
+
+                        <div className="job-card-actions" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '12px' }}>
+                          {phoneNumbers.length === 1 ? (
+                            <a href={`tel:${phoneNumbers[0]}`} className="job-action-btn btn-call" style={{ flex: '1 1 auto', padding: '10px 18px', textAlign: 'center', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                              <i className="fa-solid fa-phone"></i>
+                              <span>اتصال</span>
+                            </a>
+                          ) : phoneNumbers.length > 1 ? (
+                            <button 
+                              className="job-action-btn btn-call" 
+                              style={{ flex: '1 1 auto', padding: '10px 18px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                              onClick={() => setPhoneSelectorList(phoneNumbers.map((num, idx) => ({ label: `اتصال بالخط ${idx + 1}: ${num}`, number: num })))}
+                            >
+                              <i className="fa-solid fa-phone"></i>
+                              <span>اتصال ({phoneNumbers.length})</span>
+                            </button>
+                          ) : (
+                            <div className="job-action-btn" style={{ flex: '1 1 auto', background: 'var(--bg-tertiary)', color: 'var(--text-muted)', cursor: 'default', padding: '10px 14px', textAlign: 'center', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                              <i className="fa-solid fa-phone-slash"></i>
+                              <span>بدون تليفون</span>
+                            </div>
+                          )}
+
+                          {gov.locationUrl && (
+                            <a 
+                              href={gov.locationUrl} 
+                              target="_blank" 
+                              rel="noopener noreferrer" 
+                              className="job-action-btn" 
+                              style={{ flex: '1 1 auto', backgroundColor: 'var(--brand-dark-blue)', color: 'white', padding: '10px 18px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px', borderRadius: 'var(--radius-sm)' }}
+                            >
+                              <i className="fa-solid fa-location-arrow"></i>
+                              <span>الاتجاهات</span>
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })()}
+
+            {/* Gov CTA Banner */}
+            <div className="job-cta-banner">
+              <div className="job-cta-text">
+                <h3>هل تريد إضافة أو تحديث بيانات جهة خدمية؟ 🏛️</h3>
+                <p>ساهم معنا في تحديث الدليل الخدمي لمغاغة لتسهيل الوصول للخدمات الحكومية والعامة!</p>
+              </div>
+              <a 
+                href={`https://wa.me/201062049652?text=${encodeURIComponent("أريد إضافة / تحديث بيانات جهة خدمية في دليل مغاغة")}`}
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="job-cta-btn"
+              >
+                <i className="fa-brands fa-whatsapp"></i>
+                <span>تواصل معنا الآن</span>
               </a>
             </div>
           </div>

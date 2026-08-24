@@ -2847,6 +2847,57 @@ export const INITIAL_PHARMACIES = [
     phone: "010 26108766",
     workingHours: "مفتوح",
     locationUrl:
-      "https://www.google.com/maps/dir//JRXR%2BFF9+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D9%87+%D8%AF%D9%83%D8%AA%D9%88%D8%B1+%D8%B1%D9%85%D8%B2%D9%8A%D8%8C+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D9%85%D9%87%D9%88%D8%B1%D9%8A%D8%A9%D8%8C+%D9%85%D8%AF%D9%8A%D9%86%D8%A9+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9%D8%8C+%D9%85%D8%B1%D9%83%D8%B2+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9%D8%8C+%D9%85%D8%AD%D8%A7%D9%81%D8%B8%D8%A9+%D8%A7%D9%84%D9%85%D9%86%D9%8A%D8%A7+2547541%E2%80%AD/data=!4m6!4m5!1m1!4e2!1m2!1m1!1s0x145bac679d4186af:0xd1877fd779a33def?sa=X&ved=1t:57443&ictx=111",
+      "https://www.google.com/maps/dir//JRXR%2BFF9+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D9%87+%D8%AF%D9%83%D8%AA%D9%88%D8%B1+%D8%B1%D9%85%D8%B2%D9%8A%D8%8C+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D9%85%D9%87%D9%88%D8%B1%D9%8A%D8%A9%D8%8C+%D9%85%D8%AF%D9%8A%D9%86%D8%A9+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9%D8%8C+%D9%85%D8%B1%D9%83%D8%B2+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9%D8%8C+%D9%85%D8%ED%D8%A7%D9%81%D8%B8%D8%A9+%D8%A7%D9%84%D9%85%D9%86%D9%8A%D8%A7+2547541%E2%80%AD/data=!4m6!4m5!1m1!4e2!1m2!1m1!1s0x145bac679d4186af:0xd1877fd779a33def?sa=X&ved=1t:57443&ictx=111",
   },
+];
+
+export const INITIAL_GOV_SERVICES = [
+  {
+    id: "gov_0",
+    name: "محكمة مغاغة",
+    address: "مركز مغاغة، محافظة المنيا",
+    phone: "086 3563474",
+    workingHours: "من 8:00 ص إلى 2:00 م",
+    locationUrl: "https://maps.app.goo.gl/DK4stG62yERpCF3v8"
+  },
+  {
+    id: "gov_1",
+    name: "مجلس مدينة مغاغة",
+    address: "مغاغة - بجوار مركز الشرطة",
+    phone: "086 3562203",
+    workingHours: "من 8:00 ص إلى 2:00 ظهراً (عدا الجمعة والسبت)",
+    locationUrl: "https://www.google.com/maps/search/?api=1&query=%D9%85%D8%AC%D9%84%D8%B3+%D9%85%D8%AF%D9%8A%D9%86%D8%A9+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9"
+  },
+  {
+    id: "gov_2",
+    name: "مكتب بريد مغاغة الرئيسي",
+    address: "شارع الجمهورية - أمام المحكمة",
+    phone: "086 3561911",
+    workingHours: "من 8:00 ص إلى 3:00 ظهراً (عدا الجمعة والسبت)",
+    locationUrl: "https://www.google.com/maps/search/?api=1&query=%D8%A8%D8%B1%D9%8A%D8%AF+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9+%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A"
+  },
+  {
+    id: "gov_3",
+    name: "مستشفى مغاغة العام",
+    address: "شارع عبد العظيم",
+    phone: "086 3562103",
+    workingHours: "مفتوح على مدار الساعة (الطوارئ)",
+    locationUrl: "https://www.google.com/maps/search/?api=1&query=%D9%85%D8%B3%D8%AA%D8%B4%D9%81%D9%89+%D9%85%D8%BA%D8%A7%D8%BA%D9%87+%D8%A7%D9%84%D8%B9%D8%A7%D9%85"
+  },
+  {
+    id: "gov_4",
+    name: "شركة مياه الشرب والصرف الصحي بمغاغة",
+    address: "مغاغة - طريق القاهرة أسيوط الزراعي",
+    phone: "125 / 086 3562410",
+    workingHours: "مفتوح على مدار الساعة (الطوارئ)",
+    locationUrl: "https://www.google.com/maps/search/?api=1&query=%D8%B4%D8%B1%D9%83%D8%A9+%D9%85%D9%8A%D8%A7%D9%87+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9"
+  },
+  {
+    id: "gov_5",
+    name: "هندسة كهرباء مغاغة",
+    address: "شارع المدارس",
+    phone: "121 / 086 3562255",
+    workingHours: "مفتوح على مدار الساعة (الطوارئ)",
+    locationUrl: "https://www.google.com/maps/search/?api=1&query=%D9%83%D9%87%D8%B1%D8%A8%D8%A7%D8%A1+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9"
+  }
 ];
