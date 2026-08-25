@@ -1575,12 +1575,12 @@ function App() {
 
                     {isFormOpen ? (
                       <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', maxWidth: '600px' }}>
-                        <h3 style={{ marginBottom: '20px' }}>{editingSupermarket.id ? `تعديل المحل: ${targetSupermarket.name}` : 'إضافة محل سوبرماركت جديد'}</h3>
+                        <h3 style={{ marginBottom: '20px' }}>{editingSupermarket && editingSupermarket.id ? `تعديل المحل: ${targetSupermarket.name}` : 'إضافة محل سوبرماركت جديد'}</h3>
                         <form onSubmit={(e) => {
                           e.preventDefault();
                           const formData = new FormData(e.currentTarget);
                           const data = {
-                            id: editingSupermarket.id ? targetSupermarket.id : Date.now(),
+                            id: editingSupermarket && editingSupermarket.id ? targetSupermarket.id : Date.now(),
                             name: formData.get('name'),
                             logo: formData.get('logo') || '',
                             description: formData.get('description'),
@@ -1598,7 +1598,7 @@ function App() {
                             }).filter(Boolean)
                           };
 
-                          if (editingSupermarket.id) {
+                          if (editingSupermarket && editingSupermarket.id) {
                             handleEditSupermarket(data);
                           } else {
                             handleAddSupermarket(data);
@@ -1686,20 +1686,20 @@ function App() {
 
                     {showAddJobVacancyForm || editingJobVacancy ? (
                       <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', maxWidth: '600px' }}>
-                        <h3 style={{ marginBottom: '20px' }}>{editingJobVacancy.id ? `تعديل الوظيفة: ${targetVacancy.title}` : 'إضافة وظيفة شاغرة جديدة'}</h3>
+                        <h3 style={{ marginBottom: '20px' }}>{editingJobVacancy && editingJobVacancy.id ? `تعديل الوظيفة: ${targetVacancy.title}` : 'إضافة وظيفة شاغرة جديدة'}</h3>
                         <form onSubmit={(e) => {
                           e.preventDefault();
                           const formData = new FormData(e.currentTarget);
                           const data = {
-                            id: editingJobVacancy.id ? targetVacancy.id : `vacancy_${Date.now()}`,
+                            id: editingJobVacancy && editingJobVacancy.id ? targetVacancy.id : `vacancy_${Date.now()}`,
                             title: formData.get('title'),
                             company: formData.get('company'),
                             location: formData.get('location') || 'مغاغة',
                             description: formData.get('description'),
-                            salary: formData.get('salary') || 'غير محدد',
+                            salary: formData.get('salary') || 'غير مححدد',
                             phone: formData.get('phone')
                           };
-                          if (editingJobVacancy.id) {
+                          if (editingJobVacancy && editingJobVacancy.id) {
                             handleEditJobVacancy(data);
                           } else {
                             handleAddJobVacancy(data);
@@ -1733,18 +1733,18 @@ function App() {
                       </div>
                     ) : showAddJobSeekerForm || editingJobSeeker ? (
                       <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', maxWidth: '600px' }}>
-                        <h3 style={{ marginBottom: '20px' }}>{editingJobSeeker.id ? `تعديل طلب: ${targetSeeker.name}` : 'إضافة طلب عمل جديد'}</h3>
+                        <h3 style={{ marginBottom: '20px' }}>{editingJobSeeker && editingJobSeeker.id ? `تعديل طلب: ${targetSeeker.name}` : 'إضافة طلب عمل جديد'}</h3>
                         <form onSubmit={(e) => {
                           e.preventDefault();
                           const formData = new FormData(e.currentTarget);
                           const data = {
-                            id: editingJobSeeker.id ? targetSeeker.id : `seeker_${Date.now()}`,
+                            id: editingJobSeeker && editingJobSeeker.id ? targetSeeker.id : `seeker_${Date.now()}`,
                             name: formData.get('name'),
                             title: formData.get('title'),
                             experience: formData.get('experience'),
                             phone: formData.get('phone')
                           };
-                          if (editingJobSeeker.id) {
+                          if (editingJobSeeker && editingJobSeeker.id) {
                             handleEditJobSeeker(data);
                           } else {
                             handleAddJobSeeker(data);
@@ -1852,19 +1852,19 @@ function App() {
                     </div>
                     {isFormOpen ? (
                       <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', maxWidth: '600px' }}>
-                        <h3 style={{ marginBottom: '20px' }}>{editingDoctor.id ? `تعديل بيانات: ${targetDoctor.name}` : 'إضافة طبيب جديد'}</h3>
+                        <h3 style={{ marginBottom: '20px' }}>{editingDoctor && editingDoctor.id ? `تعديل بيانات: ${targetDoctor.name}` : 'إضافة طبيب جديد'}</h3>
                         <form onSubmit={(e) => {
                           e.preventDefault();
                           const formData = new FormData(e.currentTarget);
                           const data = {
-                            id: editingDoctor.id ? targetDoctor.id : `doc_${Date.now()}`,
+                            id: editingDoctor && editingDoctor.id ? targetDoctor.id : `doc_${Date.now()}`,
                             name: formData.get('name'),
                             specialty: formData.get('specialty'),
                             specialtyId: formData.get('specialtyId') || 'internal_chest',
                             address: formData.get('address'),
                             phone: formData.get('phone')
                           };
-                          if (editingDoctor.id) {
+                          if (editingDoctor && editingDoctor.id) {
                             handleEditDoctor(data);
                           } else {
                             handleAddDoctor(data);
@@ -1951,17 +1951,17 @@ function App() {
                     </div>
                     {isFormOpen ? (
                       <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', maxWidth: '600px' }}>
-                        <h3 style={{ marginBottom: '20px' }}>{editingPharmacy.id ? `تعديل بيانات: ${targetPharmacy.name}` : 'إضافة صيدلية جديدة'}</h3>
+                        <h3 style={{ marginBottom: '20px' }}>{editingPharmacy && editingPharmacy.id ? `تعديل بيانات: ${targetPharmacy.name}` : 'إضافة صيدلية جديدة'}</h3>
                         <form onSubmit={(e) => {
                           e.preventDefault();
                           const formData = new FormData(e.currentTarget);
                           const data = {
-                            id: editingPharmacy.id ? targetPharmacy.id : `pharm_${Date.now()}`,
+                            id: editingPharmacy && editingPharmacy.id ? targetPharmacy.id : `pharm_${Date.now()}`,
                             name: formData.get('name'),
                             address: formData.get('address'),
                             phone: formData.get('phone')
                           };
-                          if (editingPharmacy.id) {
+                          if (editingPharmacy && editingPharmacy.id) {
                             handleEditPharmacy(data);
                           } else {
                             handleAddPharmacy(data);
@@ -2031,18 +2031,18 @@ function App() {
                     </div>
                     {isFormOpen ? (
                       <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', maxWidth: '600px' }}>
-                        <h3 style={{ marginBottom: '20px' }}>{editingGovService.id ? `تعديل بيانات: ${targetService.name}` : 'إضافة خدمة جديدة'}</h3>
+                        <h3 style={{ marginBottom: '20px' }}>{editingGovService && editingGovService.id ? `تعديل بيانات: ${targetService.name}` : 'إضافة خدمة جديدة'}</h3>
                         <form onSubmit={(e) => {
                           e.preventDefault();
                           const formData = new FormData(e.currentTarget);
                           const data = {
-                            id: editingGovService.id ? targetService.id : `gov_${Date.now()}`,
+                            id: editingGovService && editingGovService.id ? targetService.id : `gov_${Date.now()}`,
                             name: formData.get('name'),
                             type: formData.get('type') || 'civil',
                             description: formData.get('description'),
                             phone: formData.get('phone')
                           };
-                          if (editingGovService.id) {
+                          if (editingGovService && editingGovService.id) {
                             handleEditGovService(data);
                           } else {
                             handleAddGovService(data);
