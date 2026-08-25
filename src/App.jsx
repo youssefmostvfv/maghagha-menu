@@ -58,6 +58,16 @@ const resolveImage = (imgName) => {
   return `/assets/${baseName}.${finalExt}`;
 };
 
+const shuffleArray = (array) => {
+  if (!array || !Array.isArray(array)) return [];
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
+
 const formatTo12Hour = (timeStr) => {
   if (!timeStr) return '';
   const parts = timeStr.split(':');
@@ -99,11 +109,21 @@ function App() {
   const [supermarkets, setSupermarkets] = useState(INITIAL_SUPERMARKETS);
   const [jobSeekers, setJobSeekers] = useState(INITIAL_JOB_SEEKERS);
   const [jobVacancies, setJobVacancies] = useState(INITIAL_JOB_VACANCIES);
-  const [activeJobSubTab, setActiveJobSubTab] = useState('seekers'); // 'seekers' | 'vacancies'
-  const [selectedDoctorCategory, setSelectedDoctorCategory] = useState('surgery_urology');
   const [doctors, setDoctors] = useState(INITIAL_DOCTORS);
   const [pharmacies, setPharmacies] = useState(INITIAL_PHARMACIES);
   const [govServices, setGovServices] = useState(INITIAL_GOV_SERVICES);
+
+  const [shuffledRestaurants, setShuffledRestaurants] = useState(() => shuffleArray(INITIAL_RESTAURANTS));
+  const [shuffledCaptains, setShuffledCaptains] = useState(() => shuffleArray(INITIAL_CAPTAINS));
+  const [shuffledSupermarkets, setShuffledSupermarkets] = useState(() => shuffleArray(INITIAL_SUPERMARKETS));
+  const [shuffledJobSeekers, setShuffledJobSeekers] = useState(() => shuffleArray(INITIAL_JOB_SEEKERS));
+  const [shuffledJobVacancies, setShuffledJobVacancies] = useState(() => shuffleArray(INITIAL_JOB_VACANCIES));
+  const [shuffledDoctors, setShuffledDoctors] = useState(() => shuffleArray(INITIAL_DOCTORS));
+  const [shuffledPharmacies, setShuffledPharmacies] = useState(() => shuffleArray(INITIAL_PHARMACIES));
+  const [shuffledGovServices, setShuffledGovServices] = useState(() => shuffleArray(INITIAL_GOV_SERVICES));
+
+  const [activeJobSubTab, setActiveJobSubTab] = useState('seekers'); // 'seekers' | 'vacancies'
+  const [selectedDoctorCategory, setSelectedDoctorCategory] = useState('surgery_urology');
   const [activeGovSubTab, setActiveGovSubTab] = useState('civil'); // 'civil' | 'emergency'
   const [promoAlert, setPromoAlert] = useState(null); // { phone: string, countdown: number }
   
@@ -443,17 +463,20 @@ function App() {
           const missing = INITIAL_RESTAURANTS.filter(item => !existingIds.has(String(item.id)));
           const merged = [...fetched, ...missing];
           setRestaurants(merged);
+          setShuffledRestaurants(shuffleArray(merged));
           if (missing.length > 0) {
             set(dbRestaurantsRef, merged);
           }
         } else {
           set(dbRestaurantsRef, INITIAL_RESTAURANTS);
           setRestaurants(INITIAL_RESTAURANTS);
+          setShuffledRestaurants(shuffleArray(INITIAL_RESTAURANTS));
         }
       })
       .catch((err) => {
         console.error('Error loading restaurants:', err);
         setRestaurants(INITIAL_RESTAURANTS);
+        setShuffledRestaurants(shuffleArray(INITIAL_RESTAURANTS));
       });
 
     // Fetch and seed Captains
@@ -465,14 +488,17 @@ function App() {
         const missing = INITIAL_CAPTAINS.filter(item => !existingIds.has(String(item.id)));
         const merged = [...fetched, ...missing];
         setCaptains(merged);
+        setShuffledCaptains(shuffleArray(merged));
         if (missing.length > 0) set(dbCaptainsRef, merged);
       } else {
         set(dbCaptainsRef, INITIAL_CAPTAINS);
         setCaptains(INITIAL_CAPTAINS);
+        setShuffledCaptains(shuffleArray(INITIAL_CAPTAINS));
       }
     }).catch((err) => {
       console.error('Error loading captains:', err);
       setCaptains(INITIAL_CAPTAINS);
+      setShuffledCaptains(shuffleArray(INITIAL_CAPTAINS));
     });
 
     // Fetch and seed Supermarkets
@@ -484,14 +510,17 @@ function App() {
         const missing = INITIAL_SUPERMARKETS.filter(item => !existingIds.has(String(item.id)));
         const merged = [...fetched, ...missing];
         setSupermarkets(merged);
+        setShuffledSupermarkets(shuffleArray(merged));
         if (missing.length > 0) set(dbSupermarketsRef, merged);
       } else {
         set(dbSupermarketsRef, INITIAL_SUPERMARKETS);
         setSupermarkets(INITIAL_SUPERMARKETS);
+        setShuffledSupermarkets(shuffleArray(INITIAL_SUPERMARKETS));
       }
     }).catch((err) => {
       console.error('Error loading supermarkets:', err);
       setSupermarkets(INITIAL_SUPERMARKETS);
+      setShuffledSupermarkets(shuffleArray(INITIAL_SUPERMARKETS));
     });
 
     // Fetch and seed Job Seekers
@@ -503,14 +532,17 @@ function App() {
         const missing = INITIAL_JOB_SEEKERS.filter(item => !existingIds.has(String(item.id)));
         const merged = [...fetched, ...missing];
         setJobSeekers(merged);
+        setShuffledJobSeekers(shuffleArray(merged));
         if (missing.length > 0) set(dbJobSeekersRef, merged);
       } else {
         set(dbJobSeekersRef, INITIAL_JOB_SEEKERS);
         setJobSeekers(INITIAL_JOB_SEEKERS);
+        setShuffledJobSeekers(shuffleArray(INITIAL_JOB_SEEKERS));
       }
     }).catch((err) => {
       console.error('Error loading job seekers:', err);
       setJobSeekers(INITIAL_JOB_SEEKERS);
+      setShuffledJobSeekers(shuffleArray(INITIAL_JOB_SEEKERS));
     });
 
     // Fetch and seed Job Vacancies
@@ -522,14 +554,17 @@ function App() {
         const missing = INITIAL_JOB_VACANCIES.filter(item => !existingIds.has(String(item.id)));
         const merged = [...fetched, ...missing];
         setJobVacancies(merged);
+        setShuffledJobVacancies(shuffleArray(merged));
         if (missing.length > 0) set(dbJobVacanciesRef, merged);
       } else {
         set(dbJobVacanciesRef, INITIAL_JOB_VACANCIES);
         setJobVacancies(INITIAL_JOB_VACANCIES);
+        setShuffledJobVacancies(shuffleArray(INITIAL_JOB_VACANCIES));
       }
     }).catch((err) => {
       console.error('Error loading job vacancies:', err);
       setJobVacancies(INITIAL_JOB_VACANCIES);
+      setShuffledJobVacancies(shuffleArray(INITIAL_JOB_VACANCIES));
     });
 
     // Fetch and seed Doctors
@@ -541,14 +576,17 @@ function App() {
         const missing = INITIAL_DOCTORS.filter(item => !existingIds.has(String(item.id)));
         const merged = [...fetched, ...missing];
         setDoctors(merged);
+        setShuffledDoctors(shuffleArray(merged));
         if (missing.length > 0) set(dbDoctorsRef, merged);
       } else {
         set(dbDoctorsRef, INITIAL_DOCTORS);
         setDoctors(INITIAL_DOCTORS);
+        setShuffledDoctors(shuffleArray(INITIAL_DOCTORS));
       }
     }).catch((err) => {
       console.error('Error loading doctors:', err);
       setDoctors(INITIAL_DOCTORS);
+      setShuffledDoctors(shuffleArray(INITIAL_DOCTORS));
     });
 
     // Fetch and seed Pharmacies
@@ -560,14 +598,17 @@ function App() {
         const missing = INITIAL_PHARMACIES.filter(item => !existingIds.has(String(item.id)));
         const merged = [...fetched, ...missing];
         setPharmacies(merged);
+        setShuffledPharmacies(shuffleArray(merged));
         if (missing.length > 0) set(dbPharmaciesRef, merged);
       } else {
         set(dbPharmaciesRef, INITIAL_PHARMACIES);
         setPharmacies(INITIAL_PHARMACIES);
+        setShuffledPharmacies(shuffleArray(INITIAL_PHARMACIES));
       }
     }).catch((err) => {
       console.error('Error loading pharmacies:', err);
       setPharmacies(INITIAL_PHARMACIES);
+      setShuffledPharmacies(shuffleArray(INITIAL_PHARMACIES));
     });
 
     // Fetch and seed Government Services
@@ -579,14 +620,17 @@ function App() {
         const missing = INITIAL_GOV_SERVICES.filter(item => !existingIds.has(String(item.id)));
         const merged = [...fetched, ...missing];
         setGovServices(merged);
+        setShuffledGovServices(shuffleArray(merged));
         if (missing.length > 0) set(dbGovServicesRef, merged);
       } else {
         set(dbGovServicesRef, INITIAL_GOV_SERVICES);
         setGovServices(INITIAL_GOV_SERVICES);
+        setShuffledGovServices(shuffleArray(INITIAL_GOV_SERVICES));
       }
     }).catch((err) => {
       console.error('Error loading gov services:', err);
       setGovServices(INITIAL_GOV_SERVICES);
+      setShuffledGovServices(shuffleArray(INITIAL_GOV_SERVICES));
     });
 
     // Parse Deep Link URL ID and page parameter on mount (using seed data for instant synchronous matching)
@@ -1028,7 +1072,7 @@ function App() {
     setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
   };
 
-  const filteredRestaurants = restaurants.filter(restaurant => {
+  const filteredRestaurants = shuffledRestaurants.filter(restaurant => {
     const matchesCategory = selectedCategory === 'all' || restaurant.category === selectedCategory;
     const matchesSearch = 
       restaurant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -2823,7 +2867,7 @@ function App() {
 
             <div className="captains-grid">
               {(() => {
-                const filteredCaptains = captains.filter(captain => {
+                const filteredCaptains = shuffledCaptains.filter(captain => {
                   const matchesService = selectedCaptainService === 'all' || captain.serviceTypes.includes(selectedCaptainService);
                   const matchesSearch = !searchTerm || 
                     captain.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -2891,7 +2935,7 @@ function App() {
           </>
         ) : activeMainTab === 'supermarket' ? (
           <div className="captains-grid">
-            {supermarkets.map(market => (
+            {shuffledSupermarkets.filter(market => !searchTerm || market.name.toLowerCase().includes(searchTerm.toLowerCase()) || (market.description && market.description.toLowerCase().includes(searchTerm.toLowerCase()))).map(market => (
               <div 
                 key={market.id} 
                 className="captain-card"
@@ -2945,7 +2989,7 @@ function App() {
             {/* Job Seekers Grid */}
             {activeJobSubTab === 'seekers' ? (
               <div className="jobs-grid">
-                {jobSeekers.map((seeker) => (
+                {shuffledJobSeekers.map((seeker) => (
                   <div key={seeker.id} className="job-card seeker-card">
                     <div className="job-card-header">
                       <div className="job-avatar-icon">
@@ -2997,7 +3041,7 @@ function App() {
             ) : (
               /* Job Vacancies Grid */
               <div className="jobs-grid">
-                {jobVacancies.map((vacancy) => (
+                {shuffledJobVacancies.map((vacancy) => (
                   <div key={vacancy.id} className="job-card vacancy-card">
                     <div className="vacancy-header-bar">
                       <span className="vacancy-tag-badge"><i className="fa-solid fa-circle-check"></i> فرصة عمل متاحة</span>
@@ -3083,7 +3127,7 @@ function App() {
 
             {/* Doctors Cards Grid */}
             {(() => {
-              const filteredDoctors = doctors.filter((doc) => {
+              const filteredDoctors = shuffledDoctors.filter((doc) => {
                 const matchesSearch = !searchTerm || 
                   doc.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                   doc.specialty.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -3184,7 +3228,7 @@ function App() {
         ) : activeMainTab === 'pharmacy' ? (
           <div className="doctors-section-container" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             {(() => {
-              const filteredPharmacies = pharmacies.filter((ph) => {
+              const filteredPharmacies = shuffledPharmacies.filter((ph) => {
                 return !searchTerm || 
                   ph.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                   ph.address.toLowerCase().includes(searchTerm.toLowerCase());
@@ -3314,7 +3358,7 @@ function App() {
             </div>
 
             {(() => {
-              const filteredGov = govServices.filter((gov) => {
+              const filteredGov = shuffledGovServices.filter((gov) => {
                 const matchesCategory = gov.category === activeGovSubTab;
                 const matchesSearch = !searchTerm || 
                   gov.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
