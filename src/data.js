@@ -710,7 +710,7 @@ export const RESTAURANTS = [
     logo: "shatah-logo",
     description:
       "مطعم شطة لتقديم أشهى الوجبات السريعة، الكريب، وسندوتشات الشاورما السورية المميزة بمغاغة.",
-    phones: ["01062049652"],
+    phones: ["01558606314"],
     whatsApp: "",
     deliveryFee: "من 20 لـ 30 جنيه",
     address: "مغاغة - شارع السلام",
@@ -760,7 +760,7 @@ export const CAPTAINS = [
     id: "captain_1",
     name: "الكابتن أحمد الجارحي (تجريبي)",
     avatar: "avatar-men",
-    phone: "01062049652",
+    phone: "01558606314",
     serviceTypes: ["توصيل طلبات", "مشاوير"],
     isAvailable: true,
     description:
@@ -877,8 +877,8 @@ export const INITIAL_JOB_SEEKERS = [
     education: "مؤهل عالي تجاري",
     skills:
       "نموذج تجريبي توضيحي للمهارات والخبرات المتاحة للتقديم والتواصل عبر الدليل.",
-    phone: "01062049652",
-    whatsApp: "201062049652",
+    phone: "01558606314",
+    whatsApp: "201558606314",
     location: "مغاغة",
   },
   {
@@ -888,8 +888,8 @@ export const INITIAL_JOB_SEEKERS = [
     age: "25 سنة",
     education: "مؤهل متوسط",
     skills: "نموذج تجريبي يوضح إمكانية إضافة بيانات الباحثين عن عمل والخدمات.",
-    phone: "01062049652",
-    whatsApp: "201062049652",
+    phone: "01558606314",
+    whatsApp: "201558606314",
     location: "مغاغة",
   },
 ];
@@ -903,8 +903,8 @@ export const INITIAL_JOB_VACANCIES = [
     workType: "صباحي - 8 ساعات",
     salary: "مرتب مجزي + عمولة",
     location: "مغاغة",
-    phone: "01062049652",
-    whatsApp: "201062049652",
+    phone: "01558606314",
+    whatsApp: "201558606314",
   },
   {
     id: "vacancy_2",
@@ -914,8 +914,8 @@ export const INITIAL_JOB_VACANCIES = [
     workType: "مسائي - 8 ساعات",
     salary: "يحدد في المقابلة",
     location: "مغاغة",
-    phone: "01062049652",
-    whatsApp: "201062049652",
+    phone: "01558606314",
+    whatsApp: "201558606314",
   },
 ];
 

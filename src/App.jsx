@@ -128,6 +128,8 @@ function App() {
   const [phoneModalData, setPhoneModalData] = useState(null);
   const [isCallsPage, setIsCallsPage] = useState(false);
   const [callsData, setCallsData] = useState({});
+  const [visitsData, setVisitsData] = useState({});
+  const [sortBy, setSortBy] = useState('total'); // total, today, yesterday, name
   const [callsSearchTerm, setCallsSearchTerm] = useState('');
   const [expandedCallsRestaurantId, setExpandedCallsRestaurantId] = useState(null);
 
@@ -309,6 +311,22 @@ function App() {
   }, []);
 
   useEffect(() => {
+    const recordVisit = async () => {
+      try {
+        const now = new Date();
+        const today = now.toISOString().split('T')[0];
+        const visitsRef = ref(db, `site_visits/daily/${today}`);
+        const snapshot = await get(visitsRef);
+        const currentCount = snapshot.exists() ? (snapshot.val() || 0) : 0;
+        await set(visitsRef, currentCount + 1);
+      } catch (err) {
+        console.error('Error recording visit:', err);
+      }
+    };
+    recordVisit();
+  }, []);
+
+  useEffect(() => {
     const currentState = window.history.state;
     if (!currentState || currentState.tab !== activeMainTab) {
       window.history.pushState({ tab: activeMainTab }, '');
@@ -321,6 +339,13 @@ function App() {
       get(dbCallsRef).then((snapshot) => {
         if (snapshot.exists()) {
           setCallsData(snapshot.val());
+        }
+      }).catch(console.error);
+
+      const dbVisitsRef = ref(db, 'site_visits');
+      get(dbVisitsRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          setVisitsData(snapshot.val() || {});
         }
       }).catch(console.error);
     }
@@ -1267,22 +1292,121 @@ function App() {
         daily: stats.daily || {},
         logs: stats.logs || {}
       };
-    }).sort((a, b) => b.total - a.total);
+    });
+    // Apply Sorting
+    const sortedStats = [...restaurantCallStats].sort((a, b) => {
+      if (sortBy === 'today') {
+        return b.todayCalls - a.todayCalls;
+      } else if (sortBy === 'yesterday') {
+        return b.yesterdayCalls - a.yesterdayCalls;
+      } else if (sortBy === 'name') {
+        return a.name.localeCompare(b.name, 'ar');
+      } else {
+        return b.total - a.total; // Default: total
+      }
+    });
 
-    const filteredStats = restaurantCallStats.filter((r) =>
+    const filteredStats = sortedStats.filter((r) =>
       !callsSearchTerm || r.name.toLowerCase().includes(callsSearchTerm.toLowerCase())
     );
+
+    // Visits Calculations
+    const todayVisits = (visitsData.daily && visitsData.daily[todayStr]) || 0;
+    const yesterdayVisits = (visitsData.daily && visitsData.daily[yesterdayStr]) || 0;
+
+    let weeklyVisits = 0;
+    for (let i = 0; i < 7; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const dStr = d.toISOString().split('T')[0];
+      weeklyVisits += (visitsData.daily && visitsData.daily[dStr]) || 0;
+    }
+
+    let monthlyVisits = 0;
+    for (let i = 0; i < 30; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const dStr = d.toISOString().split('T')[0];
+      monthlyVisits += (visitsData.daily && visitsData.daily[dStr]) || 0;
+    }
+
+    // Growth Indicators (Comparing today vs yesterday)
+    let visitsGrowth = 0;
+    if (yesterdayVisits > 0) {
+      visitsGrowth = Math.round(((todayVisits - yesterdayVisits) / yesterdayVisits) * 100);
+    } else if (todayVisits > 0) {
+      visitsGrowth = 100;
+    }
+
+    let callsGrowth = 0;
+    if (yesterdayCallsAll > 0) {
+      callsGrowth = Math.round(((todayCallsAll - yesterdayCallsAll) / yesterdayCallsAll) * 100);
+    } else if (todayCallsAll > 0) {
+      callsGrowth = 100;
+    }
+
+    const renderGrowthBadge = (growthValue) => {
+      if (growthValue > 0) {
+        return (
+          <span style={{ 
+            fontSize: '11px', 
+            color: '#10b981', 
+            backgroundColor: 'rgba(16, 185, 129, 0.12)', 
+            padding: '3px 8px', 
+            borderRadius: '12px', 
+            fontWeight: '800',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '3px'
+          }}>
+            ▲ +{growthValue}%
+          </span>
+        );
+      } else if (growthValue < 0) {
+        return (
+          <span style={{ 
+            fontSize: '11px', 
+            color: '#ef4444', 
+            backgroundColor: 'rgba(239, 68, 68, 0.12)', 
+            padding: '3px 8px', 
+            borderRadius: '12px', 
+            fontWeight: '800',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '3px'
+          }}>
+            ▼ {growthValue}%
+          </span>
+        );
+      } else {
+        return (
+          <span style={{ 
+            fontSize: '11px', 
+            color: 'var(--text-secondary)', 
+            backgroundColor: 'var(--bg-tertiary)', 
+            padding: '3px 8px', 
+            borderRadius: '12px', 
+            fontWeight: '800',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '3px'
+          }}>
+            0%
+          </span>
+        );
+      }
+    };
 
     return (
       <div className="admin-page-container" style={{ minHeight: '100vh', background: 'var(--bg-primary)', padding: '20px 16px', color: 'var(--text-primary)' }}>
         <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
           <div>
             <h1 style={{ margin: 0, fontSize: '22px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <i className="fa-solid fa-phone-volume" style={{ color: 'var(--accent-color)' }}></i>
-              إحصائيات اتصالات المطاعم 🍔📞
+              <i className="fa-solid fa-chart-bar" style={{ color: 'var(--accent-color)' }}></i>
+              إحصائيات وقراءات الدليل العامة 📊📈
             </h1>
             <p style={{ margin: '4px 0 0', color: 'var(--text-secondary)', fontSize: '13.5px' }}>
-              تتبع يومي ودقيق لكافة الاتصالات الواردة للمطاعم عبر دليل مغاغة
+              تتبع دقيق ولحظي للزيارات واتصالات الدليل والمطاعم
             </p>
           </div>
           <a href="/" className="hero-tag-btn" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', fontSize: '14px' }}>
@@ -1291,14 +1415,20 @@ function App() {
           </a>
         </header>
 
-        {/* Summary KPI Cards */}
+        {/* Summary KPI Cards - Calls */}
+        <h3 style={{ marginBottom: '12px', fontSize: '15px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <i className="fa-solid fa-phone" style={{ color: 'var(--accent-color)' }}></i> إحصائيات الاتصالات:
+        </h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '14px', marginBottom: '24px' }}>
           <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <span style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>إجمالي اتصالات اليوم</span>
               <i className="fa-solid fa-calendar-day" style={{ color: 'var(--accent-color)', fontSize: '18px' }}></i>
             </div>
-            <h2 style={{ margin: '10px 0 0', fontSize: '26px' }}>{todayCallsAll}</h2>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '10px' }}>
+              <h2 style={{ margin: 0, fontSize: '26px' }}>{todayCallsAll}</h2>
+              {renderGrowthBadge(callsGrowth)}
+            </div>
           </div>
           <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -1316,16 +1446,122 @@ function App() {
           </div>
         </div>
 
-        {/* Search Input */}
-        <div className="search-wrapper" style={{ marginBottom: '16px' }}>
-          <i className="fa-solid fa-magnifying-glass search-icon"></i>
-          <input
-            type="text"
-            className="search-input"
-            placeholder="ابحث باسم المطعم..."
-            value={callsSearchTerm}
-            onChange={(e) => setCallsSearchTerm(e.target.value)}
-          />
+        {/* Summary KPI Cards - Visits */}
+        <h3 style={{ marginBottom: '12px', fontSize: '15px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <i className="fa-solid fa-eye" style={{ color: '#3b82f6' }}></i> إحصائيات زيارات الدليل:
+        </h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '14px', marginBottom: '28px' }}>
+          <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>زيارات أمس</span>
+              <i className="fa-solid fa-history" style={{ color: '#f59e0b', fontSize: '18px' }}></i>
+            </div>
+            <h2 style={{ margin: '10px 0 0', fontSize: '26px' }}>{yesterdayVisits}</h2>
+          </div>
+          <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>إجمالي زيارات اليوم</span>
+              <i className="fa-solid fa-eye" style={{ color: 'var(--accent-color)', fontSize: '18px' }}></i>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '10px' }}>
+              <h2 style={{ margin: 0, fontSize: '26px' }}>{todayVisits}</h2>
+              {renderGrowthBadge(visitsGrowth)}
+            </div>
+          </div>
+          <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>إجمالي زيارات الأسبوع</span>
+              <i className="fa-solid fa-calendar-week" style={{ color: '#3b82f6', fontSize: '18px' }}></i>
+            </div>
+            <h2 style={{ margin: '10px 0 0', fontSize: '26px' }}>{weeklyVisits}</h2>
+          </div>
+          <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>إجمالي زيارات الشهر</span>
+              <i className="fa-solid fa-calendar-days" style={{ color: '#10b981', fontSize: '18px' }}></i>
+            </div>
+            <h2 style={{ margin: '10px 0 0', fontSize: '26px' }}>{monthlyVisits}</h2>
+          </div>
+        </div>
+
+        {/* Controls: Search and Sort */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '16px' }}>
+          {/* Search Input */}
+          <div className="search-wrapper" style={{ margin: 0 }}>
+            <i className="fa-solid fa-magnifying-glass search-icon"></i>
+            <input
+              type="text"
+              className="search-input"
+              placeholder="ابحث باسم المطعم..."
+              value={callsSearchTerm}
+              onChange={(e) => setCallsSearchTerm(e.target.value)}
+            />
+          </div>
+
+          {/* Sorting Controls */}
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+            <span style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--text-secondary)' }}>ترتيب المطاعم حسب:</span>
+            <button 
+              onClick={() => setSortBy('total')} 
+              style={{ 
+                padding: '6px 12px', 
+                borderRadius: 'var(--radius-sm)', 
+                border: '1px solid var(--border-color)', 
+                backgroundColor: sortBy === 'total' ? 'var(--accent-color)' : 'var(--bg-secondary)', 
+                color: sortBy === 'total' ? '#fff' : 'var(--text-primary)', 
+                cursor: 'pointer', 
+                fontWeight: 'bold',
+                fontSize: '12px'
+              }}
+            >
+              📊 الإجمالي الكلي
+            </button>
+            <button 
+              onClick={() => setSortBy('today')} 
+              style={{ 
+                padding: '6px 12px', 
+                borderRadius: 'var(--radius-sm)', 
+                border: '1px solid var(--border-color)', 
+                backgroundColor: sortBy === 'today' ? 'var(--accent-color)' : 'var(--bg-secondary)', 
+                color: sortBy === 'today' ? '#fff' : 'var(--text-primary)', 
+                cursor: 'pointer', 
+                fontWeight: 'bold',
+                fontSize: '12px'
+              }}
+            >
+              📞 اتصالات اليوم
+            </button>
+            <button 
+              onClick={() => setSortBy('yesterday')} 
+              style={{ 
+                padding: '6px 12px', 
+                borderRadius: 'var(--radius-sm)', 
+                border: '1px solid var(--border-color)', 
+                backgroundColor: sortBy === 'yesterday' ? 'var(--accent-color)' : 'var(--bg-secondary)', 
+                color: sortBy === 'yesterday' ? '#fff' : 'var(--text-primary)', 
+                cursor: 'pointer', 
+                fontWeight: 'bold',
+                fontSize: '12px'
+              }}
+            >
+              ⏳ اتصالات أمس
+            </button>
+            <button 
+              onClick={() => setSortBy('name')} 
+              style={{ 
+                padding: '6px 12px', 
+                borderRadius: 'var(--radius-sm)', 
+                border: '1px solid var(--border-color)', 
+                backgroundColor: sortBy === 'name' ? 'var(--accent-color)' : 'var(--bg-secondary)', 
+                color: sortBy === 'name' ? '#fff' : 'var(--text-primary)', 
+                cursor: 'pointer', 
+                fontWeight: 'bold',
+                fontSize: '12px'
+              }}
+            >
+              🔤 اسم المطعم (أبجدي)
+            </button>
+          </div>
         </div>
 
         {/* Stats Table */}
@@ -1959,7 +2195,7 @@ function App() {
                 <p>أضف بياناتك أو إعلان وظيفتك مجاناً ليصل لآلاف الأهالي في مغاغة!</p>
               </div>
               <a 
-                href={`https://wa.me/201062049652?text=${encodeURIComponent("أريد إضافة إعلان وظيفة / سيرتي الذاتية في قسم الوظائف بدليل مغاغة")}`}
+                href={`https://wa.me/201558606314?text=${encodeURIComponent("أريد إضافة إعلان وظيفة / سيرتي الذاتية في قسم الوظائف بدليل مغاغة")}`}
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="job-cta-btn"
@@ -2077,7 +2313,7 @@ function App() {
                 <p>أضف بيانات عيادتك ومواعيد كشفك مجاناً لتسهيل وصول المرضى إليك!</p>
               </div>
               <a 
-                href={`https://wa.me/201062049652?text=${encodeURIComponent("أريد إضافة بيانات عيادتي / معملي في قسم الأطباء بدليل مغاغة")}`}
+                href={`https://wa.me/201558606314?text=${encodeURIComponent("أريد إضافة بيانات عيادتي / معملي في قسم الأطباء بدليل مغاغة")}`}
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="job-cta-btn"
@@ -2177,7 +2413,7 @@ function App() {
                 <p>أضف بيانات صيدليتك ومواعيد العمل مجاناً لتسهيل وصول أهالي مغاغة إليك!</p>
               </div>
               <a 
-                href={`https://wa.me/201062049652?text=${encodeURIComponent("أريد إضافة بيانات صيدليتي في قسم الصيدليات بدليل مغاغة")}`}
+                href={`https://wa.me/201558606314?text=${encodeURIComponent("أريد إضافة بيانات صيدليتي في قسم الصيدليات بدليل مغاغة")}`}
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="job-cta-btn"
@@ -2309,7 +2545,7 @@ function App() {
                 <p>ساهم معنا في تحديث الدليل الخدمي لمغاغة لتسهيل الوصول للخدمات الحكومية والعامة!</p>
               </div>
               <a 
-                href={`https://wa.me/201062049652?text=${encodeURIComponent("أريد إضافة / تحديث بيانات جهة خدمية في دليل مغاغة")}`}
+                href={`https://wa.me/201558606314?text=${encodeURIComponent("أريد إضافة / تحديث بيانات جهة خدمية في دليل مغاغة")}`}
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="job-cta-btn"
@@ -2933,7 +3169,7 @@ function App() {
       {!selectedRestaurant && !activeMenuImage && (
         <>
           {/* <a 
-            href={`https://wa.me/201062049652?text=${encodeURIComponent("أهلاً، أريد الاستفسار عن خدمات دليل مغاغة 📱✨")}`}
+            href={`https://wa.me/201558606314?text=${encodeURIComponent("أهلاً، أريد الاستفسار عن خدمات دليل مغاغة 📱✨")}`}
             target="_blank" 
             rel="noopener noreferrer" 
             className="fixed-whatsapp-left-btn"
@@ -2956,7 +3192,7 @@ function App() {
       {/* Floating Bottom WhatsApp Button */}
       <div className={`floating-whatsapp-bottom ${showBottomWhatsApp ? 'show' : ''}`}>
         <a 
-          href={`https://wa.me/201062049652?text=${encodeURIComponent(
+          href={`https://wa.me/201558606314?text=${encodeURIComponent(
             activeMainTab === 'restaurants' ? "أهلاً، أريد إضافة بيانات المطعم أو المنيو الخاص بي في دليل مغاغة 🍔" :
             activeMainTab === 'supermarket' ? "أهلاً، أريد إضافة بيانات وعروض المحل / السوبر ماركت الخاص بي في دليل مغاغة 🛒" :
             activeMainTab === 'jobs' ? "أهلاً، أريد إضافة فرصة عمل / الإعلان عن وظيفة شاغرة في دليل مغاغة 💼" :
