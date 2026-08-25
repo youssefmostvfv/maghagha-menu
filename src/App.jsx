@@ -112,6 +112,7 @@ function App() {
   const [adminPasscode, setAdminPasscode] = useState('');
   const [adminLoginError, setAdminLoginError] = useState('');
   const [activeAdminTab, setActiveAdminTab] = useState('stats');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   // States for adding/editing forms in Admin Panel
   const [editingRestaurant, setEditingRestaurant] = useState(null);
@@ -834,77 +835,131 @@ function App() {
   };
 
   if (isAdminPage) {
-    return (
-      <div className="admin-layout" style={{ direction: 'rtl', minHeight: '100vh', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
-        {/* Admin Header */}
-        <header className="admin-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 24px', backgroundColor: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <img src={logoTow} alt="Logo" style={{ height: '40px' }} />
-            <h1 style={{ fontSize: '18px', fontWeight: '800', margin: 0 }}>لوحة تحكم دليل مغاغة</h1>
+    if (!isAdminLoggedIn) {
+      return (
+        <div style={{ direction: 'rtl', minHeight: '100vh', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+          {/* Login Screen */}
+          <div style={{ maxWidth: '400px', width: '100%', padding: '32px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-md)', textAlign: 'center' }}>
+            <img src={logo} alt="Logo" style={{ height: '70px', marginBottom: '16px' }} />
+            <h2 style={{ fontSize: '20px', fontWeight: '800', marginBottom: '24px' }}>تسجيل دخول الإدارة</h2>
+            <form onSubmit={handleAdminLogin} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <input 
+                type="password" 
+                placeholder="أدخل كلمة مرور المسؤول..." 
+                value={adminPasscode}
+                onChange={(e) => setAdminPasscode(e.target.value)}
+                style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)', textAlign: 'center' }}
+                required
+              />
+              {adminLoginError && <p style={{ color: 'var(--status-closed)', fontSize: '14px', margin: 0 }}>{adminLoginError}</p>}
+              <button type="submit" className="theme-toggle-btn" style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: 'none', backgroundColor: 'var(--accent-color)', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>
+                دخول لوحة التحكم
+              </button>
+            </form>
           </div>
-          {isAdminLoggedIn && (
-            <div className="admin-tabs" style={{ display: 'flex', gap: '8px' }}>
-              <button 
-                className={`admin-tab-btn ${activeAdminTab === 'stats' ? 'active' : ''}`}
-                onClick={() => { setActiveAdminTab('stats'); setEditingRestaurant(null); setEditingCaptain(null); setShowAddRestaurantForm(false); setShowAddCaptainForm(false); }}
-                style={{ padding: '8px 16px', borderRadius: 'var(--radius-sm)', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}
-              >
-                📊 الإحصائيات
-              </button>
-              <button 
-                className={`admin-tab-btn ${activeAdminTab === 'restaurants' ? 'active' : ''}`}
-                onClick={() => { setActiveAdminTab('restaurants'); setEditingRestaurant(null); setShowAddRestaurantForm(false); }}
-                style={{ padding: '8px 16px', borderRadius: 'var(--radius-sm)', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}
-              >
-                🍔 إدارة المطاعم
-              </button>
-              <button 
-                className={`admin-tab-btn ${activeAdminTab === 'captains' ? 'active' : ''}`}
-                onClick={() => { setActiveAdminTab('captains'); setEditingCaptain(null); setShowAddCaptainForm(false); }}
-                style={{ padding: '8px 16px', borderRadius: 'var(--radius-sm)', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}
-              >
-                🏍️ إدارة الكباتن
-              </button>
-            </div>
-          )}
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <button onClick={handleBackToHome} style={{ padding: '8px 16px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', cursor: 'pointer', fontWeight: 'bold' }}>
-              🏠 الموقع الرئيسي
-            </button>
-            {isAdminLoggedIn && (
-              <button onClick={handleAdminLogout} style={{ padding: '8px 16px', borderRadius: 'var(--radius-sm)', border: 'none', backgroundColor: 'var(--status-closed)', color: '#fff', cursor: 'pointer', fontWeight: 'bold' }}>
-                🚪 خروج
-              </button>
-            )}
-          </div>
-        </header>
+        </div>
+      );
+    }
 
-        {/* Admin Body Content */}
-        <div style={{ padding: '24px' }}>
-          {!isAdminLoggedIn ? (
-            /* Login Screen */
-            <div style={{ maxWidth: '400px', margin: '80px auto', padding: '32px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-md)', textAlign: 'center' }}>
-              <img src={logo} alt="Logo" style={{ height: '70px', marginBottom: '16px' }} />
-              <h2 style={{ fontSize: '20px', fontWeight: '800', marginBottom: '24px' }}>تسجيل دخول الإدارة</h2>
-              <form onSubmit={handleAdminLogin} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <input 
-                  type="password" 
-                  placeholder="أدخل كلمة مرور المسؤول..." 
-                  value={adminPasscode}
-                  onChange={(e) => setAdminPasscode(e.target.value)}
-                  style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)', textAlign: 'center' }}
-                  required
-                />
-                {adminLoginError && <p style={{ color: 'var(--status-closed)', fontSize: '14px', margin: 0 }}>{adminLoginError}</p>}
-                <button type="submit" className="theme-toggle-btn" style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: 'none', backgroundColor: 'var(--accent-color)', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>
-                  دخول لوحة التحكم
-                </button>
-              </form>
-            </div>
-          ) : (
-            /* Dashboard View */
-            (() => {
-              if (activeAdminTab === 'stats') {
+    return (
+      <div className="admin-layout-container">
+        {/* Mobile Header */}
+        <div className="admin-mobile-header">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <button 
+              onClick={() => setIsSidebarOpen(true)}
+              style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', fontSize: '20px', cursor: 'pointer' }}
+            >
+              <i className="fa-solid fa-bars"></i>
+            </button>
+            <h1 style={{ fontSize: '16px', fontWeight: '800', margin: 0 }}>لوحة التحكم</h1>
+          </div>
+          <img src={logoTow} alt="Logo" style={{ height: '32px' }} />
+        </div>
+
+        {/* Sidebar Overlay for Mobile */}
+        <div 
+          className={`admin-sidebar-overlay ${isSidebarOpen ? 'open' : ''}`}
+          onClick={() => setIsSidebarOpen(false)}
+        />
+
+        {/* Right Sidebar */}
+        <aside className={`admin-sidebar ${isSidebarOpen ? 'open' : ''}`}>
+          <div className="admin-sidebar-header">
+            <img src={logoTow} alt="Logo" style={{ height: '35px' }} />
+            <h1 style={{ fontSize: '16px', fontWeight: '800', margin: 0 }}>تحكم دليل مغاغة</h1>
+          </div>
+
+          <nav className="admin-sidebar-menu">
+            <button 
+              className={`admin-sidebar-item ${activeAdminTab === 'stats' ? 'active' : ''}`}
+              onClick={() => { setActiveAdminTab('stats'); setEditingRestaurant(null); setEditingCaptain(null); setShowAddRestaurantForm(false); setShowAddCaptainForm(false); setIsSidebarOpen(false); }}
+            >
+              <i className="fa-solid fa-chart-line"></i>
+              <span>📊 الإحصائيات العامة</span>
+            </button>
+
+            <button 
+              className={`admin-sidebar-item ${activeAdminTab === 'restaurants' ? 'active' : ''}`}
+              onClick={() => { setActiveAdminTab('restaurants'); setEditingRestaurant(null); setShowAddRestaurantForm(false); setIsSidebarOpen(false); }}
+            >
+              <i className="fa-solid fa-utensils"></i>
+              <span>🍔 إدارة المطاعم</span>
+            </button>
+
+            <button 
+              className={`admin-sidebar-item ${activeAdminTab === 'captains' ? 'active' : ''}`}
+              onClick={() => { setActiveAdminTab('captains'); setEditingCaptain(null); setShowAddCaptainForm(false); setIsSidebarOpen(false); }}
+            >
+              <i className="fa-solid fa-motorcycle"></i>
+              <span>🏍️ إدارة الكباتن</span>
+            </button>
+
+            {/* Inactive future control sections as placeholders */}
+            <div style={{ margin: '12px 0 6px', padding: '0 16px', fontSize: '11px', color: 'var(--text-muted)', fontWeight: 'bold' }}>أقسام قيد التطوير:</div>
+            
+            <button className="admin-sidebar-item" style={{ opacity: 0.6, cursor: 'not-allowed' }} disabled>
+              <i className="fa-solid fa-store"></i>
+              <span>🛒 إدارة السوبرماركت</span>
+            </button>
+
+            <button className="admin-sidebar-item" style={{ opacity: 0.6, cursor: 'not-allowed' }} disabled>
+              <i className="fa-solid fa-briefcase"></i>
+              <span>💼 إدارة الوظائف</span>
+            </button>
+
+            <button className="admin-sidebar-item" style={{ opacity: 0.6, cursor: 'not-allowed' }} disabled>
+              <i className="fa-solid fa-user-doctor"></i>
+              <span>🩺 إدارة الأطباء</span>
+            </button>
+
+            <button className="admin-sidebar-item" style={{ opacity: 0.6, cursor: 'not-allowed' }} disabled>
+              <i className="fa-solid fa-pills"></i>
+              <span>💊 إدارة الصيدليات</span>
+            </button>
+
+            <button className="admin-sidebar-item" style={{ opacity: 0.6, cursor: 'not-allowed' }} disabled>
+              <i className="fa-solid fa-landmark"></i>
+              <span>🏛️ الخدمات الحكومية</span>
+            </button>
+          </nav>
+
+          <div className="admin-sidebar-footer">
+            <button onClick={handleBackToHome} className="admin-sidebar-item" style={{ border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)' }}>
+              <i className="fa-solid fa-house"></i>
+              <span>الموقع الرئيسي</span>
+            </button>
+            <button onClick={handleAdminLogout} className="admin-sidebar-item" style={{ backgroundColor: 'var(--status-closed)', color: '#fff', borderRadius: 'var(--radius-sm)' }}>
+              <i className="fa-solid fa-right-from-bracket"></i>
+              <span>تسجيل الخروج</span>
+            </button>
+          </div>
+        </aside>
+
+        {/* Left Content Area */}
+        <main className="admin-main-content" style={{ padding: '24px' }}>
+          {(() => {
+            if (activeAdminTab === 'stats') {
                 const totalRatingsCount = Object.values(ratings).reduce((acc, curr) => acc + (curr.count || 0), 0);
                 const totalTripsCount = Object.values(tripsCounts).reduce((acc, curr) => acc + (curr || 0), 0);
                 return (
@@ -1246,9 +1301,8 @@ function App() {
                   </div>
                 );
               }
-            })()
-          )}
-        </div>
+            })()}
+        </main>
       </div>
     );
   }
