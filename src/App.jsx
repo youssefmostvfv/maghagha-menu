@@ -1453,7 +1453,7 @@ function App() {
                           const data = {
                             id: editingCaptain ? targetCaptain.id : `captain_${Date.now()}`,
                             name: formData.get('name'),
-                            avatar: formData.get('avatar') || '',
+                            avatar: formData.get('avatar') || 'avatar-men',
                             phone: formData.get('phone'),
                             isAvailable: formData.get('isAvailable') === 'on',
                             description: formData.get('description'),
