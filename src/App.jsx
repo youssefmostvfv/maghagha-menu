@@ -119,6 +119,18 @@ function App() {
   const [editingCaptain, setEditingCaptain] = useState(null);
   const [showAddRestaurantForm, setShowAddRestaurantForm] = useState(false);
   const [showAddCaptainForm, setShowAddCaptainForm] = useState(false);
+  const [editingSupermarket, setEditingSupermarket] = useState(null);
+  const [showAddSupermarketForm, setShowAddSupermarketForm] = useState(false);
+  const [editingJobSeeker, setEditingJobSeeker] = useState(null);
+  const [showAddJobSeekerForm, setShowAddJobSeekerForm] = useState(false);
+  const [editingJobVacancy, setEditingJobVacancy] = useState(null);
+  const [showAddJobVacancyForm, setShowAddJobVacancyForm] = useState(false);
+  const [editingDoctor, setEditingDoctor] = useState(null);
+  const [showAddDoctorForm, setShowAddDoctorForm] = useState(false);
+  const [editingPharmacy, setEditingPharmacy] = useState(null);
+  const [showAddPharmacyForm, setShowAddPharmacyForm] = useState(false);
+  const [editingGovService, setEditingGovService] = useState(null);
+  const [showAddGovServiceForm, setShowAddGovServiceForm] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showIOSInstallInstructions, setShowIOSInstallInstructions] = useState(false);
   const [showServicesArrow, setShowServicesArrow] = useState(true);
@@ -446,38 +458,136 @@ function App() {
 
     // Fetch and seed Captains
     const dbCaptainsRef = ref(db, 'captains');
-    set(dbCaptainsRef, INITIAL_CAPTAINS);
-    setCaptains(INITIAL_CAPTAINS);
+    get(dbCaptainsRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        const fetched = normalizeData(snapshot.val());
+        const existingIds = new Set(fetched.map(item => String(item.id)));
+        const missing = INITIAL_CAPTAINS.filter(item => !existingIds.has(String(item.id)));
+        const merged = [...fetched, ...missing];
+        setCaptains(merged);
+        if (missing.length > 0) set(dbCaptainsRef, merged);
+      } else {
+        set(dbCaptainsRef, INITIAL_CAPTAINS);
+        setCaptains(INITIAL_CAPTAINS);
+      }
+    }).catch((err) => {
+      console.error('Error loading captains:', err);
+      setCaptains(INITIAL_CAPTAINS);
+    });
 
     // Fetch and seed Supermarkets
     const dbSupermarketsRef = ref(db, 'supermarkets');
-    set(dbSupermarketsRef, INITIAL_SUPERMARKETS);
-    setSupermarkets(INITIAL_SUPERMARKETS);
+    get(dbSupermarketsRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        const fetched = normalizeData(snapshot.val());
+        const existingIds = new Set(fetched.map(item => String(item.id)));
+        const missing = INITIAL_SUPERMARKETS.filter(item => !existingIds.has(String(item.id)));
+        const merged = [...fetched, ...missing];
+        setSupermarkets(merged);
+        if (missing.length > 0) set(dbSupermarketsRef, merged);
+      } else {
+        set(dbSupermarketsRef, INITIAL_SUPERMARKETS);
+        setSupermarkets(INITIAL_SUPERMARKETS);
+      }
+    }).catch((err) => {
+      console.error('Error loading supermarkets:', err);
+      setSupermarkets(INITIAL_SUPERMARKETS);
+    });
 
     // Fetch and seed Job Seekers
     const dbJobSeekersRef = ref(db, 'job_seekers');
-    set(dbJobSeekersRef, INITIAL_JOB_SEEKERS);
-    setJobSeekers(INITIAL_JOB_SEEKERS);
+    get(dbJobSeekersRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        const fetched = normalizeData(snapshot.val());
+        const existingIds = new Set(fetched.map(item => String(item.id)));
+        const missing = INITIAL_JOB_SEEKERS.filter(item => !existingIds.has(String(item.id)));
+        const merged = [...fetched, ...missing];
+        setJobSeekers(merged);
+        if (missing.length > 0) set(dbJobSeekersRef, merged);
+      } else {
+        set(dbJobSeekersRef, INITIAL_JOB_SEEKERS);
+        setJobSeekers(INITIAL_JOB_SEEKERS);
+      }
+    }).catch((err) => {
+      console.error('Error loading job seekers:', err);
+      setJobSeekers(INITIAL_JOB_SEEKERS);
+    });
 
     // Fetch and seed Job Vacancies
     const dbJobVacanciesRef = ref(db, 'job_vacancies');
-    set(dbJobVacanciesRef, INITIAL_JOB_VACANCIES);
-    setJobVacancies(INITIAL_JOB_VACANCIES);
+    get(dbJobVacanciesRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        const fetched = normalizeData(snapshot.val());
+        const existingIds = new Set(fetched.map(item => String(item.id)));
+        const missing = INITIAL_JOB_VACANCIES.filter(item => !existingIds.has(String(item.id)));
+        const merged = [...fetched, ...missing];
+        setJobVacancies(merged);
+        if (missing.length > 0) set(dbJobVacanciesRef, merged);
+      } else {
+        set(dbJobVacanciesRef, INITIAL_JOB_VACANCIES);
+        setJobVacancies(INITIAL_JOB_VACANCIES);
+      }
+    }).catch((err) => {
+      console.error('Error loading job vacancies:', err);
+      setJobVacancies(INITIAL_JOB_VACANCIES);
+    });
 
     // Fetch and seed Doctors
     const dbDoctorsRef = ref(db, 'doctors');
-    set(dbDoctorsRef, INITIAL_DOCTORS);
-    setDoctors(INITIAL_DOCTORS);
+    get(dbDoctorsRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        const fetched = normalizeData(snapshot.val());
+        const existingIds = new Set(fetched.map(item => String(item.id)));
+        const missing = INITIAL_DOCTORS.filter(item => !existingIds.has(String(item.id)));
+        const merged = [...fetched, ...missing];
+        setDoctors(merged);
+        if (missing.length > 0) set(dbDoctorsRef, merged);
+      } else {
+        set(dbDoctorsRef, INITIAL_DOCTORS);
+        setDoctors(INITIAL_DOCTORS);
+      }
+    }).catch((err) => {
+      console.error('Error loading doctors:', err);
+      setDoctors(INITIAL_DOCTORS);
+    });
 
     // Fetch and seed Pharmacies
     const dbPharmaciesRef = ref(db, 'pharmacies');
-    set(dbPharmaciesRef, INITIAL_PHARMACIES);
-    setPharmacies(INITIAL_PHARMACIES);
+    get(dbPharmaciesRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        const fetched = normalizeData(snapshot.val());
+        const existingIds = new Set(fetched.map(item => String(item.id)));
+        const missing = INITIAL_PHARMACIES.filter(item => !existingIds.has(String(item.id)));
+        const merged = [...fetched, ...missing];
+        setPharmacies(merged);
+        if (missing.length > 0) set(dbPharmaciesRef, merged);
+      } else {
+        set(dbPharmaciesRef, INITIAL_PHARMACIES);
+        setPharmacies(INITIAL_PHARMACIES);
+      }
+    }).catch((err) => {
+      console.error('Error loading pharmacies:', err);
+      setPharmacies(INITIAL_PHARMACIES);
+    });
 
     // Fetch and seed Government Services
     const dbGovServicesRef = ref(db, 'gov_services');
-    set(dbGovServicesRef, INITIAL_GOV_SERVICES);
-    setGovServices(INITIAL_GOV_SERVICES);
+    get(dbGovServicesRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        const fetched = normalizeData(snapshot.val());
+        const existingIds = new Set(fetched.map(item => String(item.id)));
+        const missing = INITIAL_GOV_SERVICES.filter(item => !existingIds.has(String(item.id)));
+        const merged = [...fetched, ...missing];
+        setGovServices(merged);
+        if (missing.length > 0) set(dbGovServicesRef, merged);
+      } else {
+        set(dbGovServicesRef, INITIAL_GOV_SERVICES);
+        setGovServices(INITIAL_GOV_SERVICES);
+      }
+    }).catch((err) => {
+      console.error('Error loading gov services:', err);
+      setGovServices(INITIAL_GOV_SERVICES);
+    });
 
     // Parse Deep Link URL ID and page parameter on mount (using seed data for instant synchronous matching)
     const params = new URLSearchParams(window.location.search);
@@ -754,6 +864,138 @@ function App() {
     }
   };
 
+  const handleAddSupermarket = async (newSup) => {
+    const updatedList = [...supermarkets, { ...newSup, id: Date.now() }];
+    await set(ref(db, 'supermarkets'), updatedList);
+    setSupermarkets(updatedList);
+    setShowAddSupermarketForm(false);
+  };
+
+  const handleEditSupermarket = async (updatedSup) => {
+    const updatedList = supermarkets.map(s => s.id === updatedSup.id ? updatedSup : s);
+    await set(ref(db, 'supermarkets'), updatedList);
+    setSupermarkets(updatedList);
+    setEditingSupermarket(null);
+  };
+
+  const handleDeleteSupermarket = async (supId) => {
+    if (window.confirm('هل أنت متأكد من حذف هذا السوبرماركت نهائياً؟')) {
+      const updatedList = supermarkets.filter(s => s.id !== supId);
+      await set(ref(db, 'supermarkets'), updatedList);
+      setSupermarkets(updatedList);
+    }
+  };
+
+  const handleAddJobSeeker = async (newSeeker) => {
+    const updatedList = [...jobSeekers, { ...newSeeker, id: `seeker_${Date.now()}` }];
+    await set(ref(db, 'job_seekers'), updatedList);
+    setJobSeekers(updatedList);
+    setShowAddJobSeekerForm(false);
+  };
+
+  const handleEditJobSeeker = async (updatedSeeker) => {
+    const updatedList = jobSeekers.map(s => s.id === updatedSeeker.id ? updatedSeeker : s);
+    await set(ref(db, 'job_seekers'), updatedList);
+    setJobSeekers(updatedList);
+    setEditingJobSeeker(null);
+  };
+
+  const handleDeleteJobSeeker = async (seekerId) => {
+    if (window.confirm('هل أنت متأكد من حذف هذا الباحث عن عمل نهائياً؟')) {
+      const updatedList = jobSeekers.filter(s => s.id !== seekerId);
+      await set(ref(db, 'job_seekers'), updatedList);
+      setJobSeekers(updatedList);
+    }
+  };
+
+  const handleAddJobVacancy = async (newVacancy) => {
+    const updatedList = [...jobVacancies, { ...newVacancy, id: `vacancy_${Date.now()}` }];
+    await set(ref(db, 'job_vacancies'), updatedList);
+    setJobVacancies(updatedList);
+    setShowAddJobVacancyForm(false);
+  };
+
+  const handleEditJobVacancy = async (updatedVacancy) => {
+    const updatedList = jobVacancies.map(v => v.id === updatedVacancy.id ? updatedVacancy : v);
+    await set(ref(db, 'job_vacancies'), updatedList);
+    setJobVacancies(updatedList);
+    setEditingJobVacancy(null);
+  };
+
+  const handleDeleteJobVacancy = async (vacancyId) => {
+    if (window.confirm('هل أنت متأكد من حذف هذه الوظيفة الشاغرة نهائياً؟')) {
+      const updatedList = jobVacancies.filter(v => v.id !== vacancyId);
+      await set(ref(db, 'job_vacancies'), updatedList);
+      setJobVacancies(updatedList);
+    }
+  };
+
+  const handleAddDoctor = async (newDoc) => {
+    const updatedList = [...doctors, { ...newDoc, id: `doc_${Date.now()}` }];
+    await set(ref(db, 'doctors'), updatedList);
+    setDoctors(updatedList);
+    setShowAddDoctorForm(false);
+  };
+
+  const handleEditDoctor = async (updatedDoc) => {
+    const updatedList = doctors.map(d => d.id === updatedDoc.id ? updatedDoc : d);
+    await set(ref(db, 'doctors'), updatedList);
+    setDoctors(updatedList);
+    setEditingDoctor(null);
+  };
+
+  const handleDeleteDoctor = async (docId) => {
+    if (window.confirm('هل أنت متأكد من حذف هذا الطبيب نهائياً؟')) {
+      const updatedList = doctors.filter(d => d.id !== docId);
+      await set(ref(db, 'doctors'), updatedList);
+      setDoctors(updatedList);
+    }
+  };
+
+  const handleAddPharmacy = async (newPharm) => {
+    const updatedList = [...pharmacies, { ...newPharm, id: `pharm_${Date.now()}` }];
+    await set(ref(db, 'pharmacies'), updatedList);
+    setPharmacies(updatedList);
+    setShowAddPharmacyForm(false);
+  };
+
+  const handleEditPharmacy = async (updatedPharm) => {
+    const updatedList = pharmacies.map(p => p.id === updatedPharm.id ? updatedPharm : p);
+    await set(ref(db, 'pharmacies'), updatedList);
+    setPharmacies(updatedList);
+    setEditingPharmacy(null);
+  };
+
+  const handleDeletePharmacy = async (pharmId) => {
+    if (window.confirm('هل أنت متأكد من حذف هذه الصيدلية نهائياً؟')) {
+      const updatedList = pharmacies.filter(p => p.id !== pharmId);
+      await set(ref(db, 'pharmacies'), updatedList);
+      setPharmacies(updatedList);
+    }
+  };
+
+  const handleAddGovService = async (newSrv) => {
+    const updatedList = [...govServices, { ...newSrv, id: `gov_${Date.now()}` }];
+    await set(ref(db, 'gov_services'), updatedList);
+    setGovServices(updatedList);
+    setShowAddGovServiceForm(false);
+  };
+
+  const handleEditGovService = async (updatedSrv) => {
+    const updatedList = govServices.map(s => s.id === updatedSrv.id ? updatedSrv : s);
+    await set(ref(db, 'gov_services'), updatedList);
+    setGovServices(updatedList);
+    setEditingGovService(null);
+  };
+
+  const handleDeleteGovService = async (srvId) => {
+    if (window.confirm('هل أنت متأكد من حذف هذه الخدمة نهائياً؟')) {
+      const updatedList = govServices.filter(s => s.id !== srvId);
+      await set(ref(db, 'gov_services'), updatedList);
+      setGovServices(updatedList);
+    }
+  };
+
   const [theme, setTheme] = useState(() => {
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem('theme');
@@ -915,30 +1157,45 @@ function App() {
               <span>🏍️ إدارة الكباتن</span>
             </button>
 
-            {/* Inactive future control sections as placeholders */}
-            <div style={{ margin: '12px 0 6px', padding: '0 16px', fontSize: '11px', color: 'var(--text-muted)', fontWeight: 'bold' }}>أقسام قيد التطوير:</div>
+            {/* Admin control sections */}
+            <div style={{ margin: '12px 0 6px', padding: '0 16px', fontSize: '11px', color: 'var(--text-muted)', fontWeight: 'bold' }}>باقي الأقسام:</div>
             
-            <button className="admin-sidebar-item" style={{ opacity: 0.6, cursor: 'not-allowed' }} disabled>
+            <button 
+              className={`admin-sidebar-item ${activeAdminTab === 'supermarket' ? 'active' : ''}`}
+              onClick={() => { setActiveAdminTab('supermarket'); setIsSidebarOpen(false); }}
+            >
               <i className="fa-solid fa-store"></i>
               <span>🛒 إدارة السوبرماركت</span>
             </button>
 
-            <button className="admin-sidebar-item" style={{ opacity: 0.6, cursor: 'not-allowed' }} disabled>
+            <button 
+              className={`admin-sidebar-item ${activeAdminTab === 'jobs' ? 'active' : ''}`}
+              onClick={() => { setActiveAdminTab('jobs'); setIsSidebarOpen(false); }}
+            >
               <i className="fa-solid fa-briefcase"></i>
               <span>💼 إدارة الوظائف</span>
             </button>
 
-            <button className="admin-sidebar-item" style={{ opacity: 0.6, cursor: 'not-allowed' }} disabled>
+            <button 
+              className={`admin-sidebar-item ${activeAdminTab === 'doctors' ? 'active' : ''}`}
+              onClick={() => { setActiveAdminTab('doctors'); setIsSidebarOpen(false); }}
+            >
               <i className="fa-solid fa-user-doctor"></i>
               <span>🩺 إدارة الأطباء</span>
             </button>
 
-            <button className="admin-sidebar-item" style={{ opacity: 0.6, cursor: 'not-allowed' }} disabled>
+            <button 
+              className={`admin-sidebar-item ${activeAdminTab === 'pharmacies' ? 'active' : ''}`}
+              onClick={() => { setActiveAdminTab('pharmacies'); setIsSidebarOpen(false); }}
+            >
               <i className="fa-solid fa-pills"></i>
               <span>💊 إدارة الصيدليات</span>
             </button>
 
-            <button className="admin-sidebar-item" style={{ opacity: 0.6, cursor: 'not-allowed' }} disabled>
+            <button 
+              className={`admin-sidebar-item ${activeAdminTab === 'gov_services' ? 'active' : ''}`}
+              onClick={() => { setActiveAdminTab('gov_services'); setIsSidebarOpen(false); }}
+            >
               <i className="fa-solid fa-landmark"></i>
               <span>🏛️ الخدمات الحكومية</span>
             </button>
@@ -1291,6 +1548,553 @@ function App() {
                                 <td style={{ padding: '12px 16px', display: 'flex', gap: '8px', justifyContent: 'center' }}>
                                   <button onClick={() => setEditingCaptain(cap)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--accent-color)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🔧 تعديل</button>
                                   <button onClick={() => handleDeleteCaptain(cap.id)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--status-closed)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🗑️ حذف</button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              if (activeAdminTab === 'supermarket') {
+                const isFormOpen = showAddSupermarketForm || editingSupermarket;
+                const targetSupermarket = editingSupermarket || {};
+                return (
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                      <h2>إدارة محلات السوبرماركت والعروض ({supermarkets.length})</h2>
+                      {!isFormOpen && (
+                        <button onClick={() => setShowAddSupermarketForm(true)} style={{ padding: '10px 20px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>
+                          ➕ إضافة محل جديد
+                        </button>
+                      )}
+                    </div>
+
+                    {isFormOpen ? (
+                      <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', maxWidth: '600px' }}>
+                        <h3 style={{ marginBottom: '20px' }}>{editingSupermarket.id ? `تعديل المحل: ${targetSupermarket.name}` : 'إضافة محل سوبرماركت جديد'}</h3>
+                        <form onSubmit={(e) => {
+                          e.preventDefault();
+                          const formData = new FormData(e.currentTarget);
+                          const data = {
+                            id: editingSupermarket.id ? targetSupermarket.id : Date.now(),
+                            name: formData.get('name'),
+                            logo: formData.get('logo') || '',
+                            description: formData.get('description'),
+                            deliveryFee: formData.get('deliveryFee') || 'من 15 لـ 20 جنيه',
+                            phones: (formData.get('phones') || '').split(',').map(p => p.trim()).filter(Boolean),
+                            whatsApp: formData.get('whatsApp') || '',
+                            popularItems: (formData.get('popularItems') || '').split('\n').map(line => {
+                              if (!line.trim()) return null;
+                              const parts = line.split('|');
+                              return {
+                                name: parts[0]?.trim() || '',
+                                price: parts[1]?.trim() || '',
+                                description: parts[2]?.trim() || ''
+                              };
+                            }).filter(Boolean)
+                          };
+
+                          if (editingSupermarket.id) {
+                            handleEditSupermarket(data);
+                          } else {
+                            handleAddSupermarket(data);
+                          }
+                        }} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم المحل:</label>
+                            <input type="text" name="name" defaultValue={targetSupermarket.name || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>شعار المحل (Logo URL):</label>
+                            <input type="text" name="logo" defaultValue={targetSupermarket.logo || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>الوصف والعروض:</label>
+                            <textarea name="description" defaultValue={targetSupermarket.description || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>أرقام الهواتف (مفصولة بفاصلة):</label>
+                            <input type="text" name="phones" defaultValue={targetSupermarket.phones ? targetSupermarket.phones.join(', ') : ''} placeholder="010..., 012..." style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رقم واتساب:</label>
+                            <input type="text" name="whatsApp" defaultValue={targetSupermarket.whatsApp || ''} placeholder="2010..." style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>المنتجات المميزة / العروض (كل منتج في سطر بصيغة: الاسم | السعر | الوصف):</label>
+                            <textarea name="popularItems" rows="3" placeholder="أرز معبأ | 30 | أرز مصري فاخر 1 كجم&#10;زيت طهي | 70 | زيت خليط 800 مل" defaultValue={targetSupermarket.popularItems ? targetSupermarket.popularItems.map(item => `${item.name} | ${item.price} | ${item.description || ''}`).join('\n') : ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)', fontFamily: 'sans-serif' }} />
+                          </div>
+                          <div style={{ display: 'flex', gap: '12px' }}>
+                            <button type="submit" style={{ flex: 1, padding: '12px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>حفظ</button>
+                            <button type="button" onClick={() => { setEditingSupermarket(null); setShowAddSupermarketForm(false); }} style={{ flex: 1, padding: '12px', backgroundColor: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>إلغاء</button>
+                          </div>
+                        </form>
+                      </div>
+                    ) : (
+                      <div style={{ overflowX: 'auto', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'right' }}>
+                          <thead>
+                            <tr style={{ borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)' }}>
+                              <th style={{ padding: '12px 16px' }}>الاسم</th>
+                              <th style={{ padding: '12px 16px' }}>الهواتف</th>
+                              <th style={{ padding: '12px 16px', textAlign: 'center' }}>العمليات</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {supermarkets.map((sup) => (
+                              <tr key={sup.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                                <td style={{ padding: '12px 16px', fontWeight: 'bold' }}>{sup.name}</td>
+                                <td style={{ padding: '12px 16px', direction: 'ltr', textAlign: 'right' }}>{sup.phones.join(' - ')}</td>
+                                <td style={{ padding: '12px 16px', display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                                  <button onClick={() => setEditingSupermarket(sup)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--accent-color)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🔧 تعديل</button>
+                                  <button onClick={() => handleDeleteSupermarket(sup.id)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--status-closed)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🗑️ حذف</button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              if (activeAdminTab === 'jobs') {
+                const isFormOpen = showAddJobSeekerForm || editingJobSeeker || showAddJobVacancyForm || editingJobVacancy;
+                const targetSeeker = editingJobSeeker || {};
+                const targetVacancy = editingJobVacancy || {};
+
+                return (
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                      <h2>إدارة قسم الوظائف (وظائف: {jobVacancies.length} | طالبو عمل: {jobSeekers.length})</h2>
+                      {!isFormOpen && (
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                          <button onClick={() => setShowAddJobVacancyForm(true)} style={{ padding: '10px 16px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>
+                            ➕ إضافة وظيفة شاغرة
+                          </button>
+                          <button onClick={() => setShowAddJobSeekerForm(true)} style={{ padding: '10px 16px', backgroundColor: 'var(--bg-tertiary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>
+                            ➕ إضافة طالب عمل
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    {showAddJobVacancyForm || editingJobVacancy ? (
+                      <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', maxWidth: '600px' }}>
+                        <h3 style={{ marginBottom: '20px' }}>{editingJobVacancy.id ? `تعديل الوظيفة: ${targetVacancy.title}` : 'إضافة وظيفة شاغرة جديدة'}</h3>
+                        <form onSubmit={(e) => {
+                          e.preventDefault();
+                          const formData = new FormData(e.currentTarget);
+                          const data = {
+                            id: editingJobVacancy.id ? targetVacancy.id : `vacancy_${Date.now()}`,
+                            title: formData.get('title'),
+                            company: formData.get('company'),
+                            location: formData.get('location') || 'مغاغة',
+                            description: formData.get('description'),
+                            salary: formData.get('salary') || 'غير محدد',
+                            phone: formData.get('phone')
+                          };
+                          if (editingJobVacancy.id) {
+                            handleEditJobVacancy(data);
+                          } else {
+                            handleAddJobVacancy(data);
+                          }
+                        }} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>عنوان الوظيفة:</label>
+                            <input type="text" name="title" defaultValue={targetVacancy.title || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم الشركة / صاحب العمل:</label>
+                            <input type="text" name="company" defaultValue={targetVacancy.company || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>تفاصيل الوظيفة:</label>
+                            <textarea name="description" defaultValue={targetVacancy.description || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>الراتب:</label>
+                            <input type="text" name="salary" defaultValue={targetVacancy.salary || ''} placeholder="مثال: 4000 جنيه" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رقم التواصل:</label>
+                            <input type="text" name="phone" defaultValue={targetVacancy.phone || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div style={{ display: 'flex', gap: '12px' }}>
+                            <button type="submit" style={{ flex: 1, padding: '12px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>حفظ</button>
+                            <button type="button" onClick={() => { setEditingJobVacancy(null); setShowAddJobVacancyForm(false); }} style={{ flex: 1, padding: '12px', backgroundColor: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>إلغاء</button>
+                          </div>
+                        </form>
+                      </div>
+                    ) : showAddJobSeekerForm || editingJobSeeker ? (
+                      <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', maxWidth: '600px' }}>
+                        <h3 style={{ marginBottom: '20px' }}>{editingJobSeeker.id ? `تعديل طلب: ${targetSeeker.name}` : 'إضافة طلب عمل جديد'}</h3>
+                        <form onSubmit={(e) => {
+                          e.preventDefault();
+                          const formData = new FormData(e.currentTarget);
+                          const data = {
+                            id: editingJobSeeker.id ? targetSeeker.id : `seeker_${Date.now()}`,
+                            name: formData.get('name'),
+                            title: formData.get('title'),
+                            experience: formData.get('experience'),
+                            phone: formData.get('phone')
+                          };
+                          if (editingJobSeeker.id) {
+                            handleEditJobSeeker(data);
+                          } else {
+                            handleAddJobSeeker(data);
+                          }
+                        }} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم المتقدم:</label>
+                            <input type="text" name="name" defaultValue={targetSeeker.name || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>التخصص / المسمى الوظيفي:</label>
+                            <input type="text" name="title" defaultValue={targetSeeker.title || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>الخبرات والمهارات:</label>
+                            <textarea name="experience" defaultValue={targetSeeker.experience || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رقم الهاتف:</label>
+                            <input type="text" name="phone" defaultValue={targetSeeker.phone || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div style={{ display: 'flex', gap: '12px' }}>
+                            <button type="submit" style={{ flex: 1, padding: '12px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>حفظ</button>
+                            <button type="button" onClick={() => { setEditingJobSeeker(null); setShowAddJobSeekerForm(false); }} style={{ flex: 1, padding: '12px', backgroundColor: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>إلغاء</button>
+                          </div>
+                        </form>
+                      </div>
+                    ) : (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                        <div>
+                          <h3 style={{ marginBottom: '10px' }}>💼 الوظائف الشاغرة المعروضة:</h3>
+                          <div style={{ overflowX: 'auto', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'right' }}>
+                              <thead>
+                                <tr style={{ borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)' }}>
+                                  <th style={{ padding: '12px 16px' }}>الوظيفة</th>
+                                  <th style={{ padding: '12px 16px' }}>الشركة</th>
+                                  <th style={{ padding: '12px 16px' }}>رقم الاتصال</th>
+                                  <th style={{ padding: '12px 16px', textAlign: 'center' }}>العمليات</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {jobVacancies.map((vac) => (
+                                  <tr key={vac.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                                    <td style={{ padding: '12px 16px', fontWeight: 'bold' }}>{vac.title}</td>
+                                    <td style={{ padding: '12px 16px' }}>{vac.company}</td>
+                                    <td style={{ padding: '12px 16px', direction: 'ltr', textAlign: 'right' }}>{vac.phone}</td>
+                                    <td style={{ padding: '12px 16px', display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                                      <button onClick={() => setEditingJobVacancy(vac)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--accent-color)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🔧 تعديل</button>
+                                      <button onClick={() => handleDeleteJobVacancy(vac.id)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--status-closed)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🗑️ حذف</button>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+
+                        <div>
+                          <h3 style={{ marginBottom: '10px' }}>👤 طلبات الباحثين عن عمل:</h3>
+                          <div style={{ overflowX: 'auto', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'right' }}>
+                              <thead>
+                                <tr style={{ borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)' }}>
+                                  <th style={{ padding: '12px 16px' }}>الاسم</th>
+                                  <th style={{ padding: '12px 16px' }}>التخصص</th>
+                                  <th style={{ padding: '12px 16px' }}>الهاتف</th>
+                                  <th style={{ padding: '12px 16px', textAlign: 'center' }}>العمليات</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {jobSeekers.map((seeker) => (
+                                  <tr key={seeker.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                                    <td style={{ padding: '12px 16px', fontWeight: 'bold' }}>{seeker.name}</td>
+                                    <td style={{ padding: '12px 16px' }}>{seeker.title}</td>
+                                    <td style={{ padding: '12px 16px', direction: 'ltr', textAlign: 'right' }}>{seeker.phone}</td>
+                                    <td style={{ padding: '12px 16px', display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                                      <button onClick={() => setEditingJobSeeker(seeker)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--accent-color)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🔧 تعديل</button>
+                                      <button onClick={() => handleDeleteJobSeeker(seeker.id)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--status-closed)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🗑️ حذف</button>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              if (activeAdminTab === 'doctors') {
+                const isFormOpen = showAddDoctorForm || editingDoctor;
+                const targetDoctor = editingDoctor || {};
+                return (
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                      <h2>إدارة الأطباء والعيادات ({doctors.length})</h2>
+                      {!isFormOpen && (
+                        <button onClick={() => setShowAddDoctorForm(true)} style={{ padding: '10px 20px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>
+                          ➕ إضافة طبيب جديد
+                        </button>
+                      )}
+                    </div>
+                    {isFormOpen ? (
+                      <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', maxWidth: '600px' }}>
+                        <h3 style={{ marginBottom: '20px' }}>{editingDoctor.id ? `تعديل بيانات: ${targetDoctor.name}` : 'إضافة طبيب جديد'}</h3>
+                        <form onSubmit={(e) => {
+                          e.preventDefault();
+                          const formData = new FormData(e.currentTarget);
+                          const data = {
+                            id: editingDoctor.id ? targetDoctor.id : `doc_${Date.now()}`,
+                            name: formData.get('name'),
+                            specialty: formData.get('specialty'),
+                            specialtyId: formData.get('specialtyId') || 'internal_chest',
+                            address: formData.get('address'),
+                            phone: formData.get('phone')
+                          };
+                          if (editingDoctor.id) {
+                            handleEditDoctor(data);
+                          } else {
+                            handleAddDoctor(data);
+                          }
+                        }} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم الطبيب:</label>
+                            <input type="text" name="name" defaultValue={targetDoctor.name || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>التخصص:</label>
+                            <input type="text" name="specialty" defaultValue={targetDoctor.specialty || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>معرف التخصص (specialtyId):</label>
+                            <select name="specialtyId" defaultValue={targetDoctor.specialtyId || 'internal_chest'} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
+                              <option value="surgery_urology">الجراحة والمسالك البولية</option>
+                              <option value="internal_chest">الباطنة والصدر والحميات</option>
+                              <option value="neurology">المخ والأعصاب</option>
+                              <option value="orthopedics">العظام</option>
+                              <option value="dental">الأسنان</option>
+                              <option value="pediatrics">الأطفال وحديثي الولادة</option>
+                              <option value="cardiology">القلب والأوعية الدموية</option>
+                              <option value="ophthalmology">الرمد والعيون</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>العنوان:</label>
+                            <input type="text" name="address" defaultValue={targetDoctor.address || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>الهاتف:</label>
+                            <input type="text" name="phone" defaultValue={targetDoctor.phone || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div style={{ display: 'flex', gap: '12px' }}>
+                            <button type="submit" style={{ flex: 1, padding: '12px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>حفظ</button>
+                            <button type="button" onClick={() => { setEditingDoctor(null); setShowAddDoctorForm(false); }} style={{ flex: 1, padding: '12px', backgroundColor: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>إلغاء</button>
+                          </div>
+                        </form>
+                      </div>
+                    ) : (
+                      <div style={{ overflowX: 'auto', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'right' }}>
+                          <thead>
+                            <tr style={{ borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)' }}>
+                              <th style={{ padding: '12px 16px' }}>الاسم</th>
+                              <th style={{ padding: '12px 16px' }}>التخصص</th>
+                              <th style={{ padding: '12px 16px' }}>الهاتف</th>
+                              <th style={{ padding: '12px 16px', textAlign: 'center' }}>العمليات</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {doctors.map((doc) => (
+                              <tr key={doc.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                                <td style={{ padding: '12px 16px', fontWeight: 'bold' }}>{doc.name}</td>
+                                <td style={{ padding: '12px 16px' }}>{doc.specialty}</td>
+                                <td style={{ padding: '12px 16px' }}>{doc.phone}</td>
+                                <td style={{ padding: '12px 16px', display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                                  <button onClick={() => setEditingDoctor(doc)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--accent-color)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🔧 تعديل</button>
+                                  <button onClick={() => handleDeleteDoctor(doc.id)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--status-closed)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🗑️ حذف</button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              if (activeAdminTab === 'pharmacies') {
+                const isFormOpen = showAddPharmacyForm || editingPharmacy;
+                const targetPharmacy = editingPharmacy || {};
+                return (
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                      <h2>إدارة الصيدليات ({pharmacies.length})</h2>
+                      {!isFormOpen && (
+                        <button onClick={() => setShowAddPharmacyForm(true)} style={{ padding: '10px 20px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>
+                          ➕ إضافة صيدلية جديدة
+                        </button>
+                      )}
+                    </div>
+                    {isFormOpen ? (
+                      <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', maxWidth: '600px' }}>
+                        <h3 style={{ marginBottom: '20px' }}>{editingPharmacy.id ? `تعديل بيانات: ${targetPharmacy.name}` : 'إضافة صيدلية جديدة'}</h3>
+                        <form onSubmit={(e) => {
+                          e.preventDefault();
+                          const formData = new FormData(e.currentTarget);
+                          const data = {
+                            id: editingPharmacy.id ? targetPharmacy.id : `pharm_${Date.now()}`,
+                            name: formData.get('name'),
+                            address: formData.get('address'),
+                            phone: formData.get('phone')
+                          };
+                          if (editingPharmacy.id) {
+                            handleEditPharmacy(data);
+                          } else {
+                            handleAddPharmacy(data);
+                          }
+                        }} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم الصيدلية:</label>
+                            <input type="text" name="name" defaultValue={targetPharmacy.name || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>العنوان:</label>
+                            <input type="text" name="address" defaultValue={targetPharmacy.address || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>الهاتف:</label>
+                            <input type="text" name="phone" defaultValue={targetPharmacy.phone || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div style={{ display: 'flex', gap: '12px' }}>
+                            <button type="submit" style={{ flex: 1, padding: '12px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>حفظ</button>
+                            <button type="button" onClick={() => { setEditingPharmacy(null); setShowAddPharmacyForm(false); }} style={{ flex: 1, padding: '12px', backgroundColor: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>إلغاء</button>
+                          </div>
+                        </form>
+                      </div>
+                    ) : (
+                      <div style={{ overflowX: 'auto', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'right' }}>
+                          <thead>
+                            <tr style={{ borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)' }}>
+                              <th style={{ padding: '12px 16px' }}>الاسم</th>
+                              <th style={{ padding: '12px 16px' }}>العنوان</th>
+                              <th style={{ padding: '12px 16px' }}>الهاتف</th>
+                              <th style={{ padding: '12px 16px', textAlign: 'center' }}>العمليات</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {pharmacies.map((pharm) => (
+                              <tr key={pharm.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                                <td style={{ padding: '12px 16px', fontWeight: 'bold' }}>{pharm.name}</td>
+                                <td style={{ padding: '12px 16px' }}>{pharm.address}</td>
+                                <td style={{ padding: '12px 16px' }}>{pharm.phone}</td>
+                                <td style={{ padding: '12px 16px', display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                                  <button onClick={() => setEditingPharmacy(pharm)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--accent-color)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🔧 تعديل</button>
+                                  <button onClick={() => handleDeletePharmacy(pharm.id)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--status-closed)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🗑️ حذف</button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              if (activeAdminTab === 'gov_services') {
+                const isFormOpen = showAddGovServiceForm || editingGovService;
+                const targetService = editingGovService || {};
+                return (
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                      <h2>إدارة الخدمات الحكومية والعامة ({govServices.length})</h2>
+                      {!isFormOpen && (
+                        <button onClick={() => setShowAddGovServiceForm(true)} style={{ padding: '10px 20px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>
+                          ➕ إضافة خدمة جديدة
+                        </button>
+                      )}
+                    </div>
+                    {isFormOpen ? (
+                      <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', maxWidth: '600px' }}>
+                        <h3 style={{ marginBottom: '20px' }}>{editingGovService.id ? `تعديل بيانات: ${targetService.name}` : 'إضافة خدمة جديدة'}</h3>
+                        <form onSubmit={(e) => {
+                          e.preventDefault();
+                          const formData = new FormData(e.currentTarget);
+                          const data = {
+                            id: editingGovService.id ? targetService.id : `gov_${Date.now()}`,
+                            name: formData.get('name'),
+                            type: formData.get('type') || 'civil',
+                            description: formData.get('description'),
+                            phone: formData.get('phone')
+                          };
+                          if (editingGovService.id) {
+                            handleEditGovService(data);
+                          } else {
+                            handleAddGovService(data);
+                          }
+                        }} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم الجهة الخدمية:</label>
+                            <input type="text" name="name" defaultValue={targetService.name || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>نوع الخدمة:</label>
+                            <select name="type" defaultValue={targetService.type || 'civil'} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
+                              <option value="civil">دليل خدمي</option>
+                              <option value="emergency">طوارئ وشكاوى</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>الوصف أو مواعيد العمل:</label>
+                            <input type="text" name="description" defaultValue={targetService.description || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>الهاتف:</label>
+                            <input type="text" name="phone" defaultValue={targetService.phone || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div style={{ display: 'flex', gap: '12px' }}>
+                            <button type="submit" style={{ flex: 1, padding: '12px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>حفظ</button>
+                            <button type="button" onClick={() => { setEditingGovService(null); setShowAddGovServiceForm(false); }} style={{ flex: 1, padding: '12px', backgroundColor: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>إلغاء</button>
+                          </div>
+                        </form>
+                      </div>
+                    ) : (
+                      <div style={{ overflowX: 'auto', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'right' }}>
+                          <thead>
+                            <tr style={{ borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)' }}>
+                              <th style={{ padding: '12px 16px' }}>الاسم</th>
+                              <th style={{ padding: '12px 16px' }}>النوع</th>
+                              <th style={{ padding: '12px 16px' }}>الوصف</th>
+                              <th style={{ padding: '12px 16px' }}>الهاتف</th>
+                              <th style={{ padding: '12px 16px', textAlign: 'center' }}>العمليات</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {govServices.map((srv) => (
+                              <tr key={srv.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                                <td style={{ padding: '12px 16px', fontWeight: 'bold' }}>{srv.name}</td>
+                                <td style={{ padding: '12px 16px' }}>{srv.type === 'emergency' ? '🚨 طوارئ' : '🏛️ دليل خدمي'}</td>
+                                <td style={{ padding: '12px 16px' }}>{srv.description || '—'}</td>
+                                <td style={{ padding: '12px 16px' }}>{srv.phone}</td>
+                                <td style={{ padding: '12px 16px', display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                                  <button onClick={() => setEditingGovService(srv)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--accent-color)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🔧 تعديل</button>
+                                  <button onClick={() => handleDeleteGovService(srv.id)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--status-closed)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🗑️ حذف</button>
                                 </td>
                               </tr>
                             ))}
