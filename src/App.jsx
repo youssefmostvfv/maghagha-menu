@@ -1350,6 +1350,13 @@ function App() {
                 const totalTripsCount = Object.values(tripsCounts).reduce((acc, curr) => acc + (curr || 0), 0);
                 const featuredDoctorsCount = doctors.filter(d => d.isFeatured || d.id === 'doc_phys_6').length;
                 
+                // Calculate dynamic call statistics for each section
+                const totalRestaurantCalls = Object.values(callsData || {}).reduce((acc, curr) => acc + (curr.total || 0), 0);
+                const totalSupermarketCalls = Object.values(sectionCalls['supermarket'] || {}).reduce((acc, curr) => acc + (curr || 0), 0);
+                const totalDoctorCalls = Object.values(sectionCalls['doctors'] || {}).reduce((acc, curr) => acc + (curr || 0), 0);
+                const totalPharmacyCalls = Object.values(sectionCalls['pharmacies'] || {}).reduce((acc, curr) => acc + (curr || 0), 0);
+                const totalGovCalls = Object.values(sectionCalls['gov_services'] || {}).reduce((acc, curr) => acc + (curr || 0), 0);
+
                 const statsTabs = [
                   { id: 'general', name: 'العامة', icon: 'fa-chart-pie' },
                   { id: 'restaurants', name: 'المطاعم', icon: 'fa-utensils' },
@@ -1396,11 +1403,7 @@ function App() {
                     {activeStatsSubTab === 'general' && (
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
                         <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
-                          <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>الرحلات المسجلة (نقرات الاتصال)</h3>
-                          <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{totalTripsCount} رحلة 🚀</p>
-                        </div>
-                        <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
-                          <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>التقييمات المكتملة</h3>
+                          <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>إجمالي التقييمات المكتملة</h3>
                           <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{totalRatingsCount} تقييم ⭐</p>
                         </div>
                         <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
@@ -1417,6 +1420,10 @@ function App() {
                           <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>إجمالي المطاعم</h3>
                           <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{restaurants.length} مطعم 🍔</p>
                         </div>
+                        <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                          <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>إجمالي اتصالات الدليفري</h3>
+                          <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{totalRestaurantCalls} مكالمة 📞</p>
+                        </div>
                       </div>
                     )}
 
@@ -1426,6 +1433,10 @@ function App() {
                         <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
                           <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>إجمالي الكباتن</h3>
                           <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{captains.length} كابتن 🛵</p>
+                        </div>
+                        <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                          <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>إجمالي اتصالات الدليفري (الرحلات)</h3>
+                          <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{totalTripsCount} رحلة 🚀</p>
                         </div>
                       </div>
                     )}
@@ -1437,6 +1448,10 @@ function App() {
                           <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>إجمالي السوبرماركت</h3>
                           <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{supermarkets.length} ماركت 🛒</p>
                         </div>
+                        <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                          <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>إجمالي اتصالات الدليفري</h3>
+                          <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{totalSupermarketCalls} مكالمة 📞</p>
+                        </div>
                       </div>
                     )}
 
@@ -1446,6 +1461,10 @@ function App() {
                         <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
                           <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>إجمالي الأطباء</h3>
                           <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{doctors.length} طبيب/عيادة 🩺</p>
+                        </div>
+                        <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                          <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>إجمالي اتصالات الحجز</h3>
+                          <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{totalDoctorCalls} مكالمة 📞</p>
                         </div>
                         <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
                           <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>الأطباء المميزون (Featured)</h3>
@@ -1464,6 +1483,10 @@ function App() {
                         <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
                           <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>إجمالي الصيدليات</h3>
                           <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{pharmacies.length} صيدلية 💊</p>
+                        </div>
+                        <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                          <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>إجمالي اتصالات الطلبات</h3>
+                          <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{totalPharmacyCalls} مكالمة 📞</p>
                         </div>
                       </div>
                     )}
@@ -1488,6 +1511,10 @@ function App() {
                         <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
                           <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>الجهات والخدمات المسجلة</h3>
                           <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{govServices.length} جهة 🏛️</p>
+                        </div>
+                        <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                          <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>إجمالي اتصالات الطوارئ/الاستفسار</h3>
+                          <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{totalGovCalls} مكالمة 📞</p>
                         </div>
                       </div>
                     )}
