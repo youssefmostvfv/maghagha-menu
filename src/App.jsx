@@ -176,7 +176,12 @@ function App() {
   const [adminPasscode, setAdminPasscode] = useState('');
   const [adminLoginError, setAdminLoginError] = useState('');
   const [activeAdminTab, setActiveAdminTab] = useState('stats');
+  const [adminSearchTerm, setAdminSearchTerm] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    setAdminSearchTerm('');
+  }, [activeAdminTab]);
   
   // States for adding/editing forms in Admin Panel
   const [editingRestaurant, setEditingRestaurant] = useState(null);
@@ -2077,19 +2082,44 @@ function App() {
                         </form>
                       </div>
                     ) : (
-                      <div style={{ overflowX: 'auto', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
-                        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'right' }}>
-                          <thead>
-                            <tr style={{ borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)' }}>
-                              <th style={{ padding: '12px 16px' }}>الاسم</th>
-                              <th style={{ padding: '12px 16px' }}>التخصص</th>
-                              <th style={{ padding: '12px 16px' }}>الهاتف</th>
-                              <th style={{ padding: '12px 16px', textAlign: 'center' }}>العمليات</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {doctors.map((doc) => (
-                              <tr key={doc.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                      <div>
+                        <div style={{ marginBottom: '16px' }}>
+                          <input 
+                            type="text" 
+                            placeholder="🔍 ابحث عن طبيب بالاسم، التخصص، أو العنوان..." 
+                            value={adminSearchTerm}
+                            onChange={(e) => setAdminSearchTerm(e.target.value)}
+                            style={{
+                              width: '100%',
+                              maxWidth: '400px',
+                              padding: '10px 14px',
+                              borderRadius: 'var(--radius-sm)',
+                              border: '1px solid var(--border-color)',
+                              backgroundColor: 'var(--bg-secondary)',
+                              color: 'var(--text-primary)'
+                            }}
+                          />
+                        </div>
+                        <div style={{ overflowX: 'auto', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'right' }}>
+                            <thead>
+                              <tr style={{ borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)' }}>
+                                <th style={{ padding: '12px 16px' }}>الاسم</th>
+                                <th style={{ padding: '12px 16px' }}>التخصص</th>
+                                <th style={{ padding: '12px 16px' }}>الهاتف</th>
+                                <th style={{ padding: '12px 16px', textAlign: 'center' }}>العمليات</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {doctors
+                                .filter((doc) => {
+                                  return !adminSearchTerm || 
+                                    doc.name.toLowerCase().includes(adminSearchTerm.toLowerCase()) ||
+                                    doc.specialty.toLowerCase().includes(adminSearchTerm.toLowerCase()) ||
+                                    doc.address.toLowerCase().includes(adminSearchTerm.toLowerCase());
+                                })
+                                .map((doc) => (
+                                  <tr key={doc.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
                                 <td style={{ padding: '12px 16px', fontWeight: 'bold' }}>{doc.name}</td>
                                 <td style={{ padding: '12px 16px' }}>{doc.specialty}</td>
                                 <td style={{ padding: '12px 16px' }}>{doc.phone}</td>
@@ -2117,8 +2147,9 @@ function App() {
                           </tbody>
                         </table>
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
+                </div>
                 );
               }
 
