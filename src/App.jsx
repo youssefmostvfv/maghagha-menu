@@ -2100,13 +2100,20 @@ function App() {
                         <form onSubmit={(e) => {
                           e.preventDefault();
                           const formData = new FormData(e.currentTarget);
+                          const p1 = formData.get('phone1')?.trim() || '';
+                          const p2 = formData.get('phone2')?.trim() || '';
+                          const p3 = formData.get('phone3')?.trim() || '';
+                          const phonesList = [p1, p2, p3].filter(Boolean);
+
                           const data = {
-                            id: editingSupermarket && editingSupermarket.id ? targetSupermarket.id : Date.now(),
+                            id: editingSupermarket && editingSupermarket.id ? targetSupermarket.id : `supermarket_${Date.now()}`,
                             name: formData.get('name'),
                             logo: formData.get('logo') || '',
-                            description: formData.get('description'),
+                            description: formData.get('description') || '',
+                            address: formData.get('address') || 'مغاغة',
+                            workingHours: formData.get('workingHours') || 'مفتوح',
                             deliveryFee: formData.get('deliveryFee') || 'من 15 لـ 20 جنيه',
-                            phones: (formData.get('phones') || '').split(',').map(p => p.trim()).filter(Boolean),
+                            phones: phonesList,
                             whatsApp: formData.get('whatsApp') || '',
                             popularItems: (formData.get('popularItems') || '').split('\n').map(line => {
                               if (!line.trim()) return null;
@@ -2125,26 +2132,53 @@ function App() {
                             handleAddSupermarket(data);
                           }
                         }} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                          <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم المحل:</label>
-                            <input type="text" name="name" defaultValue={targetSupermarket.name || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم السوبرماركت:</label>
+                              <input type="text" name="name" defaultValue={targetSupermarket.name || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رابط الشعار/اللوجو (Logo URL):</label>
+                              <input type="text" name="logo" defaultValue={targetSupermarket.logo || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
                           </div>
-                          <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>شعار المحل (Logo URL):</label>
-                            <input type="text" name="logo" defaultValue={targetSupermarket.logo || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>العنوان:</label>
+                              <input type="text" name="address" defaultValue={targetSupermarket.address || ''} placeholder="مثال: ش طه حسين، مغاغة" required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>مواعيد العمل:</label>
+                              <input type="text" name="workingHours" defaultValue={targetSupermarket.workingHours || ''} placeholder="مثال: مفتوح على مدار الساعة أو 8ص - 12م" required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
                           </div>
+
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>سعر التوصيل:</label>
+                              <input type="text" name="deliveryFee" defaultValue={targetSupermarket.deliveryFee || 'من 15 لـ 20 جنيه'} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رقم الواتساب (اختياري - كود الدولة ثم الرقم):</label>
+                              <input type="text" name="whatsApp" defaultValue={targetSupermarket.whatsApp || ''} placeholder="مثال: 201156115709" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                          </div>
+
                           <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>الوصف والعروض:</label>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>أرقام الهواتف (أدخل حتى 3 أرقام):</label>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
+                              <input type="text" name="phone1" placeholder="الهاتف الأول" defaultValue={targetSupermarket.phones && targetSupermarket.phones[0] ? targetSupermarket.phones[0] : ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                              <input type="text" name="phone2" placeholder="الهاتف الثاني (اختياري)" defaultValue={targetSupermarket.phones && targetSupermarket.phones[1] ? targetSupermarket.phones[1] : ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                              <input type="text" name="phone3" placeholder="الهاتف الثالث (اختياري)" defaultValue={targetSupermarket.phones && targetSupermarket.phones[2] ? targetSupermarket.phones[2] : ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                          </div>
+
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>الوصف القصير أو نبذة عن المحل:</label>
                             <textarea name="description" defaultValue={targetSupermarket.description || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
                           </div>
-                          <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>أرقام الهواتف (مفصولة بفاصلة):</label>
-                            <input type="text" name="phones" defaultValue={targetSupermarket.phones ? targetSupermarket.phones.join(', ') : ''} placeholder="010..., 012..." style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
-                          </div>
-                          <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رقم واتساب:</label>
-                            <input type="text" name="whatsApp" defaultValue={targetSupermarket.whatsApp || ''} placeholder="2010..." style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
-                          </div>
+
                           <div>
                             <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>المنتجات المميزة / العروض (كل منتج في سطر بصيغة: الاسم | السعر | الوصف):</label>
                             <textarea name="popularItems" rows="3" placeholder="أرز معبأ | 30 | أرز مصري فاخر 1 كجم&#10;زيت طهي | 70 | زيت خليط 800 مل" defaultValue={targetSupermarket.popularItems ? targetSupermarket.popularItems.map(item => `${item.name} | ${item.price} | ${item.description || ''}`).join('\n') : ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)', fontFamily: 'sans-serif' }} />
@@ -4637,7 +4671,7 @@ function App() {
                     )}
                     <div className="info-row">
                       <i className="fa-solid fa-clock info-icon"></i>
-                      <span><strong>مواعيد العمل:</strong> {selectedRestaurant.workingHours.display}</span>
+                      <span><strong>مواعيد العمل:</strong> {selectedRestaurant.workingHours ? (selectedRestaurant.workingHours.display || selectedRestaurant.workingHours) : 'مفتوح'}</span>
                     </div>
                     <div className="info-row">
                       <i className="fa-solid fa-truck info-icon"></i>
