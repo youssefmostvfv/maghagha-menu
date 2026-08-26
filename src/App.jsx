@@ -2634,7 +2634,9 @@ function App() {
                             id: editingPharmacy && editingPharmacy.id ? targetPharmacy.id : `pharm_${Date.now()}`,
                             name: formData.get('name'),
                             address: formData.get('address'),
-                            phone: formData.get('phone')
+                            phone: formData.get('phone'),
+                            workingHours: formData.get('workingHours') || 'مفتوح على مدار الساعة',
+                            locationUrl: formData.get('locationUrl') || ''
                           };
                           if (editingPharmacy && editingPharmacy.id) {
                             handleEditPharmacy(data);
@@ -2653,6 +2655,14 @@ function App() {
                           <div>
                             <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>الهاتف:</label>
                             <input type="text" name="phone" defaultValue={targetPharmacy.phone || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>مواعيد العمل:</label>
+                            <input type="text" name="workingHours" defaultValue={targetPharmacy.workingHours || 'مفتوح على مدار الساعة'} placeholder="مثال: مفتوح على مدار الساعة، يغلق عند الساعة ١٢ ص" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رابط الموقع على الخريطة (Google Maps URL):</label>
+                            <input type="text" name="locationUrl" defaultValue={targetPharmacy.locationUrl || ''} placeholder="https://www.google.com/maps/..." style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
                           </div>
                           <div style={{ display: 'flex', gap: '12px' }}>
                             <button type="submit" style={{ flex: 1, padding: '12px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>حفظ</button>
