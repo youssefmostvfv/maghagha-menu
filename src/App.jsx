@@ -2215,7 +2215,8 @@ function App() {
                             specialtyId: formData.get('specialtyId') || 'internal_chest',
                             address: formData.get('address'),
                             phone: combinedPhone,
-                            workingHours: formData.get('workingHours') || ''
+                            workingHours: formData.get('workingHours') || '',
+                            workingDays: formData.get('workingDays') || ''
                           };
                           if (editingDoctor && editingDoctor.id) {
                             handleEditDoctor(data);
@@ -2253,9 +2254,15 @@ function App() {
                               <input type="text" name="phone2" defaultValue={(targetDoctor.phone || '').split('/')[1]?.trim() || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
                             </div>
                           </div>
-                          <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>مواعيد العمل (اختياري - مثال: من 2 ظهراً لـ 8 مساءً):</label>
-                            <input type="text" name="workingHours" defaultValue={targetDoctor.workingHours || ''} placeholder="مثال: يومياً من 4 مساءً إلى 9 مساءً عدا الجمعة" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>ساعات العمل (مثال: من 1 مساءً إلى 10 مساءً):</label>
+                              <input type="text" name="workingHours" defaultValue={targetDoctor.workingHours || ''} placeholder="مثال: من 12 ظهراً - 7 مساءً" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>أيام العمل (مثال: الأحد والجمعة):</label>
+                              <input type="text" name="workingDays" defaultValue={targetDoctor.workingDays || ''} placeholder="مثال: الأحد والجمعة" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
                           </div>
                           <div style={{ display: 'flex', gap: '12px' }}>
                             <button type="submit" style={{ flex: 1, padding: '12px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>حفظ</button>
@@ -3680,7 +3687,7 @@ function App() {
 
                         <div className="job-card-actions" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                           {phoneNumbers.length === 1 ? (
-                            <a href={`tel:${phoneNumbers[0]}`} className="job-action-btn btn-call" style={{ flex: '0 0 auto', padding: '10px 18px' }}>
+                            <a href={`tel:${phoneNumbers[0]}`} className="job-action-btn btn-call" style={{ flex: '0 0 auto', padding: '10px 18px' }} onClick={() => handleIncrementCall('doctors', doc.id)}>
                               <i className="fa-solid fa-phone"></i>
                               <span>اتصال</span>
                             </a>
@@ -3688,7 +3695,7 @@ function App() {
                             <button 
                               className="job-action-btn btn-call" 
                               style={{ flex: '0 0 auto', padding: '10px 18px', cursor: 'pointer' }}
-                              onClick={() => setPhoneSelectorList(phoneNumbers.map((num, idx) => ({ label: `اتصال بالخط ${idx + 1}: ${num}`, number: num })))}
+                              onClick={() => setPhoneSelectorList(phoneNumbers.map((num, idx) => ({ label: `اتصال بالخط ${idx + 1}: ${num}`, number: num, category: 'doctors', itemId: doc.id })))}
                             >
                               <i className="fa-solid fa-phone"></i>
                               <span>اتصال ({phoneNumbers.length})</span>
@@ -3701,8 +3708,8 @@ function App() {
                           )}
 
                           <div className="doc-working-hours-badge" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', background: 'var(--accent-light)', color: 'var(--accent-color)', padding: '10px 12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', fontSize: '12.5px', fontWeight: '700' }}>
-                            <i className="fa-regular fa-clock" style={{ fontSize: '13.5px' }}></i>
-                            <span>{doc.workingHours || 'من 12 ظهراً - 7 مساءً'}</span>
+                            <i className="fa-regular fa-calendar-days" style={{ fontSize: '13.5px' }}></i>
+                            <span>{doc.workingDays || 'يومياً عدا الجمعة'}</span>
                           </div>
                         </div>
                       </div>
@@ -3772,7 +3779,7 @@ function App() {
 
                         <div className="job-card-actions" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '12px' }}>
                           {phoneNumbers.length === 1 ? (
-                            <a href={`tel:${phoneNumbers[0]}`} className="job-action-btn btn-call" style={{ flex: '1 1 auto', padding: '10px 18px', textAlign: 'center', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                            <a href={`tel:${phoneNumbers[0]}`} className="job-action-btn btn-call" style={{ flex: '1 1 auto', padding: '10px 18px', textAlign: 'center', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }} onClick={() => handleIncrementCall('pharmacies', ph.id)}>
                               <i className="fa-solid fa-phone"></i>
                               <span>اتصال</span>
                             </a>
@@ -3780,7 +3787,7 @@ function App() {
                             <button 
                               className="job-action-btn btn-call" 
                               style={{ flex: '1 1 auto', padding: '10px 18px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
-                              onClick={() => setPhoneSelectorList(phoneNumbers.map((num, idx) => ({ label: `اتصال بالخط ${idx + 1}: ${num}`, number: num })))}
+                              onClick={() => setPhoneSelectorList(phoneNumbers.map((num, idx) => ({ label: `اتصال بالخط ${idx + 1}: ${num}`, number: num, category: 'pharmacies', itemId: ph.id })))}
                             >
                               <i className="fa-solid fa-phone"></i>
                               <span>اتصال ({phoneNumbers.length})</span>
@@ -3904,7 +3911,7 @@ function App() {
 
                         <div className="job-card-actions" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '12px' }}>
                           {phoneNumbers.length === 1 ? (
-                            <a href={`tel:${phoneNumbers[0]}`} className="job-action-btn btn-call" style={{ flex: '1 1 auto', padding: '10px 18px', textAlign: 'center', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                            <a href={`tel:${phoneNumbers[0]}`} className="job-action-btn btn-call" style={{ flex: '1 1 auto', padding: '10px 18px', textAlign: 'center', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }} onClick={() => handleIncrementCall('gov_services', gov.id)}>
                               <i className="fa-solid fa-phone"></i>
                               <span>اتصال</span>
                             </a>
@@ -3912,7 +3919,7 @@ function App() {
                             <button 
                               className="job-action-btn btn-call" 
                               style={{ flex: '1 1 auto', padding: '10px 18px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
-                              onClick={() => setPhoneSelectorList(phoneNumbers.map((num, idx) => ({ label: `اتصال بالخط ${idx + 1}: ${num}`, number: num })))}
+                              onClick={() => setPhoneSelectorList(phoneNumbers.map((num, idx) => ({ label: `اتصال بالخط ${idx + 1}: ${num}`, number: num, category: 'gov_services', itemId: gov.id })))}
                             >
                               <i className="fa-solid fa-phone"></i>
                               <span>اتصال ({phoneNumbers.length})</span>
@@ -4512,7 +4519,12 @@ function App() {
                     onClick={(e) => {
                       e.preventDefault();
                       setPhoneSelectorList(null);
-                      handleInitiateCall(number, selectedRestaurant);
+                      if (phone.category && phone.itemId) {
+                        handleIncrementCall(phone.category, phone.itemId);
+                        window.location.href = `tel:${number}`;
+                      } else {
+                        handleInitiateCall(number, selectedRestaurant);
+                      }
                     }}
                   >
                     <i className="fa-solid fa-phone"></i>
