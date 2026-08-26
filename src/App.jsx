@@ -2006,13 +2006,18 @@ function App() {
                         <form onSubmit={(e) => {
                           e.preventDefault();
                           const formData = new FormData(e.currentTarget);
+                          const p1 = formData.get('phone1')?.trim() || '';
+                          const p2 = formData.get('phone2')?.trim() || '';
+                          const combinedPhone = p2 ? `${p1} / ${p2}` : p1;
+                          
                           const data = {
                             id: editingDoctor && editingDoctor.id ? targetDoctor.id : `doc_${Date.now()}`,
                             name: formData.get('name'),
                             specialty: formData.get('specialty'),
                             specialtyId: formData.get('specialtyId') || 'internal_chest',
                             address: formData.get('address'),
-                            phone: formData.get('phone')
+                            phone: combinedPhone,
+                            workingHours: formData.get('workingHours') || ''
                           };
                           if (editingDoctor && editingDoctor.id) {
                             handleEditDoctor(data);
@@ -2040,9 +2045,19 @@ function App() {
                             <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>العنوان:</label>
                             <input type="text" name="address" defaultValue={targetDoctor.address || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
                           </div>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رقم الهاتف الأول:</label>
+                              <input type="text" name="phone1" defaultValue={(targetDoctor.phone || '').split('/')[0]?.trim() || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رقم الهاتف الثاني (اختياري):</label>
+                              <input type="text" name="phone2" defaultValue={(targetDoctor.phone || '').split('/')[1]?.trim() || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                          </div>
                           <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>الهاتف:</label>
-                            <input type="text" name="phone" defaultValue={targetDoctor.phone || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>مواعيد العمل (اختياري - مثال: من 2 ظهراً لـ 8 مساءً):</label>
+                            <input type="text" name="workingHours" defaultValue={targetDoctor.workingHours || ''} placeholder="مثال: يومياً من 4 مساءً إلى 9 مساءً عدا الجمعة" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
                           </div>
                           <div style={{ display: 'flex', gap: '12px' }}>
                             <button type="submit" style={{ flex: 1, padding: '12px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>حفظ</button>
@@ -3273,6 +3288,12 @@ function App() {
                             <i className="fa-solid fa-location-dot" style={{ color: 'var(--accent-color)' }}></i>
                             <span><strong>العنوان:</strong> {doc.address}</span>
                           </div>
+                          {doc.workingHours && (
+                            <div className="job-detail-row-inline" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13.5px', marginTop: '6px' }}>
+                              <i className="fa-solid fa-clock" style={{ color: 'var(--accent-color)' }}></i>
+                              <span><strong>مواعيد العمل:</strong> {doc.workingHours}</span>
+                            </div>
+                          )}
                         </div>
 
                         <div className="job-card-actions" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
