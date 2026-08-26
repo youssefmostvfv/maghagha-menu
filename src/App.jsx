@@ -132,6 +132,12 @@ function App() {
   const [copySuccess, setCopySuccess] = useState(false);
   const [selectedCaptainService, setSelectedCaptainService] = useState('all');
   const [selectedSupermarketCategory, setSelectedSupermarketCategory] = useState('all');
+  const [restaurantCategories, setRestaurantCategories] = useState(CATEGORIES);
+  const [supermarketCategories, setSupermarketCategories] = useState(SUPERMARKET_SUBCATEGORIES);
+  const [restaurantAdminSubTab, setRestaurantAdminSubTab] = useState('restaurants'); // 'restaurants' | 'categories'
+  const [supermarketAdminSubTab, setSupermarketAdminSubTab] = useState('supermarkets'); // 'supermarkets' | 'categories'
+  const [showAddRestaurantCategoryForm, setShowAddRestaurantCategoryForm] = useState(false);
+  const [showAddSupermarketCategoryForm, setShowAddSupermarketCategoryForm] = useState(false);
   const [restaurants, setRestaurants] = useState(INITIAL_RESTAURANTS);
   const [captains, setCaptains] = useState(INITIAL_CAPTAINS);
   const [supermarkets, setSupermarkets] = useState(INITIAL_SUPERMARKETS);
@@ -679,6 +685,44 @@ function App() {
       setDoctors(INITIAL_DOCTORS);
       setShuffledDoctors(shuffleArray(INITIAL_DOCTORS));
     });
+    // Fetch and seed Restaurant Categories
+    const dbRestaurantCategoriesRef = ref(db, 'restaurant_categories');
+    get(dbRestaurantCategoriesRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        const fetched = normalizeData(snapshot.val());
+        const existingIds = new Set(fetched.map(item => String(item.id)));
+        const missing = CATEGORIES.filter(item => !existingIds.has(String(item.id)));
+        const merged = [...fetched, ...missing];
+        setRestaurantCategories(merged);
+        if (missing.length > 0) set(dbRestaurantCategoriesRef, merged);
+      } else {
+        set(dbRestaurantCategoriesRef, CATEGORIES);
+        setRestaurantCategories(CATEGORIES);
+      }
+    }).catch((err) => {
+      console.error('Error loading restaurant categories:', err);
+      setRestaurantCategories(CATEGORIES);
+    });
+
+    // Fetch and seed Supermarket Categories
+    const dbSupermarketCategoriesRef = ref(db, 'supermarket_categories');
+    get(dbSupermarketCategoriesRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        const fetched = normalizeData(snapshot.val());
+        const existingIds = new Set(fetched.map(item => String(item.id)));
+        const missing = SUPERMARKET_SUBCATEGORIES.filter(item => !existingIds.has(String(item.id)));
+        const merged = [...fetched, ...missing];
+        setSupermarketCategories(merged);
+        if (missing.length > 0) set(dbSupermarketCategoriesRef, merged);
+      } else {
+        set(dbSupermarketCategoriesRef, SUPERMARKET_SUBCATEGORIES);
+        setSupermarketCategories(SUPERMARKET_SUBCATEGORIES);
+      }
+    }).catch((err) => {
+      console.error('Error loading supermarket categories:', err);
+      setSupermarketCategories(SUPERMARKET_SUBCATEGORIES);
+    });
+
     // Fetch and seed Doctor Categories
     const dbDoctorCategoriesRef = ref(db, 'doctor_categories');
     get(dbDoctorCategoriesRef).then((snapshot) => {
@@ -1250,6 +1294,68 @@ function App() {
     }
   };
 
+  const handleAddRestaurantCategory = async (newCat) => {
+    try {
+      const updatedList = [...restaurantCategories, newCat];
+      await set(ref(db, 'restaurant_categories'), updatedList);
+      setRestaurantCategories(updatedList);
+      setShowAddRestaurantCategoryForm(false);
+      alert('تمت إضافة قسم المطعم بنجاح! 🎉');
+    } catch (error) {
+      console.error('Error adding restaurant category:', error);
+      alert('حدث خطأ أثناء إضافة القسم: ' + error.message);
+    }
+  };
+
+  const handleDeleteRestaurantCategory = async (catId) => {
+    if (catId === 'all') {
+      alert('لا يمكن حذف القسم الافتراضي (الكل)!');
+      return;
+    }
+    if (window.confirm('هل أنت متأكد من حذف هذا القسم نهائياً من المطاعم؟')) {
+      try {
+        const updatedList = restaurantCategories.filter(c => c.id !== catId);
+        await set(ref(db, 'restaurant_categories'), updatedList);
+        setRestaurantCategories(updatedList);
+        alert('تم حذف القسم بنجاح! 🗑️');
+      } catch (error) {
+        console.error('Error deleting restaurant category:', error);
+        alert('حدث خطأ أثناء حذف القسم: ' + error.message);
+      }
+    }
+  };
+
+  const handleAddSupermarketCategory = async (newCat) => {
+    try {
+      const updatedList = [...supermarketCategories, newCat];
+      await set(ref(db, 'supermarket_categories'), updatedList);
+      setSupermarketCategories(updatedList);
+      setShowAddSupermarketCategoryForm(false);
+      alert('تمت إضافة قسم السوبرماركت بنجاح! 🎉');
+    } catch (error) {
+      console.error('Error adding supermarket category:', error);
+      alert('حدث خطأ أثناء إضافة القسم: ' + error.message);
+    }
+  };
+
+  const handleDeleteSupermarketCategory = async (catId) => {
+    if (catId === 'grocery') {
+      alert('لا يمكن حذف القسم الافتراضي (سوبرماركت وبقالة)!');
+      return;
+    }
+    if (window.confirm('هل أنت متأكد من حذف هذا القسم نهائياً من السوبرماركت؟')) {
+      try {
+        const updatedList = supermarketCategories.filter(c => c.id !== catId);
+        await set(ref(db, 'supermarket_categories'), updatedList);
+        setSupermarketCategories(updatedList);
+        alert('تم حذف القسم بنجاح! 🗑️');
+      } catch (error) {
+        console.error('Error deleting supermarket category:', error);
+        alert('حدث خطأ أثناء حذف القسم: ' + error.message);
+      }
+    }
+  };
+
   const handleAddDoctorCategory = async (newCat) => {
     try {
       const updatedList = [...doctorCategories, newCat];
@@ -1773,13 +1879,57 @@ function App() {
                 return (
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                      <h2>إدارة المطاعم ({restaurants.length})</h2>
-                      {!isFormOpen && (
-                        <button onClick={() => setShowAddRestaurantForm(true)} style={{ padding: '10px 20px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>
-                          ➕ إضافة مطعم جديد
-                        </button>
+                      <h2>إدارة المطاعم والأقسام</h2>
+                      {!isFormOpen && !showAddRestaurantCategoryForm && (
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                          {restaurantAdminSubTab === 'restaurants' ? (
+                            <button onClick={() => setShowAddRestaurantForm(true)} style={{ padding: '10px 20px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>
+                              ➕ إضافة مطعم جديد
+                            </button>
+                          ) : (
+                            <button onClick={() => setShowAddRestaurantCategoryForm(true)} style={{ padding: '10px 20px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>
+                              ➕ إضافة قسم جديد للمطاعم
+                            </button>
+                          )}
+                        </div>
                       )}
                     </div>
+
+                    {!isFormOpen && !showAddRestaurantCategoryForm && (
+                      <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px' }}>
+                        <button 
+                          onClick={() => setRestaurantAdminSubTab('restaurants')}
+                          style={{
+                            padding: '8px 16px',
+                            border: 'none',
+                            backgroundColor: restaurantAdminSubTab === 'restaurants' ? 'var(--accent-color)' : 'transparent',
+                            color: restaurantAdminSubTab === 'restaurants' ? '#fff' : 'var(--text-primary)',
+                            borderRadius: 'var(--radius-sm)',
+                            fontWeight: 'bold',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          📋 قائمة المطاعم ({restaurants.length})
+                        </button>
+                        <button 
+                          onClick={() => setRestaurantAdminSubTab('categories')}
+                          style={{
+                            padding: '8px 16px',
+                            border: 'none',
+                            backgroundColor: restaurantAdminSubTab === 'categories' ? 'var(--accent-color)' : 'transparent',
+                            color: restaurantAdminSubTab === 'categories' ? '#fff' : 'var(--text-primary)',
+                            borderRadius: 'var(--radius-sm)',
+                            fontWeight: 'bold',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          🗂️ الأقسام ({restaurantCategories.length})
+                        </button>
+                      </div>
+                    )}
+
+                    {restaurantAdminSubTab === 'restaurants' ? (
+                      <>
 
                     {isFormOpen ? (
                       /* Restaurant Add/Edit Form */
@@ -1842,7 +1992,7 @@ function App() {
                             <div>
                               <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>تصنيف المطعم:</label>
                               <select name="category" defaultValue={targetRestaurant.category || 'syrian'} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
-                                {CATEGORIES.filter(c => c.id !== 'all').map(cat => (
+                                {restaurantCategories.filter(c => c.id !== 'all').map(cat => (
                                   <option key={cat.id} value={cat.id}>{cat.name}</option>
                                 ))}
                               </select>
@@ -1952,6 +2102,66 @@ function App() {
                           </tbody>
                         </table>
                       </div>
+                    )}
+                      </>
+                    ) : (
+                      <>
+                        {showAddRestaurantCategoryForm ? (
+                          <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', maxWidth: '600px', marginBottom: '20px' }}>
+                            <h3 style={{ marginBottom: '20px' }}>إضافة قسم جديد للمطاعم</h3>
+                            <form onSubmit={(e) => {
+                              e.preventDefault();
+                              const formData = new FormData(e.currentTarget);
+                              const name = formData.get('cat_name');
+                              const id = formData.get('cat_id') || `cat_${Date.now()}`;
+                              const icon = formData.get('cat_icon') || 'fa-store';
+                              handleAddRestaurantCategory({ id, name, icon });
+                            }} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                              <div>
+                                <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم القسم (بالعربية):</label>
+                                <input type="text" name="cat_name" required placeholder="مثال: مأكولات بحرية" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                              </div>
+                              <div>
+                                <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>معرف القسم (ID - بالإنجليزية أحرف صغيرة بدون مسافات):</label>
+                                <input type="text" name="cat_id" required placeholder="مثال: seafood" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                              </div>
+                              <div>
+                                <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>أيقونة القسم (اسم أيقونة FontAwesome):</label>
+                                <input type="text" name="cat_icon" defaultValue="fa-store" placeholder="مثال: fa-fish" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                              </div>
+                              <div style={{ display: 'flex', gap: '12px' }}>
+                                <button type="submit" style={{ flex: 1, padding: '12px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>إضافة القسم</button>
+                                <button type="button" onClick={() => setShowAddRestaurantCategoryForm(false)} style={{ flex: 1, padding: '12px', backgroundColor: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>إلغاء</button>
+                              </div>
+                            </form>
+                          </div>
+                        ) : (
+                          <div style={{ overflowX: 'auto', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'right' }}>
+                              <thead>
+                                <tr style={{ borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)' }}>
+                                  <th style={{ padding: '12px 16px' }}>اسم القسم</th>
+                                  <th style={{ padding: '12px 16px' }}>المعرف (ID)</th>
+                                  <th style={{ padding: '12px 16px' }}>الأيقونة</th>
+                                  <th style={{ padding: '12px 16px', textAlign: 'center' }}>العمليات</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {restaurantCategories.map((cat) => (
+                                  <tr key={cat.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                                    <td style={{ padding: '12px 16px', fontWeight: 'bold' }}>{cat.name}</td>
+                                    <td style={{ padding: '12px 16px' }}>{cat.id}</td>
+                                    <td style={{ padding: '12px 16px' }}><i className={`fa-solid ${cat.icon}`}></i> ({cat.icon})</td>
+                                    <td style={{ padding: '12px 16px', display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                                      <button onClick={() => handleDeleteRestaurantCategory(cat.id)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--status-closed)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🗑️ حذف</button>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
                 );
@@ -2104,13 +2314,57 @@ function App() {
                 return (
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                      <h2>إدارة محلات السوبرماركت والعروض ({supermarkets.length})</h2>
-                      {!isFormOpen && (
-                        <button onClick={() => setShowAddSupermarketForm(true)} style={{ padding: '10px 20px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>
-                          ➕ إضافة محل جديد
-                        </button>
+                      <h2>إدارة السوبرماركت والأقسام</h2>
+                      {!isFormOpen && !showAddSupermarketCategoryForm && (
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                          {supermarketAdminSubTab === 'supermarkets' ? (
+                            <button onClick={() => setShowAddSupermarketForm(true)} style={{ padding: '10px 20px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>
+                              ➕ إضافة محل جديد
+                            </button>
+                          ) : (
+                            <button onClick={() => setShowAddSupermarketCategoryForm(true)} style={{ padding: '10px 20px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>
+                              ➕ إضافة قسم جديد للسوبرماركت
+                            </button>
+                          )}
+                        </div>
                       )}
                     </div>
+
+                    {!isFormOpen && !showAddSupermarketCategoryForm && (
+                      <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px' }}>
+                        <button 
+                          onClick={() => setSupermarketAdminSubTab('supermarkets')}
+                          style={{
+                            padding: '8px 16px',
+                            border: 'none',
+                            backgroundColor: supermarketAdminSubTab === 'supermarkets' ? 'var(--accent-color)' : 'transparent',
+                            color: supermarketAdminSubTab === 'supermarkets' ? '#fff' : 'var(--text-primary)',
+                            borderRadius: 'var(--radius-sm)',
+                            fontWeight: 'bold',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          📋 قائمة المحلات ({supermarkets.length})
+                        </button>
+                        <button 
+                          onClick={() => setSupermarketAdminSubTab('categories')}
+                          style={{
+                            padding: '8px 16px',
+                            border: 'none',
+                            backgroundColor: supermarketAdminSubTab === 'categories' ? 'var(--accent-color)' : 'transparent',
+                            color: supermarketAdminSubTab === 'categories' ? '#fff' : 'var(--text-primary)',
+                            borderRadius: 'var(--radius-sm)',
+                            fontWeight: 'bold',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          🗂️ الأقسام ({supermarketCategories.length})
+                        </button>
+                      </div>
+                    )}
+
+                    {supermarketAdminSubTab === 'supermarkets' ? (
+                      <>
 
                     {isFormOpen ? (
                       <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', maxWidth: '600px' }}>
@@ -2160,7 +2414,7 @@ function App() {
                             <div>
                               <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>تصنيف النشاط:</label>
                               <select name="shopCategory" defaultValue={targetSupermarket.shopCategory || 'grocery'} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
-                                {SUPERMARKET_SUBCATEGORIES.map(sub => (
+                                {supermarketCategories.map(sub => (
                                   <option key={sub.id} value={sub.id}>{sub.name}</option>
                                 ))}
                               </select>
@@ -2241,6 +2495,66 @@ function App() {
                           </tbody>
                         </table>
                       </div>
+                    )}
+                      </>
+                    ) : (
+                      <>
+                        {showAddSupermarketCategoryForm ? (
+                          <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', maxWidth: '600px', marginBottom: '20px' }}>
+                            <h3 style={{ marginBottom: '20px' }}>إضافة قسم جديد للسوبرماركت</h3>
+                            <form onSubmit={(e) => {
+                              e.preventDefault();
+                              const formData = new FormData(e.currentTarget);
+                              const name = formData.get('cat_name');
+                              const id = formData.get('cat_id') || `sub_${Date.now()}`;
+                              const icon = formData.get('cat_icon') || 'fa-store';
+                              handleAddSupermarketCategory({ id, name, icon });
+                            }} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                              <div>
+                                <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم القسم (بالعربية):</label>
+                                <input type="text" name="cat_name" required placeholder="مثال: محلات فواكه" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                              </div>
+                              <div>
+                                <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>معرف القسم (ID - بالإنجليزية أحرف صغيرة بدون مسافات):</label>
+                                <input type="text" name="cat_id" required placeholder="مثال: fruits" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                              </div>
+                              <div>
+                                <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>أيقونة القسم (اسم أيقونة FontAwesome):</label>
+                                <input type="text" name="cat_icon" defaultValue="fa-store" placeholder="مثال: fa-apple-whole" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                              </div>
+                              <div style={{ display: 'flex', gap: '12px' }}>
+                                <button type="submit" style={{ flex: 1, padding: '12px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>إضافة القسم</button>
+                                <button type="button" onClick={() => setShowAddSupermarketCategoryForm(false)} style={{ flex: 1, padding: '12px', backgroundColor: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>إلغاء</button>
+                              </div>
+                            </form>
+                          </div>
+                        ) : (
+                          <div style={{ overflowX: 'auto', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'right' }}>
+                              <thead>
+                                <tr style={{ borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)' }}>
+                                  <th style={{ padding: '12px 16px' }}>اسم القسم</th>
+                                  <th style={{ padding: '12px 16px' }}>المعرف (ID)</th>
+                                  <th style={{ padding: '12px 16px' }}>الأيقونة</th>
+                                  <th style={{ padding: '12px 16px', textAlign: 'center' }}>العمليات</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {supermarketCategories.map((cat) => (
+                                  <tr key={cat.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                                    <td style={{ padding: '12px 16px', fontWeight: 'bold' }}>{cat.name}</td>
+                                    <td style={{ padding: '12px 16px' }}>{cat.id}</td>
+                                    <td style={{ padding: '12px 16px' }}><i className={`fa-solid ${cat.icon}`}></i> ({cat.icon})</td>
+                                    <td style={{ padding: '12px 16px', display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                                      <button onClick={() => handleDeleteSupermarketCategory(cat.id)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--status-closed)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🗑️ حذف</button>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
                 );
@@ -3844,7 +4158,7 @@ function App() {
                   <i className="fa-solid fa-basket-shopping"></i>
                   <span>الكل</span>
                 </button>
-                {SUPERMARKET_SUBCATEGORIES.map((sub) => (
+                {supermarketCategories.map((sub) => (
                   <button 
                     key={sub.id}
                     className={`category-chip ${selectedSupermarketCategory === sub.id ? 'active' : ''}`}
@@ -3879,7 +4193,7 @@ function App() {
                 }
 
                 return filteredMarkets.map(market => {
-                  const catInfo = SUPERMARKET_SUBCATEGORIES.find(s => s.id === market.shopCategory) || { name: 'نشاط تجاري' };
+                  const catInfo = supermarketCategories.find(s => s.id === market.shopCategory) || { name: 'نشاط تجاري' };
                   return (
                     <div 
                       key={market.id} 
