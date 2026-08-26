@@ -184,6 +184,7 @@ function App() {
   useEffect(() => {
     setAdminSearchTerm('');
   }, [activeAdminTab]);
+  // 
   
   // States for adding/editing forms in Admin Panel
   const [editingRestaurant, setEditingRestaurant] = useState(null);
