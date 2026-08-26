@@ -2647,7 +2647,7 @@ function App() {
                                           fontWeight: 'bold'
                                         }}
                                       >
-                                        {doc.isFeatured ? '⭐ مميز' : '☆ تمييز'}
+                                        {doc.isFeatured ? '⭐ الأكثر طلبًا' : '☆ تمييز'}
                                       </button>
                                       <button onClick={() => setEditingDoctor(doc)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--accent-color)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🔧 تعديل</button>
                                       <button onClick={() => handleDeleteDoctor(doc.id)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--status-closed)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🗑️ حذف</button>
@@ -4130,7 +4130,7 @@ function App() {
                             gap: '4px'
                           }}>
                             <i className="fa-solid fa-star"></i>
-                            <span>طبيب مميز</span>
+                            <span>الأكثر طلبًا</span>
                           </div>
                         )}
                         <div className="vacancy-header-bar">
