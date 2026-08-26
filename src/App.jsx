@@ -122,8 +122,52 @@ function App() {
   const [shuffledPharmacies, setShuffledPharmacies] = useState(() => shuffleArray(INITIAL_PHARMACIES));
   const [shuffledGovServices, setShuffledGovServices] = useState(() => shuffleArray(INITIAL_GOV_SERVICES));
 
+  const syncShuffledList = (shuffledList, updatedList) => {
+    const updatedMap = new Map(updatedList.map(item => [String(item.id), item]));
+    const shuffledMap = new Map(shuffledList.map(item => [String(item.id), item]));
+    const result = shuffledList
+      .filter(item => updatedMap.has(String(item.id)))
+      .map(item => updatedMap.get(String(item.id)));
+    const newItems = updatedList.filter(item => !shuffledMap.has(String(item.id)));
+    return [...result, ...newItems];
+  };
+
+  useEffect(() => {
+    setShuffledRestaurants(prev => syncShuffledList(prev, restaurants));
+  }, [restaurants]);
+
+  useEffect(() => {
+    setShuffledCaptains(prev => syncShuffledList(prev, captains));
+  }, [captains]);
+
+  useEffect(() => {
+    setShuffledSupermarkets(prev => syncShuffledList(prev, supermarkets));
+  }, [supermarkets]);
+
+  useEffect(() => {
+    setShuffledJobSeekers(prev => syncShuffledList(prev, jobSeekers));
+  }, [jobSeekers]);
+
+  useEffect(() => {
+    setShuffledJobVacancies(prev => syncShuffledList(prev, jobVacancies));
+  }, [jobVacancies]);
+
+  useEffect(() => {
+    setShuffledDoctors(prev => syncShuffledList(prev, doctors));
+  }, [doctors]);
+
+  useEffect(() => {
+    setShuffledPharmacies(prev => syncShuffledList(prev, pharmacies));
+  }, [pharmacies]);
+
+  useEffect(() => {
+    setShuffledGovServices(prev => syncShuffledList(prev, govServices));
+  }, [govServices]);
+
   const [activeJobSubTab, setActiveJobSubTab] = useState('seekers'); // 'seekers' | 'vacancies'
   const [selectedDoctorCategory, setSelectedDoctorCategory] = useState('surgery_urology');
+  const [doctorCategories, setDoctorCategories] = useState(DOCTOR_CATEGORIES);
+  const [showAddDoctorCategoryForm, setShowAddDoctorCategoryForm] = useState(false);
   const [activeGovSubTab, setActiveGovSubTab] = useState('civil'); // 'civil' | 'emergency'
   const [promoAlert, setPromoAlert] = useState(null); // { phone: string, countdown: number }
   
@@ -588,7 +632,24 @@ function App() {
       setDoctors(INITIAL_DOCTORS);
       setShuffledDoctors(shuffleArray(INITIAL_DOCTORS));
     });
-
+    // Fetch and seed Doctor Categories
+    const dbDoctorCategoriesRef = ref(db, 'doctor_categories');
+    get(dbDoctorCategoriesRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        const fetched = normalizeData(snapshot.val());
+        const existingIds = new Set(fetched.map(item => String(item.id)));
+        const missing = DOCTOR_CATEGORIES.filter(item => !existingIds.has(String(item.id)));
+        const merged = [...fetched, ...missing];
+        setDoctorCategories(merged);
+        if (missing.length > 0) set(dbDoctorCategoriesRef, merged);
+      } else {
+        set(dbDoctorCategoriesRef, DOCTOR_CATEGORIES);
+        setDoctorCategories(DOCTOR_CATEGORIES);
+      }
+    }).catch((err) => {
+      console.error('Error loading doctor categories:', err);
+      setDoctorCategories(DOCTOR_CATEGORIES);
+    });
     // Fetch and seed Pharmacies
     const dbPharmaciesRef = ref(db, 'pharmacies');
     get(dbPharmaciesRef).then((snapshot) => {
@@ -994,6 +1055,13 @@ function App() {
       await set(ref(db, 'doctors'), updatedList);
       setDoctors(updatedList);
     }
+  };
+
+  const handleAddDoctorCategory = async (newCat) => {
+    const updatedList = [...doctorCategories, newCat];
+    await set(ref(db, 'doctor_categories'), updatedList);
+    setDoctorCategories(updatedList);
+    setShowAddDoctorCategoryForm(false);
   };
 
   const handleAddPharmacy = async (newPharm) => {
@@ -1888,12 +1956,50 @@ function App() {
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                       <h2>إدارة الأطباء والعيادات ({doctors.length})</h2>
-                      {!isFormOpen && (
-                        <button onClick={() => setShowAddDoctorForm(true)} style={{ padding: '10px 20px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>
-                          ➕ إضافة طبيب جديد
-                        </button>
+                      {!isFormOpen && !showAddDoctorCategoryForm && (
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                          <button onClick={() => setShowAddDoctorForm(true)} style={{ padding: '10px 20px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>
+                            ➕ إضافة طبيب جديد
+                          </button>
+                          <button onClick={() => setShowAddDoctorCategoryForm(true)} style={{ padding: '10px 20px', backgroundColor: 'var(--bg-tertiary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>
+                            ➕ إضافة قسم/تخصص جديد
+                          </button>
+                        </div>
                       )}
                     </div>
+
+                    {showAddDoctorCategoryForm && (
+                      <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', maxWidth: '600px', marginBottom: '20px' }}>
+                        <h3 style={{ marginBottom: '20px' }}>إضافة تخصص طبي جديد</h3>
+                        <form onSubmit={(e) => {
+                          e.preventDefault();
+                          const formData = new FormData(e.currentTarget);
+                          const name = formData.get('cat_name');
+                          const id = formData.get('cat_id') || `specialty_${Date.now()}`;
+                          const icon = formData.get('cat_icon') || 'fa-user-doctor';
+                          
+                          handleAddDoctorCategory({ id, name, icon });
+                        }} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم التخصص (مثال: المسالك البولية):</label>
+                            <input type="text" name="cat_name" required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>معرف التخصص بالإنجليزية (مثال: urology):</label>
+                            <input type="text" name="cat_id" placeholder="حروف إنجليزية فقط" required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>أيقونة FontAwesome (مثال: fa-stethoscope):</label>
+                            <input type="text" name="cat_icon" defaultValue="fa-user-doctor" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+                          <div style={{ display: 'flex', gap: '12px' }}>
+                            <button type="submit" style={{ flex: 1, padding: '12px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>حفظ التخصص</button>
+                            <button type="button" onClick={() => setShowAddDoctorCategoryForm(false)} style={{ flex: 1, padding: '12px', backgroundColor: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>إلغاء</button>
+                          </div>
+                        </form>
+                      </div>
+                    )}
+
                     {isFormOpen ? (
                       <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', maxWidth: '600px' }}>
                         <h3 style={{ marginBottom: '20px' }}>{editingDoctor && editingDoctor.id ? `تعديل بيانات: ${targetDoctor.name}` : 'إضافة طبيب جديد'}</h3>
@@ -1925,14 +2031,9 @@ function App() {
                           <div>
                             <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>معرف التخصص (specialtyId):</label>
                             <select name="specialtyId" defaultValue={targetDoctor.specialtyId || 'internal_chest'} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
-                              <option value="surgery_urology">الجراحة والمسالك البولية</option>
-                              <option value="internal_chest">الباطنة والصدر والحميات</option>
-                              <option value="neurology">المخ والأعصاب</option>
-                              <option value="orthopedics">العظام</option>
-                              <option value="dental">الأسنان</option>
-                              <option value="pediatrics">الأطفال وحديثي الولادة</option>
-                              <option value="cardiology">القلب والأوعية الدموية</option>
-                              <option value="ophthalmology">الرمد والعيون</option>
+                              {doctorCategories.map((cat) => (
+                                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                              ))}
                             </select>
                           </div>
                           <div>
@@ -3112,7 +3213,7 @@ function App() {
             {/* Doctor Categories Filter Carousel (Sticky) */}
             <div className="scroll-indicator-wrapper primary-bg">
               <div className="categories-container">
-                {DOCTOR_CATEGORIES.map((cat) => (
+                {doctorCategories.map((cat) => (
                   <button
                     key={cat.id}
                     className={`category-chip ${selectedDoctorCategory === cat.id ? 'active' : ''}`}
