@@ -99,6 +99,14 @@ const formatTo12Hour = (timeStr) => {
   return `${hour12}:${minutes} ${ampm}`;
 };
 
+const SUPERMARKET_SUBCATEGORIES = [
+  { id: 'grocery', name: 'سوبرماركت وبقالة', icon: 'fa-store' },
+  { id: 'fruits', name: 'خضار وفواكه', icon: 'fa-apple-whole' },
+  { id: 'cleaning', name: 'منظفات وكيماويات', icon: 'fa-soap' },
+  { id: 'dairy', name: 'ألبان وأجبان', icon: 'fa-cheese' },
+  { id: 'meat', name: 'لحوم ومجمدات', icon: 'fa-drumstick-bite' }
+];
+
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -123,6 +131,7 @@ function App() {
   const [activeMainTab, setActiveMainTab] = useState('restaurants');
   const [copySuccess, setCopySuccess] = useState(false);
   const [selectedCaptainService, setSelectedCaptainService] = useState('all');
+  const [selectedSupermarketCategory, setSelectedSupermarketCategory] = useState('all');
   const [restaurants, setRestaurants] = useState(INITIAL_RESTAURANTS);
   const [captains, setCaptains] = useState(INITIAL_CAPTAINS);
   const [supermarkets, setSupermarkets] = useState(INITIAL_SUPERMARKETS);
@@ -2109,6 +2118,7 @@ function App() {
                             id: editingSupermarket && editingSupermarket.id ? targetSupermarket.id : `supermarket_${Date.now()}`,
                             name: formData.get('name'),
                             logo: formData.get('logo') || '',
+                            shopCategory: formData.get('shopCategory') || 'grocery',
                             description: formData.get('description') || '',
                             address: formData.get('address') || 'مغاغة',
                             workingHours: formData.get('workingHours') || 'مفتوح',
@@ -2135,13 +2145,21 @@ function App() {
                         }} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                             <div>
-                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم السوبرماركت:</label>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم المحل/السوبرماركت:</label>
                               <input type="text" name="name" defaultValue={targetSupermarket.name || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
                             </div>
                             <div>
-                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رابط الشعار/اللوجو (Logo URL):</label>
-                              <input type="text" name="logo" defaultValue={targetSupermarket.logo || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>تصنيف النشاط:</label>
+                              <select name="shopCategory" defaultValue={targetSupermarket.shopCategory || 'grocery'} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
+                                {SUPERMARKET_SUBCATEGORIES.map(sub => (
+                                  <option key={sub.id} value={sub.id}>{sub.name}</option>
+                                ))}
+                              </select>
                             </div>
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رابط الشعار/اللوجو (Logo URL):</label>
+                            <input type="text" name="logo" defaultValue={targetSupermarket.logo || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
                           </div>
 
                           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
@@ -3806,38 +3824,89 @@ function App() {
             </div>
           </>
         ) : activeMainTab === 'supermarket' ? (
-          <div className="captains-grid">
-            {shuffledSupermarkets.filter(market => !searchTerm || market.name.toLowerCase().includes(searchTerm.toLowerCase()) || (market.description && market.description.toLowerCase().includes(searchTerm.toLowerCase()))).map(market => (
-              <div 
-                key={market.id} 
-                className="captain-card"
-                onClick={() => setSelectedRestaurant(market)}
-              >
-                <div className="captain-avatar-wrapper">
-                  <img 
-                    src={resolveImage(market.logo)} 
-                    alt={market.name} 
-                    className="captain-avatar" 
-                    loading="lazy"
-                  />
-                  <span className={`captain-status-dot ${isRestaurantOpen(market.workingHours) ? 'available' : 'unavailable'}`}></span>
-                </div>
-                
-                <div className="captain-info">
-                  <div className="captain-name-row">
-                    <h2 className="captain-name">{market.name}</h2>
-                  </div>
-                  
-                  <p className="captain-desc">{market.description}</p>
-                  
-                  <div className="captain-services">
-                    {market.branches && <span className="captain-service-badge">🏬 {market.branches.length} فروع في مغاغة</span>}
-                    <span className="captain-service-badge">🛵 خدمة دليفري</span>
-                  </div>
-                </div>
+          <>
+            {/* Supermarket Sub-Categories Filter Chips */}
+            <div className="scroll-indicator-wrapper primary-bg">
+              <div className="categories-container">
+                <button 
+                  className={`category-chip ${selectedSupermarketCategory === 'all' ? 'active' : ''}`}
+                  onClick={() => setSelectedSupermarketCategory('all')}
+                >
+                  <i className="fa-solid fa-basket-shopping"></i>
+                  <span>الكل</span>
+                </button>
+                {SUPERMARKET_SUBCATEGORIES.map((sub) => (
+                  <button 
+                    key={sub.id}
+                    className={`category-chip ${selectedSupermarketCategory === sub.id ? 'active' : ''}`}
+                    onClick={() => setSelectedSupermarketCategory(sub.id)}
+                  >
+                    <i className={`fa-solid ${sub.icon}`}></i>
+                    <span>{sub.name}</span>
+                  </button>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+
+            <div className="captains-grid">
+              {(() => {
+                const filteredMarkets = shuffledSupermarkets.filter(market => {
+                  const matchesCategory = selectedSupermarketCategory === 'all' || market.shopCategory === selectedSupermarketCategory;
+                  const matchesSearch = !searchTerm || 
+                    market.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    (market.description && market.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                    (market.address && market.address.toLowerCase().includes(searchTerm.toLowerCase()));
+                  return matchesCategory && matchesSearch;
+                });
+
+                if (filteredMarkets.length === 0) {
+                  return (
+                    <div className="empty-state" style={{ gridColumn: '1 / -1', padding: '40px 20px' }}>
+                      <i className="fa-solid fa-basket-shopping" style={{ fontSize: '48px', marginBottom: '10px', opacity: 0.5 }}></i>
+                      <h3 className="empty-state-title">لا توجد محلات أو أنشطة تطابق بحثك</h3>
+                      <p>جرّب اختيار تصنيف آخر أو البحث باسم المحل.</p>
+                    </div>
+                  );
+                }
+
+                return filteredMarkets.map(market => {
+                  const catInfo = SUPERMARKET_SUBCATEGORIES.find(s => s.id === market.shopCategory) || { name: 'نشاط تجاري' };
+                  return (
+                    <div 
+                      key={market.id} 
+                      className="captain-card"
+                      onClick={() => setSelectedRestaurant(market)}
+                    >
+                      <div className="captain-avatar-wrapper">
+                        <img 
+                          src={resolveImage(market.logo)} 
+                          alt={market.name} 
+                          className="captain-avatar" 
+                          loading="lazy"
+                        />
+                        <span className={`captain-status-dot ${isRestaurantOpen(market.workingHours) ? 'available' : 'unavailable'}`}></span>
+                      </div>
+                      
+                      <div className="captain-info">
+                        <div className="captain-name-row">
+                          <h2 className="captain-name">{market.name}</h2>
+                        </div>
+                        
+                        <p className="captain-desc">{market.description}</p>
+                        
+                        <div className="captain-services">
+                          <span className="captain-service-badge" style={{ backgroundColor: 'var(--brand-dark-blue)', color: 'white' }}>
+                            {catInfo.name}
+                          </span>
+                          <span className="captain-service-badge">🛵 خدمة دليفري</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                });
+              })()}
+            </div>
+          </>
         ) : activeMainTab === 'jobs' ? (
           <div className="jobs-section-container">
             {/* Sub Tabs Switcher */}
