@@ -24,12 +24,31 @@ const resolveImage = (imgName) => {
   
   let filename = imgName;
   
-  // Clean up development paths from older database seeds
-  if (typeof filename === 'string' && filename.includes('src/assets/')) {
-    filename = filename.substring(filename.lastIndexOf('/') + 1);
+  if (typeof filename === 'string') {
+    // Clean up development paths from older database seeds
+    if (filename.includes('src/assets/')) {
+      filename = filename.substring(filename.lastIndexOf('/') + 1);
+    }
+
+    // Google Drive share link auto-converter
+    if (filename.includes('drive.google.com')) {
+      let fileId = '';
+      const dMatch = filename.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+      if (dMatch && dMatch[1]) {
+        fileId = dMatch[1];
+      } else {
+        const idMatch = filename.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+        if (idMatch && idMatch[1]) {
+          fileId = idMatch[1];
+        }
+      }
+      if (fileId) {
+        return `https://lh3.googleusercontent.com/d/${fileId}`;
+      }
+    }
   }
 
-  if (filename.startsWith('http') || filename.startsWith('data:') || filename.startsWith('blob:')) {
+  if (typeof filename === 'string' && (filename.startsWith('http') || filename.startsWith('data:') || filename.startsWith('blob:'))) {
     return filename;
   }
   
