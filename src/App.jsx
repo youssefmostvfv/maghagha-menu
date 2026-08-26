@@ -178,6 +178,7 @@ function App() {
   const [activeAdminTab, setActiveAdminTab] = useState('stats');
   const [adminSearchTerm, setAdminSearchTerm] = useState('');
   const [activeStatsSubTab, setActiveStatsSubTab] = useState('general');
+  const [sectionCalls, setSectionCalls] = useState({});
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
@@ -495,7 +496,15 @@ function App() {
           setTripsCounts(snapshot.val() || {});
         }
       })
-      .catch((err) => console.error('Error loading trips counts:', err));
+    // Fetch global calls counts from Firebase
+    const callsRef = ref(db, 'calls');
+    get(callsRef)
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          setSectionCalls(snapshot.val() || {});
+        }
+      })
+      .catch((err) => console.error('Error loading section calls:', err));
 
     // Helper to normalize snapshot to array
     const normalizeData = (data) => {
@@ -897,6 +906,27 @@ function App() {
       }));
     } catch (error) {
       console.error('Error incrementing trips:', error);
+    }
+  };
+
+  const handleIncrementCall = async (category, itemId) => {
+    if (!category || !itemId) return;
+    try {
+      const callRef = ref(db, `calls/${category}/${itemId}`);
+      const snapshot = await get(callRef);
+      const count = snapshot.exists() ? (snapshot.val() || 0) : 0;
+      const newCount = count + 1;
+      await set(callRef, newCount);
+      
+      setSectionCalls(prev => ({
+        ...prev,
+        [category]: {
+          ...(prev[category] || {}),
+          [itemId]: newCount
+        }
+      }));
+    } catch (e) {
+      console.error('Error incrementing calls:', e);
     }
   };
 
