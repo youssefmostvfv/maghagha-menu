@@ -966,211 +966,379 @@ function App() {
   };
 
   const handleAddRestaurant = async (newRes) => {
-    const updatedList = [...restaurants, { ...newRes, id: Date.now() }];
-    await set(ref(db, 'restaurants'), updatedList);
-    setRestaurants(updatedList);
-    setShowAddRestaurantForm(false);
+    try {
+      const updatedList = [...restaurants, { ...newRes, id: Date.now() }];
+      await set(ref(db, 'restaurants'), updatedList);
+      setRestaurants(updatedList);
+      setShowAddRestaurantForm(false);
+      alert('تمت إضافة المطعم بنجاح! 🎉');
+    } catch (error) {
+      console.error('Error adding restaurant:', error);
+      alert('حدث خطأ أثناء إضافة المطعم: ' + error.message);
+    }
   };
 
   const handleEditRestaurant = async (updatedRes) => {
-    const updatedList = restaurants.map(r => r.id === updatedRes.id ? updatedRes : r);
-    await set(ref(db, 'restaurants'), updatedList);
-    setRestaurants(updatedList);
-    setEditingRestaurant(null);
+    try {
+      const updatedList = restaurants.map(r => r.id === updatedRes.id ? updatedRes : r);
+      await set(ref(db, 'restaurants'), updatedList);
+      setRestaurants(updatedList);
+      setEditingRestaurant(null);
+      alert('تم تعديل المطعم بنجاح! 🎉');
+    } catch (error) {
+      console.error('Error editing restaurant:', error);
+      alert('حدث خطأ أثناء تعديل المطعم: ' + error.message);
+    }
   };
 
   const handleDeleteRestaurant = async (resId) => {
     if (window.confirm('هل أنت متأكد من حذف هذا المطعم نهائياً؟')) {
-      const updatedList = restaurants.filter(r => r.id !== resId);
-      await set(ref(db, 'restaurants'), updatedList);
-      setRestaurants(updatedList);
+      try {
+        const updatedList = restaurants.filter(r => r.id !== resId);
+        await set(ref(db, 'restaurants'), updatedList);
+        setRestaurants(updatedList);
+        alert('تم حذف المطعم بنجاح! 🗑️');
+      } catch (error) {
+        console.error('Error deleting restaurant:', error);
+        alert('حدث خطأ أثناء حذف المطعم: ' + error.message);
+      }
     }
   };
 
   const handleAddCaptain = async (newCap) => {
-    const updatedList = [...captains, { ...newCap, id: `captain_${Date.now()}` }];
-    await set(ref(db, 'captains'), updatedList);
-    setCaptains(updatedList);
-    setShowAddCaptainForm(false);
+    try {
+      const updatedList = [...captains, { ...newCap, id: `captain_${Date.now()}` }];
+      await set(ref(db, 'captains'), updatedList);
+      setCaptains(updatedList);
+      setShowAddCaptainForm(false);
+      alert('تمت إضافة الكابتن بنجاح! 🎉');
+    } catch (error) {
+      console.error('Error adding captain:', error);
+      alert('حدث خطأ أثناء إضافة الكابتن: ' + error.message);
+    }
   };
 
   const handleEditCaptain = async (updatedCap) => {
-    const updatedList = captains.map(c => c.id === updatedCap.id ? updatedCap : c);
-    await set(ref(db, 'captains'), updatedList);
-    setCaptains(updatedList);
-    setEditingCaptain(null);
+    try {
+      const updatedList = captains.map(c => c.id === updatedCap.id ? updatedCap : c);
+      await set(ref(db, 'captains'), updatedList);
+      setCaptains(updatedList);
+      setEditingCaptain(null);
+      alert('تم تعديل بيانات الكابتن بنجاح! 🎉');
+    } catch (error) {
+      console.error('Error editing captain:', error);
+      alert('حدث خطأ أثناء تعديل بيانات الكابتن: ' + error.message);
+    }
   };
 
   const handleDeleteCaptain = async (capId) => {
     if (window.confirm('هل أنت متأكد من حذف هذا الكابتن نهائياً؟')) {
-      const updatedList = captains.filter(c => c.id !== capId);
-      await set(ref(db, 'captains'), updatedList);
-      setCaptains(updatedList);
+      try {
+        const updatedList = captains.filter(c => c.id !== capId);
+        await set(ref(db, 'captains'), updatedList);
+        setCaptains(updatedList);
+        alert('تم حذف الكابتن بنجاح! 🗑️');
+      } catch (error) {
+        console.error('Error deleting captain:', error);
+        alert('حدث خطأ أثناء حذف الكابتن: ' + error.message);
+      }
     }
   };
 
   const handleAddSupermarket = async (newSup) => {
-    const updatedList = [...supermarkets, { ...newSup, id: Date.now() }];
-    await set(ref(db, 'supermarkets'), updatedList);
-    setSupermarkets(updatedList);
-    setShowAddSupermarketForm(false);
+    try {
+      const updatedList = [...supermarkets, { ...newSup, id: Date.now() }];
+      await set(ref(db, 'supermarkets'), updatedList);
+      setSupermarkets(updatedList);
+      setShowAddSupermarketForm(false);
+      alert('تمت إضافة المحل بنجاح! 🎉');
+    } catch (error) {
+      console.error('Error adding supermarket:', error);
+      alert('حدث خطأ أثناء إضافة المحل: ' + error.message);
+    }
   };
 
   const handleEditSupermarket = async (updatedSup) => {
-    const updatedList = supermarkets.map(s => s.id === updatedSup.id ? updatedSup : s);
-    await set(ref(db, 'supermarkets'), updatedList);
-    setSupermarkets(updatedList);
-    setEditingSupermarket(null);
+    try {
+      const updatedList = supermarkets.map(s => s.id === updatedSup.id ? updatedSup : s);
+      await set(ref(db, 'supermarkets'), updatedList);
+      setSupermarkets(updatedList);
+      setEditingSupermarket(null);
+      alert('تم تعديل المحل بنجاح! 🎉');
+    } catch (error) {
+      console.error('Error editing supermarket:', error);
+      alert('حدث خطأ أثناء تعديل المحل: ' + error.message);
+    }
   };
 
   const handleDeleteSupermarket = async (supId) => {
     if (window.confirm('هل أنت متأكد من حذف هذا السوبرماركت نهائياً؟')) {
-      const updatedList = supermarkets.filter(s => s.id !== supId);
-      await set(ref(db, 'supermarkets'), updatedList);
-      setSupermarkets(updatedList);
+      try {
+        const updatedList = supermarkets.filter(s => s.id !== supId);
+        await set(ref(db, 'supermarkets'), updatedList);
+        setSupermarkets(updatedList);
+        alert('تم حذف المحل بنجاح! 🗑️');
+      } catch (error) {
+        console.error('Error deleting supermarket:', error);
+        alert('حدث خطأ أثناء حذف المحل: ' + error.message);
+      }
     }
   };
 
   const handleAddJobSeeker = async (newSeeker) => {
-    const updatedList = [...jobSeekers, { ...newSeeker, id: `seeker_${Date.now()}` }];
-    await set(ref(db, 'job_seekers'), updatedList);
-    setJobSeekers(updatedList);
-    setShowAddJobSeekerForm(false);
+    try {
+      const updatedList = [...jobSeekers, { ...newSeeker, id: `seeker_${Date.now()}` }];
+      await set(ref(db, 'job_seekers'), updatedList);
+      setJobSeekers(updatedList);
+      setShowAddJobSeekerForm(false);
+      alert('تم تسجيل الباحث عن عمل بنجاح! 🎉');
+    } catch (error) {
+      console.error('Error adding job seeker:', error);
+      alert('حدث خطأ أثناء التسجيل: ' + error.message);
+    }
   };
 
   const handleEditJobSeeker = async (updatedSeeker) => {
-    const updatedList = jobSeekers.map(s => s.id === updatedSeeker.id ? updatedSeeker : s);
-    await set(ref(db, 'job_seekers'), updatedList);
-    setJobSeekers(updatedList);
-    setEditingJobSeeker(null);
+    try {
+      const updatedList = jobSeekers.map(s => s.id === updatedSeeker.id ? updatedSeeker : s);
+      await set(ref(db, 'job_seekers'), updatedList);
+      setJobSeekers(updatedList);
+      setEditingJobSeeker(null);
+      alert('تم تعديل بيانات الباحث عن عمل بنجاح! 🎉');
+    } catch (error) {
+      console.error('Error editing job seeker:', error);
+      alert('حدث خطأ أثناء التعديل: ' + error.message);
+    }
   };
 
   const handleDeleteJobSeeker = async (seekerId) => {
     if (window.confirm('هل أنت متأكد من حذف هذا الباحث عن عمل نهائياً؟')) {
-      const updatedList = jobSeekers.filter(s => s.id !== seekerId);
-      await set(ref(db, 'job_seekers'), updatedList);
-      setJobSeekers(updatedList);
+      try {
+        const updatedList = jobSeekers.filter(s => s.id !== seekerId);
+        await set(ref(db, 'job_seekers'), updatedList);
+        setJobSeekers(updatedList);
+        alert('تم الحذف بنجاح! 🗑️');
+      } catch (error) {
+        console.error('Error deleting job seeker:', error);
+        alert('حدث خطأ أثناء الحذف: ' + error.message);
+      }
     }
   };
 
   const handleAddJobVacancy = async (newVacancy) => {
-    const updatedList = [...jobVacancies, { ...newVacancy, id: `vacancy_${Date.now()}` }];
-    await set(ref(db, 'job_vacancies'), updatedList);
-    setJobVacancies(updatedList);
-    setShowAddJobVacancyForm(false);
+    try {
+      const updatedList = [...jobVacancies, { ...newVacancy, id: `vacancy_${Date.now()}` }];
+      await set(ref(db, 'job_vacancies'), updatedList);
+      setJobVacancies(updatedList);
+      setShowAddJobVacancyForm(false);
+      alert('تمت إضافة الوظيفة بنجاح! 🎉');
+    } catch (error) {
+      console.error('Error adding job vacancy:', error);
+      alert('حدث خطأ أثناء إضافة الوظيفة: ' + error.message);
+    }
   };
 
   const handleEditJobVacancy = async (updatedVacancy) => {
-    const updatedList = jobVacancies.map(v => v.id === updatedVacancy.id ? updatedVacancy : v);
-    await set(ref(db, 'job_vacancies'), updatedList);
-    setJobVacancies(updatedList);
-    setEditingJobVacancy(null);
+    try {
+      const updatedList = jobVacancies.map(v => v.id === updatedVacancy.id ? updatedVacancy : v);
+      await set(ref(db, 'job_vacancies'), updatedList);
+      setJobVacancies(updatedList);
+      setEditingJobVacancy(null);
+      alert('تم تعديل الوظيفة بنجاح! 🎉');
+    } catch (error) {
+      console.error('Error editing job vacancy:', error);
+      alert('حدث خطأ أثناء تعديل الوظيفة: ' + error.message);
+    }
   };
 
   const handleDeleteJobVacancy = async (vacancyId) => {
     if (window.confirm('هل أنت متأكد من حذف هذه الوظيفة الشاغرة نهائياً؟')) {
-      const updatedList = jobVacancies.filter(v => v.id !== vacancyId);
-      await set(ref(db, 'job_vacancies'), updatedList);
-      setJobVacancies(updatedList);
+      try {
+        const updatedList = jobVacancies.filter(v => v.id !== vacancyId);
+        await set(ref(db, 'job_vacancies'), updatedList);
+        setJobVacancies(updatedList);
+        alert('تم حذف الوظيفة بنجاح! 🗑️');
+      } catch (error) {
+        console.error('Error deleting job vacancy:', error);
+        alert('حدث خطأ أثناء حذف الوظيفة: ' + error.message);
+      }
     }
   };
 
   const handleAddDoctor = async (newDoc) => {
-    const updatedList = [...doctors, { ...newDoc, id: `doc_${Date.now()}` }];
-    await set(ref(db, 'doctors'), updatedList);
-    setDoctors(updatedList);
-    setShowAddDoctorForm(false);
+    try {
+      const updatedList = [...doctors, { ...newDoc, id: `doc_${Date.now()}` }];
+      await set(ref(db, 'doctors'), updatedList);
+      setDoctors(updatedList);
+      setShowAddDoctorForm(false);
+      alert('تمت إضافة الطبيب بنجاح! 🎉');
+    } catch (error) {
+      console.error('Error adding doctor:', error);
+      alert('حدث خطأ أثناء إضافة الطبيب: ' + error.message);
+    }
   };
 
   const handleEditDoctor = async (updatedDoc) => {
-    const updatedList = doctors.map(d => d.id === updatedDoc.id ? updatedDoc : d);
-    await set(ref(db, 'doctors'), updatedList);
-    setDoctors(updatedList);
-    setEditingDoctor(null);
+    try {
+      const updatedList = doctors.map(d => d.id === updatedDoc.id ? updatedDoc : d);
+      await set(ref(db, 'doctors'), updatedList);
+      setDoctors(updatedList);
+      setEditingDoctor(null);
+      alert('تم تعديل بيانات الطبيب بنجاح! 🎉');
+    } catch (error) {
+      console.error('Error editing doctor:', error);
+      alert('حدث خطأ أثناء تعديل بيانات الطبيب: ' + error.message);
+    }
   };
 
   const handleDeleteDoctor = async (docId) => {
     if (window.confirm('هل أنت متأكد من حذف هذا الطبيب نهائياً؟')) {
-      const updatedList = doctors.filter(d => d.id !== docId);
-      await set(ref(db, 'doctors'), updatedList);
-      setDoctors(updatedList);
+      try {
+        const updatedList = doctors.filter(d => d.id !== docId);
+        await set(ref(db, 'doctors'), updatedList);
+        setDoctors(updatedList);
+        alert('تم حذف الطبيب بنجاح! 🗑️');
+      } catch (error) {
+        console.error('Error deleting doctor:', error);
+        alert('حدث خطأ أثناء حذف الطبيب: ' + error.message);
+      }
     }
   };
 
   const handleToggleDoctorFeatured = async (docId) => {
-    const updatedList = doctors.map(d => {
-      if (d.id === docId) {
-        return { ...d, isFeatured: !d.isFeatured };
-      }
-      return d;
-    });
-    await set(ref(db, 'doctors'), updatedList);
-    setDoctors(updatedList);
+    try {
+      const updatedList = doctors.map(d => {
+        if (d.id === docId) {
+          return { ...d, isFeatured: !d.isFeatured };
+        }
+        return d;
+      });
+      await set(ref(db, 'doctors'), updatedList);
+      setDoctors(updatedList);
+      alert('تم تعديل حالة التمييز بنجاح! 🌟');
+    } catch (error) {
+      console.error('Error toggling doctor featured state:', error);
+      alert('حدث خطأ أثناء تعديل حالة التمييز: ' + error.message);
+    }
   };
 
   const handleAddDoctorCategory = async (newCat) => {
-    const updatedList = [...doctorCategories, newCat];
-    await set(ref(db, 'doctor_categories'), updatedList);
-    setDoctorCategories(updatedList);
-    setShowAddDoctorCategoryForm(false);
+    try {
+      const updatedList = [...doctorCategories, newCat];
+      await set(ref(db, 'doctor_categories'), updatedList);
+      setDoctorCategories(updatedList);
+      setShowAddDoctorCategoryForm(false);
+      alert('تمت إضافة التخصص بنجاح! 🎉');
+    } catch (error) {
+      console.error('Error adding doctor category:', error);
+      alert('حدث خطأ أثناء إضافة التخصص: ' + error.message);
+    }
   };
 
   const handleEditDoctorCategory = async (updatedCat) => {
-    const updatedList = doctorCategories.map(c => c.id === updatedCat.id ? updatedCat : c);
-    await set(ref(db, 'doctor_categories'), updatedList);
-    setDoctorCategories(updatedList);
-    setEditingDoctorCategory(null);
+    try {
+      const updatedList = doctorCategories.map(c => c.id === updatedCat.id ? updatedCat : c);
+      await set(ref(db, 'doctor_categories'), updatedList);
+      setDoctorCategories(updatedList);
+      setEditingDoctorCategory(null);
+      alert('تم تعديل التخصص بنجاح! 🎉');
+    } catch (error) {
+      console.error('Error editing doctor category:', error);
+      alert('حدث خطأ أثناء تعديل التخصص: ' + error.message);
+    }
   };
 
   const handleDeleteDoctorCategory = async (catId) => {
     if (window.confirm('هل أنت متأكد من حذف هذا التخصص نهائياً؟ تنبيه: لن يتم حذف الأطباء المسجلين تحت هذا التخصص تلقائياً.')) {
-      const updatedList = doctorCategories.filter(c => c.id !== catId);
-      await set(ref(db, 'doctor_categories'), updatedList);
-      setDoctorCategories(updatedList);
+      try {
+        const updatedList = doctorCategories.filter(c => c.id !== catId);
+        await set(ref(db, 'doctor_categories'), updatedList);
+        setDoctorCategories(updatedList);
+        alert('تم حذف التخصص بنجاح! 🗑️');
+      } catch (error) {
+        console.error('Error deleting doctor category:', error);
+        alert('حدث خطأ أثناء حذف التخصص: ' + error.message);
+      }
     }
   };
 
   const handleAddPharmacy = async (newPharm) => {
-    const updatedList = [...pharmacies, { ...newPharm, id: `pharm_${Date.now()}` }];
-    await set(ref(db, 'pharmacies'), updatedList);
-    setPharmacies(updatedList);
-    setShowAddPharmacyForm(false);
+    try {
+      const updatedList = [...pharmacies, { ...newPharm, id: `pharm_${Date.now()}` }];
+      await set(ref(db, 'pharmacies'), updatedList);
+      setPharmacies(updatedList);
+      setShowAddPharmacyForm(false);
+      alert('تمت إضافة الصيدلية بنجاح! 🎉');
+    } catch (error) {
+      console.error('Error adding pharmacy:', error);
+      alert('حدث خطأ أثناء إضافة الصيدلية: ' + error.message);
+    }
   };
 
   const handleEditPharmacy = async (updatedPharm) => {
-    const updatedList = pharmacies.map(p => p.id === updatedPharm.id ? updatedPharm : p);
-    await set(ref(db, 'pharmacies'), updatedList);
-    setPharmacies(updatedList);
-    setEditingPharmacy(null);
+    try {
+      const updatedList = pharmacies.map(p => p.id === updatedPharm.id ? updatedPharm : p);
+      await set(ref(db, 'pharmacies'), updatedList);
+      setPharmacies(updatedList);
+      setEditingPharmacy(null);
+      alert('تم تعديل بيانات الصيدلية بنجاح! 🎉');
+    } catch (error) {
+      console.error('Error editing pharmacy:', error);
+      alert('حدث خطأ أثناء تعديل بيانات الصيدلية: ' + error.message);
+    }
   };
 
   const handleDeletePharmacy = async (pharmId) => {
     if (window.confirm('هل أنت متأكد من حذف هذه الصيدلية نهائياً؟')) {
-      const updatedList = pharmacies.filter(p => p.id !== pharmId);
-      await set(ref(db, 'pharmacies'), updatedList);
-      setPharmacies(updatedList);
+      try {
+        const updatedList = pharmacies.filter(p => p.id !== pharmId);
+        await set(ref(db, 'pharmacies'), updatedList);
+        setPharmacies(updatedList);
+        alert('تم حذف الصيدلية بنجاح! 🗑️');
+      } catch (error) {
+        console.error('Error deleting pharmacy:', error);
+        alert('حدث خطأ أثناء حذف الصيدلية: ' + error.message);
+      }
     }
   };
 
   const handleAddGovService = async (newSrv) => {
-    const updatedList = [...govServices, { ...newSrv, id: `gov_${Date.now()}` }];
-    await set(ref(db, 'gov_services'), updatedList);
-    setGovServices(updatedList);
-    setShowAddGovServiceForm(false);
+    try {
+      const updatedList = [...govServices, { ...newSrv, id: `gov_${Date.now()}` }];
+      await set(ref(db, 'gov_services'), updatedList);
+      setGovServices(updatedList);
+      setShowAddGovServiceForm(false);
+      alert('تمت إضافة الخدمة بنجاح! 🎉');
+    } catch (error) {
+      console.error('Error adding gov service:', error);
+      alert('حدث خطأ أثناء إضافة الخدمة: ' + error.message);
+    }
   };
 
   const handleEditGovService = async (updatedSrv) => {
-    const updatedList = govServices.map(s => s.id === updatedSrv.id ? updatedSrv : s);
-    await set(ref(db, 'gov_services'), updatedList);
-    setGovServices(updatedList);
-    setEditingGovService(null);
+    try {
+      const updatedList = govServices.map(s => s.id === updatedSrv.id ? updatedSrv : s);
+      await set(ref(db, 'gov_services'), updatedList);
+      setGovServices(updatedList);
+      setEditingGovService(null);
+      alert('تم تعديل الخدمة بنجاح! 🎉');
+    } catch (error) {
+      console.error('Error editing gov service:', error);
+      alert('حدث خطأ أثناء تعديل الخدمة: ' + error.message);
+    }
   };
 
   const handleDeleteGovService = async (srvId) => {
     if (window.confirm('هل أنت متأكد من حذف هذه الخدمة نهائياً؟')) {
-      const updatedList = govServices.filter(s => s.id !== srvId);
-      await set(ref(db, 'gov_services'), updatedList);
-      setGovServices(updatedList);
+      try {
+        const updatedList = govServices.filter(s => s.id !== srvId);
+        await set(ref(db, 'gov_services'), updatedList);
+        setGovServices(updatedList);
+        alert('تم حذف الخدمة بنجاح! 🗑️');
+      } catch (error) {
+        console.error('Error deleting gov service:', error);
+        alert('حدث خطأ أثناء حذف الخدمة: ' + error.message);
+      }
     }
   };
 
