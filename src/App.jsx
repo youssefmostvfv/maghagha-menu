@@ -179,6 +179,7 @@ function App() {
   const [adminSearchTerm, setAdminSearchTerm] = useState('');
   const [activeStatsSubTab, setActiveStatsSubTab] = useState('general');
   const [sectionCalls, setSectionCalls] = useState({});
+  const [activeCallsTab, setActiveCallsTab] = useState('restaurants');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
@@ -2515,22 +2516,66 @@ function App() {
     yesterdayDate.setDate(yesterdayDate.getDate() - 1);
     const yesterdayStr = yesterdayDate.toISOString().split('T')[0];
 
+    // Select raw items and calls database node depending on activeCallsTab
+    let rawItems = [];
+    let callsNode = {};
+    let isTrips = false; // trips node uses a flat number schema instead of { total, daily }
+
+    if (activeCallsTab === 'restaurants') {
+      rawItems = restaurants;
+      callsNode = callsData || {};
+    } else if (activeCallsTab === 'captains') {
+      rawItems = captains;
+      callsNode = tripsCounts || {};
+      isTrips = true;
+    } else if (activeCallsTab === 'supermarkets') {
+      rawItems = supermarkets;
+      callsNode = sectionCalls['supermarket'] || {};
+    } else if (activeCallsTab === 'doctors') {
+      rawItems = doctors;
+      callsNode = sectionCalls['doctors'] || {};
+    } else if (activeCallsTab === 'pharmacies') {
+      rawItems = pharmacies;
+      callsNode = sectionCalls['pharmacies'] || {};
+    } else if (activeCallsTab === 'gov') {
+      rawItems = govServices;
+      callsNode = sectionCalls['gov_services'] || {};
+    }
+
     let totalCallsAll = 0;
     let todayCallsAll = 0;
     let yesterdayCallsAll = 0;
 
-     const restaurantCallStats = INITIAL_RESTAURANTS.map((rest) => {
-      const stats = callsData[rest.id] || { total: 0, daily: {}, logs: {} };
-      const total = stats.total || 0;
-      const todayCalls = (stats.daily && stats.daily[todayStr]) || 0;
-      const yesterdayCalls = (stats.daily && stats.daily[yesterdayStr]) || 0;
+    const itemCallStats = rawItems.map((item) => {
+      let total = 0;
+      let todayCalls = 0;
+      let yesterdayCalls = 0;
+      let daily = {};
+      let logs = {};
+
+      if (isTrips) {
+        total = callsNode[item.id] || 0;
+      } else {
+        const stats = callsNode[item.id];
+        if (typeof stats === 'number') {
+          total = stats;
+        } else if (stats && typeof stats === 'object') {
+          total = stats.total || 0;
+          todayCalls = (stats.daily && stats.daily[todayStr]) || 0;
+          yesterdayCalls = (stats.daily && stats.daily[yesterdayStr]) || 0;
+          daily = stats.daily || {};
+          logs = stats.logs || {};
+        }
+      }
 
       let last7DaysSum = 0;
-      for (let i = 0; i < 7; i++) {
-        const d = new Date();
-        d.setDate(d.getDate() - i);
-        const dStr = d.toISOString().split('T')[0];
-        last7DaysSum += (stats.daily && stats.daily[dStr]) || 0;
+      if (!isTrips && daily) {
+        for (let i = 0; i < 7; i++) {
+          const d = new Date();
+          d.setDate(d.getDate() - i);
+          const dStr = d.toISOString().split('T')[0];
+          last7DaysSum += daily[dStr] || 0;
+        }
       }
 
       totalCallsAll += total;
@@ -2538,19 +2583,21 @@ function App() {
       yesterdayCallsAll += yesterdayCalls;
 
       return {
-        id: rest.id,
-        name: rest.name,
-        logo: rest.logo,
+        id: item.id,
+        name: item.name,
+        logo: item.logo || '',
+        avatar: item.avatar || '',
         total,
         todayCalls,
         yesterdayCalls,
         last7DaysSum,
-        daily: stats.daily || {},
-        logs: stats.logs || {}
+        daily,
+        logs
       };
     });
+
     // Apply Sorting
-    const sortedStats = [...restaurantCallStats].sort((a, b) => {
+    const sortedStats = [...itemCallStats].sort((a, b) => {
       if (sortBy === 'today') {
         return b.todayCalls - a.todayCalls;
       } else if (sortBy === 'yesterday') {
@@ -2740,6 +2787,43 @@ function App() {
           </div>
         </div>
 
+        {/* Calls Section Sub-Tabs */}
+        <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '12px', marginBottom: '20px', borderBottom: '1px solid var(--border-color)' }}>
+          {[
+            { id: 'restaurants', name: 'المطاعم', icon: 'fa-utensils' },
+            { id: 'captains', name: 'الكباتن', icon: 'fa-motorcycle' },
+            { id: 'supermarkets', name: 'السوبرماركت', icon: 'fa-store' },
+            { id: 'doctors', name: 'الأطباء', icon: 'fa-user-doctor' },
+            { id: 'pharmacies', name: 'الصيدليات', icon: 'fa-mortar-pestle' },
+            { id: 'gov', name: 'الحكومي والطوارئ', icon: 'fa-building-columns' },
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => {
+                setActiveCallsTab(tab.id);
+                setCallsSearchTerm('');
+              }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '10px 16px',
+                borderRadius: 'var(--radius-sm)',
+                border: '1px solid var(--border-color)',
+                backgroundColor: activeCallsTab === tab.id ? 'var(--accent-color)' : 'var(--bg-secondary)',
+                color: activeCallsTab === tab.id ? '#fff' : 'var(--text-primary)',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                fontSize: '13.5px'
+              }}
+            >
+              <i className={`fa-solid ${tab.icon}`}></i>
+              <span>{tab.name}</span>
+            </button>
+          ))}
+        </div>
+
         {/* Controls: Search and Sort */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '16px' }}>
           {/* Search Input */}
@@ -2748,7 +2832,14 @@ function App() {
             <input
               type="text"
               className="search-input"
-              placeholder="ابحث باسم المطعم..."
+              placeholder={`ابحث باسم ${
+                activeCallsTab === 'restaurants' ? 'المطعم' : 
+                activeCallsTab === 'captains' ? 'الكابتن' : 
+                activeCallsTab === 'supermarkets' ? 'السوبرماركت' : 
+                activeCallsTab === 'doctors' ? 'الدكتور/العيادة' : 
+                activeCallsTab === 'pharmacies' ? 'الصيدلية' : 
+                'الجهة/الخدمة'
+              }...`}
               value={callsSearchTerm}
               onChange={(e) => setCallsSearchTerm(e.target.value)}
             />
@@ -2756,7 +2847,7 @@ function App() {
 
           {/* Sorting Controls */}
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
-            <span style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--text-secondary)' }}>ترتيب المطاعم حسب:</span>
+            <span style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--text-secondary)' }}>ترتيب القائمة حسب:</span>
             <button 
               onClick={() => setSortBy('total')} 
               style={{ 
@@ -2772,36 +2863,40 @@ function App() {
             >
               📊 الإجمالي الكلي
             </button>
-            <button 
-              onClick={() => setSortBy('today')} 
-              style={{ 
-                padding: '6px 12px', 
-                borderRadius: 'var(--radius-sm)', 
-                border: '1px solid var(--border-color)', 
-                backgroundColor: sortBy === 'today' ? 'var(--accent-color)' : 'var(--bg-secondary)', 
-                color: sortBy === 'today' ? '#fff' : 'var(--text-primary)', 
-                cursor: 'pointer', 
-                fontWeight: 'bold',
-                fontSize: '12px'
-              }}
-            >
-              📞 اتصالات اليوم
-            </button>
-            <button 
-              onClick={() => setSortBy('yesterday')} 
-              style={{ 
-                padding: '6px 12px', 
-                borderRadius: 'var(--radius-sm)', 
-                border: '1px solid var(--border-color)', 
-                backgroundColor: sortBy === 'yesterday' ? 'var(--accent-color)' : 'var(--bg-secondary)', 
-                color: sortBy === 'yesterday' ? '#fff' : 'var(--text-primary)', 
-                cursor: 'pointer', 
-                fontWeight: 'bold',
-                fontSize: '12px'
-              }}
-            >
-              ⏳ اتصالات أمس
-            </button>
+            {activeCallsTab !== 'captains' && (
+              <>
+                <button 
+                  onClick={() => setSortBy('today')} 
+                  style={{ 
+                    padding: '6px 12px', 
+                    borderRadius: 'var(--radius-sm)', 
+                    border: '1px solid var(--border-color)', 
+                    backgroundColor: sortBy === 'today' ? 'var(--accent-color)' : 'var(--bg-secondary)', 
+                    color: sortBy === 'today' ? '#fff' : 'var(--text-primary)', 
+                    cursor: 'pointer', 
+                    fontWeight: 'bold',
+                    fontSize: '12px'
+                  }}
+                >
+                  📞 اتصالات اليوم
+                </button>
+                <button 
+                  onClick={() => setSortBy('yesterday')} 
+                  style={{ 
+                    padding: '6px 12px', 
+                    borderRadius: 'var(--radius-sm)', 
+                    border: '1px solid var(--border-color)', 
+                    backgroundColor: sortBy === 'yesterday' ? 'var(--accent-color)' : 'var(--bg-secondary)', 
+                    color: sortBy === 'yesterday' ? '#fff' : 'var(--text-primary)', 
+                    cursor: 'pointer', 
+                    fontWeight: 'bold',
+                    fontSize: '12px'
+                  }}
+                >
+                  ⏳ اتصالات أمس
+                </button>
+              </>
+            )}
             <button 
               onClick={() => setSortBy('name')} 
               style={{ 
@@ -2815,7 +2910,7 @@ function App() {
                 fontSize: '12px'
               }}
             >
-              🔤 اسم المطعم (أبجدي)
+              🔤 الاسم (أبجدي)
             </button>
           </div>
         </div>
@@ -2825,7 +2920,14 @@ function App() {
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'right', fontSize: '14px' }}>
             <thead>
               <tr style={{ background: 'var(--bg-tertiary)', borderBottom: '1px solid var(--border-color)' }}>
-                <th style={{ padding: '12px 16px' }}>المطعم</th>
+                <th style={{ padding: '12px 16px' }}>{
+                  activeCallsTab === 'restaurants' ? 'المطعم' : 
+                  activeCallsTab === 'captains' ? 'الكابتن' : 
+                  activeCallsTab === 'supermarkets' ? 'السوبرماركت' : 
+                  activeCallsTab === 'doctors' ? 'الدكتور/العيادة' : 
+                  activeCallsTab === 'pharmacies' ? 'الصيدلية' : 
+                  'الجهة/الخدمة'
+                }</th>
                 <th style={{ padding: '12px 16px' }}>اتصالات اليوم</th>
                 <th style={{ padding: '12px 16px' }}>اتصالات أمس</th>
                 <th style={{ padding: '12px 16px' }}>آخر 7 أيام</th>
@@ -2843,13 +2945,17 @@ function App() {
                     <td style={{ padding: '12px 16px' }}>{item.last7DaysSum}</td>
                     <td style={{ padding: '12px 16px', fontWeight: 'bold' }}>{item.total}</td>
                     <td style={{ padding: '12px 16px' }}>
-                      <button
-                        className="hero-tag-btn"
-                        style={{ padding: '4px 10px', fontSize: '12px' }}
-                        onClick={() => setExpandedCallsRestaurantId(expandedCallsRestaurantId === item.id ? null : item.id)}
-                      >
-                        {expandedCallsRestaurantId === item.id ? 'إخفاء' : 'عرض السجل 📅'}
-                      </button>
+                      {activeCallsTab !== 'captains' ? (
+                        <button
+                          className="hero-tag-btn"
+                          style={{ padding: '4px 10px', fontSize: '12px' }}
+                          onClick={() => setExpandedCallsRestaurantId(expandedCallsRestaurantId === item.id ? null : item.id)}
+                        >
+                          {expandedCallsRestaurantId === item.id ? 'إخفاء' : 'عرض السجل 📅'}
+                        </button>
+                      ) : (
+                        <span style={{ color: 'var(--text-muted)', fontSize: '12.5px' }}>غير متوفر لكباتن التوصيل</span>
+                      )}
                     </td>
                   </tr>
                   {expandedCallsRestaurantId === item.id && (
