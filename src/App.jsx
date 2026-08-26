@@ -1804,6 +1804,9 @@ function App() {
                           const menuText = formData.get('menuImages') || '';
                           const menuImgs = menuText.split(',').map(url => url.trim()).filter(Boolean);
 
+                          const offerText = formData.get('offerImages') || '';
+                          const offerImgs = offerText.split(',').map(url => url.trim()).filter(Boolean);
+
                           const data = {
                             id: editingRestaurant ? targetRestaurant.id : Date.now(),
                             name: formData.get('name'),
@@ -1821,7 +1824,8 @@ function App() {
                               display: formData.get('workingHoursDisplay') || 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'
                             },
                             popularItems: popItems,
-                            menuImages: menuImgs
+                            menuImages: menuImgs,
+                             offerImages: offerImgs
                           };
 
                           if (editingRestaurant) {
@@ -1901,6 +1905,11 @@ function App() {
                           <div>
                             <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>صور المنيو (روابط مفصولة بفواصل):</label>
                             <input type="text" name="menuImages" placeholder="http://..., http://..." defaultValue={targetRestaurant.menuImages ? targetRestaurant.menuImages.join(', ') : ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>صور العروض والخصومات (روابط مفصولة بفواصل - في نهاية المنيو):</label>
+                            <input type="text" name="offerImages" placeholder="مثال: http://..., http://..." defaultValue={targetRestaurant.offerImages ? targetRestaurant.offerImages.join(', ') : ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
                           </div>
 
                           <div>
@@ -4698,6 +4707,31 @@ function App() {
                       }}
                     >
                       <img src={resolveImage(img)} alt={`منيو صفحة ${idx + 1}`} className="menu-thumbnail" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Offer Images List */}
+            {!isCaptain && selectedRestaurant.offerImages && selectedRestaurant.offerImages.length > 0 && (
+              <div style={{ marginTop: '20px' }}>
+                <h3 className="drawer-section-title" style={{ color: 'var(--accent-color)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <i className="fa-solid fa-gift"></i> العروض والخصومات الحالية (اضغط للتكبير)
+                </h3>
+                <div className="menu-thumbnails">
+                  {selectedRestaurant.offerImages.map((img, idx) => (
+                    <div 
+                      key={idx} 
+                      className="menu-thumbnail-wrapper" 
+                      style={{ border: '2px dashed var(--accent-color)' }} 
+                      onClick={() => {
+                        setActiveMenuImage(resolveImage(img));
+                        setZoomScale(1);
+                        setPanOffset({ x: 0, y: 0 });
+                      }}
+                    >
+                      <img src={resolveImage(img)} alt={`عرض ${idx + 1}`} className="menu-thumbnail" />
                     </div>
                   ))}
                 </div>
