@@ -177,6 +177,7 @@ function App() {
   const [adminLoginError, setAdminLoginError] = useState('');
   const [activeAdminTab, setActiveAdminTab] = useState('stats');
   const [adminSearchTerm, setAdminSearchTerm] = useState('');
+  const [activeStatsSubTab, setActiveStatsSubTab] = useState('general');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
@@ -1347,30 +1348,152 @@ function App() {
             if (activeAdminTab === 'stats') {
                 const totalRatingsCount = Object.values(ratings).reduce((acc, curr) => acc + (curr.count || 0), 0);
                 const totalTripsCount = Object.values(tripsCounts).reduce((acc, curr) => acc + (curr || 0), 0);
+                const featuredDoctorsCount = doctors.filter(d => d.isFeatured || d.id === 'doc_phys_6').length;
+                
+                const statsTabs = [
+                  { id: 'general', name: 'العامة', icon: 'fa-chart-pie' },
+                  { id: 'restaurants', name: 'المطاعم', icon: 'fa-utensils' },
+                  { id: 'captains', name: 'الكباتن', icon: 'fa-motorcycle' },
+                  { id: 'supermarkets', name: 'السوبرماركت', icon: 'fa-store' },
+                  { id: 'doctors', name: 'الأطباء', icon: 'fa-user-doctor' },
+                  { id: 'pharmacies', name: 'الصيدليات', icon: 'fa-mortar-pestle' },
+                  { id: 'jobs', name: 'الوظائف', icon: 'fa-briefcase' },
+                  { id: 'gov', name: 'الحكومي والطوارئ', icon: 'fa-building-columns' },
+                ];
+
                 return (
                   <div>
-                    <h2 style={{ marginBottom: '20px' }}>لوحة الإحصائيات العامة 📈</h2>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
-                      <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
-                        <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>إجمالي المطاعم</h3>
-                        <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{restaurants.length}</p>
-                      </div>
-                      <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
-                        <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>إجمالي الكباتن</h3>
-                        <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{captains.length}</p>
-                      </div>
-                      <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
-                        <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>الرحلات المسجلة (نقرات الاتصال)</h3>
-                        <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{totalTripsCount} رحلة 🚀</p>
-                      </div>
-                      <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
-                        <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>التقييمات المكتملة</h3>
-                        <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{totalRatingsCount} تقييم ⭐</p>
-                      </div>
+                    <h2 style={{ marginBottom: '16px' }}>لوحة الإحصائيات التفصيلية 📈</h2>
+                    
+                    {/* Stats Sub-Tabs */}
+                    <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '12px', marginBottom: '20px', borderBottom: '1px solid var(--border-color)' }}>
+                      {statsTabs.map(tab => (
+                        <button
+                          key={tab.id}
+                          onClick={() => setActiveStatsSubTab(tab.id)}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            padding: '10px 16px',
+                            borderRadius: 'var(--radius-sm)',
+                            border: '1px solid var(--border-color)',
+                            backgroundColor: activeStatsSubTab === tab.id ? 'var(--accent-color)' : 'var(--bg-secondary)',
+                            color: activeStatsSubTab === tab.id ? '#fff' : 'var(--text-primary)',
+                            fontWeight: 'bold',
+                            cursor: 'pointer',
+                            whiteSpace: 'nowrap',
+                            fontSize: '13.5px'
+                          }}
+                        >
+                          <i className={`fa-solid ${tab.icon}`}></i>
+                          <span>{tab.name}</span>
+                        </button>
+                      ))}
                     </div>
+
+                    {/* General Stats */}
+                    {activeStatsSubTab === 'general' && (
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
+                        <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                          <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>الرحلات المسجلة (نقرات الاتصال)</h3>
+                          <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{totalTripsCount} رحلة 🚀</p>
+                        </div>
+                        <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                          <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>التقييمات المكتملة</h3>
+                          <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{totalRatingsCount} تقييم ⭐</p>
+                        </div>
+                        <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                          <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>إجمالي الأقسام النشطة</h3>
+                          <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>8 أقسام 📁</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Restaurants Stats */}
+                    {activeStatsSubTab === 'restaurants' && (
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
+                        <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                          <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>إجمالي المطاعم</h3>
+                          <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{restaurants.length} مطعم 🍔</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Captains Stats */}
+                    {activeStatsSubTab === 'captains' && (
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
+                        <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                          <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>إجمالي الكباتن</h3>
+                          <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{captains.length} كابتن 🛵</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Supermarkets Stats */}
+                    {activeStatsSubTab === 'supermarkets' && (
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
+                        <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                          <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>إجمالي السوبرماركت</h3>
+                          <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{supermarkets.length} ماركت 🛒</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Doctors Stats */}
+                    {activeStatsSubTab === 'doctors' && (
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
+                        <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                          <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>إجمالي الأطباء</h3>
+                          <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{doctors.length} طبيب/عيادة 🩺</p>
+                        </div>
+                        <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                          <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>الأطباء المميزون (Featured)</h3>
+                          <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{featuredDoctorsCount} طبيب ⭐</p>
+                        </div>
+                        <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                          <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>الأقسام/التخصصات الطبية</h3>
+                          <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{doctorCategories.length} تخصص 🗂️</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Pharmacies Stats */}
+                    {activeStatsSubTab === 'pharmacies' && (
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
+                        <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                          <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>إجمالي الصيدليات</h3>
+                          <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{pharmacies.length} صيدلية 💊</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Jobs Stats */}
+                    {activeStatsSubTab === 'jobs' && (
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
+                        <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                          <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>الباحثون عن عمل</h3>
+                          <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{jobSeekers.length} باحث 👨‍💼</p>
+                        </div>
+                        <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                          <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>فرص العمل المتاحة</h3>
+                          <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{jobVacancies.length} فرصة 📢</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Gov Stats */}
+                    {activeStatsSubTab === 'gov' && (
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
+                        <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                          <h3 style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>الجهات والخدمات المسجلة</h3>
+                          <p style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0 0 0' }}>{govServices.length} جهة 🏛️</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 );
-              }
+            }
 
               if (activeAdminTab === 'restaurants') {
                 const isFormOpen = showAddRestaurantForm || editingRestaurant;
