@@ -6,14 +6,14 @@ import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, get, set } from 'firebase/database';
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+  apiKey: "AIzaSyDeL-wGyed08dGASFBE5-ak_p3vUut_A0g",
+  authDomain: "maghagha-menu.firebaseapp.com",
+  databaseURL: "https://maghagha-menu-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "maghagha-menu",
+  storageBucket: "maghagha-menu.firebasestorage.app",
+  messagingSenderId: "107392502900",
+  appId: "1:107392502900:web:59d4c7c964a3c8d66ed521",
+  measurementId: "G-T7P3QQM8S9"
 };
 // 
 const app = initializeApp(firebaseConfig);
