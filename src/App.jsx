@@ -1057,6 +1057,17 @@ function App() {
     }
   };
 
+  const handleToggleDoctorFeatured = async (docId) => {
+    const updatedList = doctors.map(d => {
+      if (d.id === docId) {
+        return { ...d, isFeatured: !d.isFeatured };
+      }
+      return d;
+    });
+    await set(ref(db, 'doctors'), updatedList);
+    setDoctors(updatedList);
+  };
+
   const handleAddDoctorCategory = async (newCat) => {
     const updatedList = [...doctorCategories, newCat];
     await set(ref(db, 'doctor_categories'), updatedList);
@@ -2083,6 +2094,21 @@ function App() {
                                 <td style={{ padding: '12px 16px' }}>{doc.specialty}</td>
                                 <td style={{ padding: '12px 16px' }}>{doc.phone}</td>
                                 <td style={{ padding: '12px 16px', display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                                  <button 
+                                    onClick={() => handleToggleDoctorFeatured(doc.id)} 
+                                    style={{ 
+                                      padding: '6px 12px', 
+                                      border: 'none', 
+                                      borderRadius: 'var(--radius-sm)', 
+                                      backgroundColor: doc.isFeatured ? '#d4af37' : 'var(--bg-tertiary)', 
+                                      color: doc.isFeatured ? '#000' : 'var(--text-primary)', 
+                                      cursor: 'pointer', 
+                                      fontSize: '12px', 
+                                      fontWeight: 'bold'
+                                    }}
+                                  >
+                                    {doc.isFeatured ? '⭐ مميز' : '☆ تمييز'}
+                                  </button>
                                   <button onClick={() => setEditingDoctor(doc)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--accent-color)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🔧 تعديل</button>
                                   <button onClick={() => handleDeleteDoctor(doc.id)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--status-closed)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🗑️ حذف</button>
                                 </td>
@@ -3252,7 +3278,15 @@ function App() {
                 return matchesCategory && matchesSearch;
               });
 
-              if (filteredDoctors.length === 0) {
+              const sortedDoctors = [...filteredDoctors].sort((a, b) => {
+                const aFeatured = a.isFeatured || a.id === 'doc_phys_6';
+                const bFeatured = b.isFeatured || b.id === 'doc_phys_6';
+                if (aFeatured && !bFeatured) return -1;
+                if (!aFeatured && bFeatured) return 1;
+                return 0;
+              });
+
+              if (sortedDoctors.length === 0) {
                 return (
                   <div className="empty-state">
                     <i className="fa-solid fa-user-doctor" style={{ fontSize: '48px', marginBottom: '10px', opacity: 0.5 }}></i>
@@ -3264,12 +3298,42 @@ function App() {
 
               return (
                 <div className="jobs-grid">
-                  {filteredDoctors.map((doc) => {
+                  {sortedDoctors.map((doc) => {
+                    const isFeatured = doc.isFeatured || doc.id === 'doc_phys_6';
                     const rawPhone = doc.phone && doc.phone !== '—' ? doc.phone : null;
                     const phoneNumbers = rawPhone ? rawPhone.split('/').map(n => n.trim()).filter(Boolean) : [];
 
                     return (
-                      <div key={doc.id} className="job-card vacancy-card">
+                      <div 
+                        key={doc.id} 
+                        className={`job-card vacancy-card ${isFeatured ? 'featured-doctor-card' : ''}`}
+                        style={isFeatured ? {
+                          border: '2px solid #d4af37',
+                          boxShadow: '0 4px 20px rgba(212, 175, 55, 0.25)',
+                          position: 'relative',
+                          overflow: 'hidden',
+                          background: 'linear-gradient(to bottom, var(--bg-secondary), rgba(212, 175, 55, 0.03))'
+                        } : {}}
+                      >
+                        {isFeatured && (
+                          <div style={{
+                            position: 'absolute',
+                            top: '10px',
+                            left: '10px',
+                            backgroundColor: '#d4af37',
+                            color: '#000',
+                            padding: '3px 8px',
+                            borderRadius: '30px',
+                            fontSize: '11px',
+                            fontWeight: 'bold',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '4px'
+                          }}>
+                            <i className="fa-solid fa-star"></i>
+                            <span>طبيب مميز</span>
+                          </div>
+                        )}
                         <div className="vacancy-header-bar">
                           <h3 className="vacancy-title" style={{ margin: 0 }}>{doc.name}</h3>
                           <span className="vacancy-tag-badge">
