@@ -1950,6 +1950,7 @@ function App() {
                             name: formData.get('name'),
                             avatar: formData.get('avatar') || 'avatar-men',
                             phone: formData.get('phone'),
+                            whatsApp: formData.get('whatsApp') || '',
                             isAvailable: formData.get('isAvailable') === 'on',
                             description: formData.get('description'),
                             tripsCount: Number(formData.get('tripsCount') || 0),
@@ -1975,8 +1976,8 @@ function App() {
 
                           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                             <div>
-                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رابط الصورة (Avatar URL):</label>
-                              <input type="text" name="avatar" defaultValue={targetCaptain.avatar || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رقم الواتساب (اختياري - كود الدولة ثم الرقم):</label>
+                              <input type="text" name="whatsApp" placeholder="مثال: 201155435543" defaultValue={targetCaptain.whatsApp || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
                             </div>
                             <div>
                               <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>عدد الرحلات الأساسية:</label>
@@ -1984,9 +1985,15 @@ function App() {
                             </div>
                           </div>
 
-                          <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>الوصف القصير:</label>
-                            <input type="text" name="description" defaultValue={targetCaptain.description || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رابط الصورة (Avatar URL):</label>
+                              <input type="text" name="avatar" defaultValue={targetCaptain.avatar || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>الوصف القصير:</label>
+                              <input type="text" name="description" defaultValue={targetCaptain.description || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
                           </div>
 
                           <div>
@@ -2188,11 +2195,13 @@ function App() {
                           const data = {
                             id: editingJobVacancy && editingJobVacancy.id ? targetVacancy.id : `vacancy_${Date.now()}`,
                             title: formData.get('title'),
-                            company: formData.get('company'),
+                            businessName: formData.get('businessName'),
                             location: formData.get('location') || 'مغاغة',
-                            description: formData.get('description'),
-                            salary: formData.get('salary') || 'غير مححدد',
-                            phone: formData.get('phone')
+                            requirements: formData.get('requirements'),
+                            workType: formData.get('workType') || 'دوام كامل',
+                            salary: formData.get('salary') || 'غير محدد',
+                            phone: formData.get('phone'),
+                            whatsApp: formData.get('whatsApp') || ''
                           };
                           if (editingJobVacancy && editingJobVacancy.id) {
                             handleEditJobVacancy(data);
@@ -2200,25 +2209,43 @@ function App() {
                             handleAddJobVacancy(data);
                           }
                         }} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                          <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>عنوان الوظيفة:</label>
-                            <input type="text" name="title" defaultValue={targetVacancy.title || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>عنوان الوظيفة:</label>
+                              <input type="text" name="title" defaultValue={targetVacancy.title || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم النشاط / صاحب العمل:</label>
+                              <input type="text" name="businessName" defaultValue={targetVacancy.businessName || targetVacancy.company || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                          </div>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>تفاصيل الشيفت/الدوام:</label>
+                              <input type="text" name="workType" defaultValue={targetVacancy.workType || ''} placeholder="مثال: مسائي - 8 ساعات" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>الراتب:</label>
+                              <input type="text" name="salary" defaultValue={targetVacancy.salary || ''} placeholder="مثال: 4000 جنيه" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                          </div>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '16px' }}>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>العنوان/الإقامة:</label>
+                              <input type="text" name="location" defaultValue={targetVacancy.location || 'مغاغة'} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رقم الاتصال:</label>
+                              <input type="text" name="phone" defaultValue={targetVacancy.phone || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
                           </div>
                           <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم الشركة / صاحب العمل:</label>
-                            <input type="text" name="company" defaultValue={targetVacancy.company || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رقم الواتساب (اختياري - كود الدولة ثم الرقم):</label>
+                            <input type="text" name="whatsApp" placeholder="مثال: 201558606314" defaultValue={targetVacancy.whatsApp || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
                           </div>
                           <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>تفاصيل الوظيفة:</label>
-                            <textarea name="description" defaultValue={targetVacancy.description || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
-                          </div>
-                          <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>الراتب:</label>
-                            <input type="text" name="salary" defaultValue={targetVacancy.salary || ''} placeholder="مثال: 4000 جنيه" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
-                          </div>
-                          <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رقم التواصل:</label>
-                            <input type="text" name="phone" defaultValue={targetVacancy.phone || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>الشروط والمتطلبات:</label>
+                            <textarea name="requirements" defaultValue={targetVacancy.requirements || targetVacancy.description || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
                           </div>
                           <div style={{ display: 'flex', gap: '12px' }}>
                             <button type="submit" style={{ flex: 1, padding: '12px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>حفظ</button>
@@ -2235,9 +2262,13 @@ function App() {
                           const data = {
                             id: editingJobSeeker && editingJobSeeker.id ? targetSeeker.id : `seeker_${Date.now()}`,
                             name: formData.get('name'),
-                            title: formData.get('title'),
-                            experience: formData.get('experience'),
-                            phone: formData.get('phone')
+                            jobDesired: formData.get('jobDesired'),
+                            age: formData.get('age') || '',
+                            education: formData.get('education') || '',
+                            location: formData.get('location') || 'مغاغة',
+                            skills: formData.get('skills') || '',
+                            phone: formData.get('phone'),
+                            whatsApp: formData.get('whatsApp') || ''
                           };
                           if (editingJobSeeker && editingJobSeeker.id) {
                             handleEditJobSeeker(data);
@@ -2245,21 +2276,43 @@ function App() {
                             handleAddJobSeeker(data);
                           }
                         }} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                          <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم المتقدم:</label>
-                            <input type="text" name="name" defaultValue={targetSeeker.name || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم المتقدم:</label>
+                              <input type="text" name="name" defaultValue={targetSeeker.name || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>المسمى الوظيفي المطلوب:</label>
+                              <input type="text" name="jobDesired" defaultValue={targetSeeker.jobDesired || targetSeeker.title || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                          </div>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>السن (مثال: 25 سنة):</label>
+                              <input type="text" name="age" defaultValue={targetSeeker.age || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>المؤهل الدراسي:</label>
+                              <input type="text" name="education" defaultValue={targetSeeker.education || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                          </div>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>العنوان/الإقامة:</label>
+                              <input type="text" name="location" defaultValue={targetSeeker.location || 'مغاغة'} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رقم الهاتف:</label>
+                              <input type="text" name="phone" defaultValue={targetSeeker.phone || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
                           </div>
                           <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>التخصص / المسمى الوظيفي:</label>
-                            <input type="text" name="title" defaultValue={targetSeeker.title || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رقم الواتساب (اختياري - كود الدولة ثم الرقم):</label>
+                            <input type="text" name="whatsApp" placeholder="مثال: 201558606314" defaultValue={targetSeeker.whatsApp || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
                           </div>
                           <div>
                             <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>الخبرات والمهارات:</label>
-                            <textarea name="experience" defaultValue={targetSeeker.experience || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
-                          </div>
-                          <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رقم الهاتف:</label>
-                            <input type="text" name="phone" defaultValue={targetSeeker.phone || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            <textarea name="skills" defaultValue={targetSeeker.skills || targetSeeker.experience || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
                           </div>
                           <div style={{ display: 'flex', gap: '12px' }}>
                             <button type="submit" style={{ flex: 1, padding: '12px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>حفظ</button>
@@ -2285,7 +2338,7 @@ function App() {
                                 {jobVacancies.map((vac) => (
                                   <tr key={vac.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
                                     <td style={{ padding: '12px 16px', fontWeight: 'bold' }}>{vac.title}</td>
-                                    <td style={{ padding: '12px 16px' }}>{vac.company}</td>
+                                    <td style={{ padding: '12px 16px' }}>{vac.businessName || vac.company}</td>
                                     <td style={{ padding: '12px 16px', direction: 'ltr', textAlign: 'right' }}>{vac.phone}</td>
                                     <td style={{ padding: '12px 16px', display: 'flex', gap: '8px', justifyContent: 'center' }}>
                                       <button onClick={() => setEditingJobVacancy(vac)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--accent-color)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🔧 تعديل</button>
@@ -2305,7 +2358,7 @@ function App() {
                               <thead>
                                 <tr style={{ borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)' }}>
                                   <th style={{ padding: '12px 16px' }}>الاسم</th>
-                                  <th style={{ padding: '12px 16px' }}>التخصص</th>
+                                  <th style={{ padding: '12px 16px' }}>التخصص المطلوب</th>
                                   <th style={{ padding: '12px 16px' }}>الهاتف</th>
                                   <th style={{ padding: '12px 16px', textAlign: 'center' }}>العمليات</th>
                                 </tr>
@@ -2314,7 +2367,7 @@ function App() {
                                 {jobSeekers.map((seeker) => (
                                   <tr key={seeker.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
                                     <td style={{ padding: '12px 16px', fontWeight: 'bold' }}>{seeker.name}</td>
-                                    <td style={{ padding: '12px 16px' }}>{seeker.title}</td>
+                                    <td style={{ padding: '12px 16px' }}>{seeker.jobDesired || seeker.title}</td>
                                     <td style={{ padding: '12px 16px', direction: 'ltr', textAlign: 'right' }}>{seeker.phone}</td>
                                     <td style={{ padding: '12px 16px', display: 'flex', gap: '8px', justifyContent: 'center' }}>
                                       <button onClick={() => setEditingJobSeeker(seeker)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--accent-color)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🔧 تعديل</button>
@@ -2720,12 +2773,17 @@ function App() {
                         <form onSubmit={(e) => {
                           e.preventDefault();
                           const formData = new FormData(e.currentTarget);
+                          const serviceCategory = formData.get('category') || 'civil';
                           const data = {
                             id: editingGovService && editingGovService.id ? targetService.id : `gov_${Date.now()}`,
                             name: formData.get('name'),
-                            type: formData.get('type') || 'civil',
-                            description: formData.get('description'),
-                            phone: formData.get('phone')
+                            category: serviceCategory,
+                            type: serviceCategory,
+                            address: formData.get('address') || '',
+                            workingHours: formData.get('workingHours') || '',
+                            description: formData.get('workingHours') || '',
+                            phone: formData.get('phone') || '',
+                            locationUrl: formData.get('locationUrl') || ''
                           };
                           if (editingGovService && editingGovService.id) {
                             handleEditGovService(data);
@@ -2733,24 +2791,36 @@ function App() {
                             handleAddGovService(data);
                           }
                         }} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                          <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم الجهة الخدمية:</label>
-                            <input type="text" name="name" defaultValue={targetService.name || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم الجهة الخدمية:</label>
+                              <input type="text" name="name" defaultValue={targetService.name || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>قسم الخدمة:</label>
+                              <select name="category" defaultValue={targetService.category || targetService.type || 'civil'} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
+                                <option value="civil">دليل خدمي</option>
+                                <option value="emergency">طوارئ وشكاوى</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '16px' }}>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>العنوان:</label>
+                              <input type="text" name="address" defaultValue={targetService.address || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>الهاتف:</label>
+                              <input type="text" name="phone" defaultValue={targetService.phone || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
                           </div>
                           <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>نوع الخدمة:</label>
-                            <select name="type" defaultValue={targetService.type || 'civil'} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
-                              <option value="civil">دليل خدمي</option>
-                              <option value="emergency">طوارئ وشكاوى</option>
-                            </select>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>مواعيد العمل أو التفاصيل:</label>
+                            <input type="text" name="workingHours" defaultValue={targetService.workingHours || targetService.description || ''} placeholder="مثال: من 8:00 ص إلى 2:00 م" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
                           </div>
                           <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>الوصف أو مواعيد العمل:</label>
-                            <input type="text" name="description" defaultValue={targetService.description || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
-                          </div>
-                          <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>الهاتف:</label>
-                            <input type="text" name="phone" defaultValue={targetService.phone || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رابط الموقع على الخريطة (Google Maps URL):</label>
+                            <input type="text" name="locationUrl" defaultValue={targetService.locationUrl || ''} placeholder="https://maps.app.goo.gl/..." style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
                           </div>
                           <div style={{ display: 'flex', gap: '12px' }}>
                             <button type="submit" style={{ flex: 1, padding: '12px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>حفظ</button>
@@ -2764,8 +2834,9 @@ function App() {
                           <thead>
                             <tr style={{ borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)' }}>
                               <th style={{ padding: '12px 16px' }}>الاسم</th>
-                              <th style={{ padding: '12px 16px' }}>النوع</th>
-                              <th style={{ padding: '12px 16px' }}>الوصف</th>
+                              <th style={{ padding: '12px 16px' }}>القسم</th>
+                              <th style={{ padding: '12px 16px' }}>العنوان</th>
+                              <th style={{ padding: '12px 16px' }}>المواعيد</th>
                               <th style={{ padding: '12px 16px' }}>الهاتف</th>
                               <th style={{ padding: '12px 16px', textAlign: 'center' }}>العمليات</th>
                             </tr>
@@ -2774,9 +2845,10 @@ function App() {
                             {govServices.map((srv) => (
                               <tr key={srv.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
                                 <td style={{ padding: '12px 16px', fontWeight: 'bold' }}>{srv.name}</td>
-                                <td style={{ padding: '12px 16px' }}>{srv.type === 'emergency' ? '🚨 طوارئ' : '🏛️ دليل خدمي'}</td>
-                                <td style={{ padding: '12px 16px' }}>{srv.description || '—'}</td>
-                                <td style={{ padding: '12px 16px' }}>{srv.phone}</td>
+                                <td style={{ padding: '12px 16px' }}>{srv.category === 'emergency' || srv.type === 'emergency' ? '🚨 طوارئ' : '🏛️ دليل خدمي'}</td>
+                                <td style={{ padding: '12px 16px' }}>{srv.address || '—'}</td>
+                                <td style={{ padding: '12px 16px' }}>{srv.workingHours || srv.description || '—'}</td>
+                                <td style={{ padding: '12px 16px' }}>{srv.phone || '—'}</td>
                                 <td style={{ padding: '12px 16px', display: 'flex', gap: '8px', justifyContent: 'center' }}>
                                   <button onClick={() => setEditingGovService(srv)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--accent-color)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🔧 تعديل</button>
                                   <button onClick={() => handleDeleteGovService(srv.id)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--status-closed)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🗑️ حذف</button>
