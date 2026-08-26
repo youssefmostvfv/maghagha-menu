@@ -168,6 +168,8 @@ function App() {
   const [selectedDoctorCategory, setSelectedDoctorCategory] = useState('surgery_urology');
   const [doctorCategories, setDoctorCategories] = useState(DOCTOR_CATEGORIES);
   const [showAddDoctorCategoryForm, setShowAddDoctorCategoryForm] = useState(false);
+  const [editingDoctorCategory, setEditingDoctorCategory] = useState(null);
+  const [doctorAdminSubTab, setDoctorAdminSubTab] = useState('doctors'); // 'doctors' | 'categories'
   const [activeGovSubTab, setActiveGovSubTab] = useState('civil'); // 'civil' | 'emergency'
   const [promoAlert, setPromoAlert] = useState(null); // { phone: string, countdown: number }
   
@@ -1111,6 +1113,21 @@ function App() {
     await set(ref(db, 'doctor_categories'), updatedList);
     setDoctorCategories(updatedList);
     setShowAddDoctorCategoryForm(false);
+  };
+
+  const handleEditDoctorCategory = async (updatedCat) => {
+    const updatedList = doctorCategories.map(c => c.id === updatedCat.id ? updatedCat : c);
+    await set(ref(db, 'doctor_categories'), updatedList);
+    setDoctorCategories(updatedList);
+    setEditingDoctorCategory(null);
+  };
+
+  const handleDeleteDoctorCategory = async (catId) => {
+    if (window.confirm('هل أنت متأكد من حذف هذا التخصص نهائياً؟ تنبيه: لن يتم حذف الأطباء المسجلين تحت هذا التخصص تلقائياً.')) {
+      const updatedList = doctorCategories.filter(c => c.id !== catId);
+      await set(ref(db, 'doctor_categories'), updatedList);
+      setDoctorCategories(updatedList);
+    }
   };
 
   const handleAddPharmacy = async (newPharm) => {
@@ -2150,193 +2167,277 @@ function App() {
               if (activeAdminTab === 'doctors') {
                 const isFormOpen = showAddDoctorForm || editingDoctor;
                 const targetDoctor = editingDoctor || {};
+                const isCategoryFormOpen = showAddDoctorCategoryForm || editingDoctorCategory;
+                const targetCategory = editingDoctorCategory || {};
                 return (
                   <div>
+                    {/* Header */}
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                      <h2>إدارة الأطباء والعيادات ({doctors.length})</h2>
-                      {!isFormOpen && !showAddDoctorCategoryForm && (
+                      <h2>إدارة الأطباء والتخصصات</h2>
+                      {!isFormOpen && !isCategoryFormOpen && (
                         <div style={{ display: 'flex', gap: '10px' }}>
-                          <button onClick={() => setShowAddDoctorForm(true)} style={{ padding: '10px 20px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>
-                            ➕ إضافة طبيب جديد
-                          </button>
-                          <button onClick={() => setShowAddDoctorCategoryForm(true)} style={{ padding: '10px 20px', backgroundColor: 'var(--bg-tertiary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>
-                            ➕ إضافة قسم/تخصص جديد
-                          </button>
+                          {doctorAdminSubTab === 'doctors' ? (
+                            <button onClick={() => setShowAddDoctorForm(true)} style={{ padding: '10px 20px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>
+                              ➕ إضافة طبيب جديد
+                            </button>
+                          ) : (
+                            <button onClick={() => setShowAddDoctorCategoryForm(true)} style={{ padding: '10px 20px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>
+                              ➕ إضافة قسم/تخصص جديد
+                            </button>
+                          )}
                         </div>
                       )}
                     </div>
 
-                    {showAddDoctorCategoryForm && (
-                      <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', maxWidth: '600px', marginBottom: '20px' }}>
-                        <h3 style={{ marginBottom: '20px' }}>إضافة تخصص طبي جديد</h3>
-                        <form onSubmit={(e) => {
-                          e.preventDefault();
-                          const formData = new FormData(e.currentTarget);
-                          const name = formData.get('cat_name');
-                          const id = formData.get('cat_id') || `specialty_${Date.now()}`;
-                          const icon = formData.get('cat_icon') || 'fa-user-doctor';
-                          
-                          handleAddDoctorCategory({ id, name, icon });
-                        }} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                          <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم التخصص (مثال: المسالك البولية):</label>
-                            <input type="text" name="cat_name" required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
-                          </div>
-                          <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>معرف التخصص بالإنجليزية (مثال: urology):</label>
-                            <input type="text" name="cat_id" placeholder="حروف إنجليزية فقط" required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
-                          </div>
-                          <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>أيقونة FontAwesome (مثال: fa-stethoscope):</label>
-                            <input type="text" name="cat_icon" defaultValue="fa-user-doctor" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
-                          </div>
-                          <div style={{ display: 'flex', gap: '12px' }}>
-                            <button type="submit" style={{ flex: 1, padding: '12px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>حفظ التخصص</button>
-                            <button type="button" onClick={() => setShowAddDoctorCategoryForm(false)} style={{ flex: 1, padding: '12px', backgroundColor: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>إلغاء</button>
-                          </div>
-                        </form>
+                    {/* Sub tabs */}
+                    {!isFormOpen && !isCategoryFormOpen && (
+                      <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px' }}>
+                        <button 
+                          onClick={() => setDoctorAdminSubTab('doctors')}
+                          style={{
+                            padding: '8px 16px',
+                            border: 'none',
+                            backgroundColor: doctorAdminSubTab === 'doctors' ? 'var(--accent-color)' : 'transparent',
+                            color: doctorAdminSubTab === 'doctors' ? '#fff' : 'var(--text-primary)',
+                            borderRadius: 'var(--radius-sm)',
+                            fontWeight: 'bold',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          📋 قائمة الأطباء ({doctors.length})
+                        </button>
+                        <button 
+                          onClick={() => setDoctorAdminSubTab('categories')}
+                          style={{
+                            padding: '8px 16px',
+                            border: 'none',
+                            backgroundColor: doctorAdminSubTab === 'categories' ? 'var(--accent-color)' : 'transparent',
+                            color: doctorAdminSubTab === 'categories' ? '#fff' : 'var(--text-primary)',
+                            borderRadius: 'var(--radius-sm)',
+                            fontWeight: 'bold',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          🗂️ التخصصات الطبية ({doctorCategories.length})
+                        </button>
                       </div>
                     )}
 
-                    {isFormOpen ? (
-                      <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', maxWidth: '600px' }}>
-                        <h3 style={{ marginBottom: '20px' }}>{editingDoctor && editingDoctor.id ? `تعديل بيانات: ${targetDoctor.name}` : 'إضافة طبيب جديد'}</h3>
-                        <form onSubmit={(e) => {
-                          e.preventDefault();
-                          const formData = new FormData(e.currentTarget);
-                          const p1 = formData.get('phone1')?.trim() || '';
-                          const p2 = formData.get('phone2')?.trim() || '';
-                          const combinedPhone = p2 ? `${p1} / ${p2}` : p1;
-                          
-                          const data = {
-                            id: editingDoctor && editingDoctor.id ? targetDoctor.id : `doc_${Date.now()}`,
-                            name: formData.get('name'),
-                            specialty: formData.get('specialty'),
-                            specialtyId: formData.get('specialtyId') || 'internal_chest',
-                            address: formData.get('address'),
-                            phone: combinedPhone,
-                            workingHours: formData.get('workingHours') || '',
-                            workingDays: formData.get('workingDays') || ''
-                          };
-                          if (editingDoctor && editingDoctor.id) {
-                            handleEditDoctor(data);
-                          } else {
-                            handleAddDoctor(data);
-                          }
-                        }} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {/* Doctors sub-tab */}
+                    {doctorAdminSubTab === 'doctors' && (
+                      <>
+                        {isFormOpen ? (
+                          <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', maxWidth: '600px' }}>
+                            <h3 style={{ marginBottom: '20px' }}>{editingDoctor && editingDoctor.id ? `تعديل بيانات: ${targetDoctor.name}` : 'إضافة طبيب جديد'}</h3>
+                            <form onSubmit={(e) => {
+                              e.preventDefault();
+                              const formData = new FormData(e.currentTarget);
+                              const p1 = formData.get('phone1')?.trim() || '';
+                              const p2 = formData.get('phone2')?.trim() || '';
+                              const combinedPhone = p2 ? `${p1} / ${p2}` : p1;
+                              
+                              const data = {
+                                id: editingDoctor && editingDoctor.id ? targetDoctor.id : `doc_${Date.now()}`,
+                                name: formData.get('name'),
+                                specialty: formData.get('specialty'),
+                                specialtyId: formData.get('specialtyId') || 'internal_chest',
+                                address: formData.get('address'),
+                                phone: combinedPhone,
+                                workingHours: formData.get('workingHours') || '',
+                                workingDays: formData.get('workingDays') || ''
+                              };
+                              if (editingDoctor && editingDoctor.id) {
+                                handleEditDoctor(data);
+                              } else {
+                                handleAddDoctor(data);
+                              }
+                            }} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                              <div>
+                                <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم الطبيب:</label>
+                                <input type="text" name="name" defaultValue={targetDoctor.name || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                              </div>
+                              <div>
+                                <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>التخصص:</label>
+                                <input type="text" name="specialty" defaultValue={targetDoctor.specialty || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                              </div>
+                              <div>
+                                <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>معرف التخصص (specialtyId):</label>
+                                <select name="specialtyId" defaultValue={targetDoctor.specialtyId || 'internal_chest'} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
+                                  {doctorCategories.map((cat) => (
+                                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                  ))}
+                                </select>
+                              </div>
+                              <div>
+                                <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>العنوان:</label>
+                                <input type="text" name="address" defaultValue={targetDoctor.address || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                              </div>
+                              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                                <div>
+                                  <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رقم الهاتف الأول:</label>
+                                  <input type="text" name="phone1" defaultValue={(targetDoctor.phone || '').split('/')[0]?.trim() || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                                </div>
+                                <div>
+                                  <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رقم الهاتف الثاني (اختياري):</label>
+                                  <input type="text" name="phone2" defaultValue={(targetDoctor.phone || '').split('/')[1]?.trim() || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                                </div>
+                              </div>
+                              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                                <div>
+                                  <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>ساعات العمل (مثال: من 1 مساءً إلى 10 مساءً):</label>
+                                  <input type="text" name="workingHours" defaultValue={targetDoctor.workingHours || ''} placeholder="مثال: من 12 ظهراً - 7 مساءً" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                                </div>
+                                <div>
+                                  <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>أيام العمل (مثال: الأحد والجمعة):</label>
+                                  <input type="text" name="workingDays" defaultValue={targetDoctor.workingDays || ''} placeholder="مثال: الأحد والجمعة" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                                </div>
+                              </div>
+                              <div style={{ display: 'flex', gap: '12px' }}>
+                                <button type="submit" style={{ flex: 1, padding: '12px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>حفظ</button>
+                                <button type="button" onClick={() => { setEditingDoctor(null); setShowAddDoctorForm(false); }} style={{ flex: 1, padding: '12px', backgroundColor: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>إلغاء</button>
+                              </div>
+                            </form>
+                          </div>
+                        ) : (
                           <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم الطبيب:</label>
-                            <input type="text" name="name" defaultValue={targetDoctor.name || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
-                          </div>
-                          <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>التخصص:</label>
-                            <input type="text" name="specialty" defaultValue={targetDoctor.specialty || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
-                          </div>
-                          <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>معرف التخصص (specialtyId):</label>
-                            <select name="specialtyId" defaultValue={targetDoctor.specialtyId || 'internal_chest'} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
-                              {doctorCategories.map((cat) => (
-                                <option key={cat.id} value={cat.id}>{cat.name}</option>
-                              ))}
-                            </select>
-                          </div>
-                          <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>العنوان:</label>
-                            <input type="text" name="address" defaultValue={targetDoctor.address || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
-                          </div>
-                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                            <div>
-                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رقم الهاتف الأول:</label>
-                              <input type="text" name="phone1" defaultValue={(targetDoctor.phone || '').split('/')[0]?.trim() || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            <div style={{ marginBottom: '16px' }}>
+                              <input 
+                                type="text" 
+                                placeholder="🔍 ابحث عن طبيب بالاسم، التخصص، أو العنوان..." 
+                                value={adminSearchTerm}
+                                onChange={(e) => setAdminSearchTerm(e.target.value)}
+                                style={{
+                                  width: '100%',
+                                  maxWidth: '400px',
+                                  padding: '10px 14px',
+                                  borderRadius: 'var(--radius-sm)',
+                                  border: '1px solid var(--border-color)',
+                                  backgroundColor: 'var(--bg-secondary)',
+                                  color: 'var(--text-primary)'
+                                }}
+                              />
                             </div>
-                            <div>
-                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رقم الهاتف الثاني (اختياري):</label>
-                              <input type="text" name="phone2" defaultValue={(targetDoctor.phone || '').split('/')[1]?.trim() || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
-                            </div>
+                            <div style={{ overflowX: 'auto', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'right' }}>
+                                <thead>
+                                  <tr style={{ borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)' }}>
+                                    <th style={{ padding: '12px 16px' }}>الاسم</th>
+                                    <th style={{ padding: '12px 16px' }}>التخصص</th>
+                                    <th style={{ padding: '12px 16px' }}>الهاتف</th>
+                                    <th style={{ padding: '12px 16px', textAlign: 'center' }}>العمليات</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {doctors
+                                    .filter((doc) => {
+                                      return !adminSearchTerm || 
+                                        doc.name.toLowerCase().includes(adminSearchTerm.toLowerCase()) ||
+                                        doc.specialty.toLowerCase().includes(adminSearchTerm.toLowerCase()) ||
+                                        doc.address.toLowerCase().includes(adminSearchTerm.toLowerCase());
+                                    })
+                                    .map((doc) => (
+                                      <tr key={doc.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                                    <td style={{ padding: '12px 16px', fontWeight: 'bold' }}>{doc.name}</td>
+                                    <td style={{ padding: '12px 16px' }}>{doc.specialty}</td>
+                                    <td style={{ padding: '12px 16px' }}>{doc.phone}</td>
+                                    <td style={{ padding: '12px 16px', display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                                      <button 
+                                        onClick={() => handleToggleDoctorFeatured(doc.id)} 
+                                        style={{ 
+                                          padding: '6px 12px', 
+                                          border: 'none', 
+                                          borderRadius: 'var(--radius-sm)', 
+                                          backgroundColor: doc.isFeatured ? '#d4af37' : 'var(--bg-tertiary)', 
+                                          color: doc.isFeatured ? '#000' : 'var(--text-primary)', 
+                                          cursor: 'pointer', 
+                                          fontSize: '12px', 
+                                          fontWeight: 'bold'
+                                        }}
+                                      >
+                                        {doc.isFeatured ? '⭐ مميز' : '☆ تمييز'}
+                                      </button>
+                                      <button onClick={() => setEditingDoctor(doc)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--accent-color)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🔧 تعديل</button>
+                                      <button onClick={() => handleDeleteDoctor(doc.id)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--status-closed)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🗑️ حذف</button>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
                           </div>
-                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                            <div>
-                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>ساعات العمل (مثال: من 1 مساءً إلى 10 مساءً):</label>
-                              <input type="text" name="workingHours" defaultValue={targetDoctor.workingHours || ''} placeholder="مثال: من 12 ظهراً - 7 مساءً" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
-                            </div>
-                            <div>
-                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>أيام العمل (مثال: الأحد والجمعة):</label>
-                              <input type="text" name="workingDays" defaultValue={targetDoctor.workingDays || ''} placeholder="مثال: الأحد والجمعة" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
-                            </div>
-                          </div>
-                          <div style={{ display: 'flex', gap: '12px' }}>
-                            <button type="submit" style={{ flex: 1, padding: '12px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>حفظ</button>
-                            <button type="button" onClick={() => { setEditingDoctor(null); setShowAddDoctorForm(false); }} style={{ flex: 1, padding: '12px', backgroundColor: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>إلغاء</button>
-                          </div>
-                        </form>
-                      </div>
-                    ) : (
-                      <div>
-                        <div style={{ marginBottom: '16px' }}>
-                          <input 
-                            type="text" 
-                            placeholder="🔍 ابحث عن طبيب بالاسم، التخصص، أو العنوان..." 
-                            value={adminSearchTerm}
-                            onChange={(e) => setAdminSearchTerm(e.target.value)}
-                            style={{
-                              width: '100%',
-                              maxWidth: '400px',
-                              padding: '10px 14px',
-                              borderRadius: 'var(--radius-sm)',
-                              border: '1px solid var(--border-color)',
-                              backgroundColor: 'var(--bg-secondary)',
-                              color: 'var(--text-primary)'
-                            }}
-                          />
                         </div>
+                      )}
+                    </>
+                  )}
+
+                  {/* Categories sub-tab */}
+                  {doctorAdminSubTab === 'categories' && (
+                    <>
+                      {isCategoryFormOpen ? (
+                        <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', maxWidth: '600px', marginBottom: '20px' }}>
+                          <h3 style={{ marginBottom: '20px' }}>{editingDoctorCategory ? `تعديل التخصص: ${targetCategory.name}` : 'إضافة تخصص طبي جديد'}</h3>
+                          <form onSubmit={(e) => {
+                            e.preventDefault();
+                            const formData = new FormData(e.currentTarget);
+                            const name = formData.get('cat_name');
+                            const id = editingDoctorCategory ? targetCategory.id : (formData.get('cat_id') || `specialty_${Date.now()}`);
+                            const icon = formData.get('cat_icon') || 'fa-user-doctor';
+                            
+                            const catData = { id, name, icon };
+                            if (editingDoctorCategory) {
+                              handleEditDoctorCategory(catData);
+                            } else {
+                              handleAddDoctorCategory(catData);
+                            }
+                          }} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم التخصص (مثال: المسالك البولية):</label>
+                              <input type="text" name="cat_name" defaultValue={targetCategory.name || ''} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>معرف التخصص بالإنجليزية (مثال: urology):</label>
+                              <input type="text" name="cat_id" placeholder="حروف إنجليزية فقط" defaultValue={targetCategory.id || ''} disabled={!!editingDoctorCategory} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)', opacity: editingDoctorCategory ? 0.6 : 1 }} />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>أيقونة FontAwesome (مثال: fa-stethoscope):</label>
+                              <input type="text" name="cat_icon" defaultValue={targetCategory.icon || 'fa-user-doctor'} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            </div>
+                            <div style={{ display: 'flex', gap: '12px' }}>
+                              <button type="submit" style={{ flex: 1, padding: '12px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>{editingDoctorCategory ? 'حفظ التغييرات' : 'حفظ التخصص'}</button>
+                              <button type="button" onClick={() => { setShowAddDoctorCategoryForm(false); setEditingDoctorCategory(null); }} style={{ flex: 1, padding: '12px', backgroundColor: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>إلغاء</button>
+                            </div>
+                          </form>
+                        </div>
+                      ) : (
                         <div style={{ overflowX: 'auto', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
                           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'right' }}>
                             <thead>
                               <tr style={{ borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)' }}>
-                                <th style={{ padding: '12px 16px' }}>الاسم</th>
-                                <th style={{ padding: '12px 16px' }}>التخصص</th>
-                                <th style={{ padding: '12px 16px' }}>الهاتف</th>
+                                <th style={{ padding: '12px 16px' }}>اسم التخصص</th>
+                                <th style={{ padding: '12px 16px' }}>المعرف (ID)</th>
+                                <th style={{ padding: '12px 16px' }}>الأيقونة</th>
                                 <th style={{ padding: '12px 16px', textAlign: 'center' }}>العمليات</th>
                               </tr>
                             </thead>
                             <tbody>
-                              {doctors
-                                .filter((doc) => {
-                                  return !adminSearchTerm || 
-                                    doc.name.toLowerCase().includes(adminSearchTerm.toLowerCase()) ||
-                                    doc.specialty.toLowerCase().includes(adminSearchTerm.toLowerCase()) ||
-                                    doc.address.toLowerCase().includes(adminSearchTerm.toLowerCase());
-                                })
-                                .map((doc) => (
-                                  <tr key={doc.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
-                                <td style={{ padding: '12px 16px', fontWeight: 'bold' }}>{doc.name}</td>
-                                <td style={{ padding: '12px 16px' }}>{doc.specialty}</td>
-                                <td style={{ padding: '12px 16px' }}>{doc.phone}</td>
-                                <td style={{ padding: '12px 16px', display: 'flex', gap: '8px', justifyContent: 'center' }}>
-                                  <button 
-                                    onClick={() => handleToggleDoctorFeatured(doc.id)} 
-                                    style={{ 
-                                      padding: '6px 12px', 
-                                      border: 'none', 
-                                      borderRadius: 'var(--radius-sm)', 
-                                      backgroundColor: doc.isFeatured ? '#d4af37' : 'var(--bg-tertiary)', 
-                                      color: doc.isFeatured ? '#000' : 'var(--text-primary)', 
-                                      cursor: 'pointer', 
-                                      fontSize: '12px', 
-                                      fontWeight: 'bold'
-                                    }}
-                                  >
-                                    {doc.isFeatured ? '⭐ مميز' : '☆ تمييز'}
-                                  </button>
-                                  <button onClick={() => setEditingDoctor(doc)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--accent-color)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🔧 تعديل</button>
-                                  <button onClick={() => handleDeleteDoctor(doc.id)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--status-closed)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🗑️ حذف</button>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
+                              {doctorCategories.map((cat) => (
+                                <tr key={cat.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                                  <td style={{ padding: '12px 16px', fontWeight: 'bold' }}>{cat.name}</td>
+                                  <td style={{ padding: '12px 16px' }}>{cat.id}</td>
+                                  <td style={{ padding: '12px 16px' }}>
+                                    <i className={`fa-solid ${cat.icon}`} style={{ marginRight: '6px' }}></i>
+                                    <span>{cat.icon}</span>
+                                  </td>
+                                  <td style={{ padding: '12px 16px', display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                                    <button onClick={() => setEditingDoctorCategory(cat)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--accent-color)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🔧 تعديل الاسم</button>
+                                    <button onClick={() => handleDeleteDoctorCategory(cat.id)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--status-closed)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🗑️ حذف</button>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
                 );
