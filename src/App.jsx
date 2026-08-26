@@ -2121,7 +2121,8 @@ function App() {
                               return {
                                 name: parts[0]?.trim() || '',
                                 price: parts[1]?.trim() || '',
-                                description: parts[2]?.trim() || ''
+                                description: parts[2]?.trim() || '',
+                                category: parts[3]?.trim() || 'منتجات عامة'
                               };
                             }).filter(Boolean)
                           };
@@ -2180,8 +2181,8 @@ function App() {
                           </div>
 
                           <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>المنتجات المميزة / العروض (كل منتج في سطر بصيغة: الاسم | السعر | الوصف):</label>
-                            <textarea name="popularItems" rows="3" placeholder="أرز معبأ | 30 | أرز مصري فاخر 1 كجم&#10;زيت طهي | 70 | زيت خليط 800 مل" defaultValue={targetSupermarket.popularItems ? targetSupermarket.popularItems.map(item => `${item.name} | ${item.price} | ${item.description || ''}`).join('\n') : ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)', fontFamily: 'sans-serif' }} />
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>المنتجات والأقسام (كل منتج في سطر بصيغة: الاسم | السعر | الوصف | القسم):</label>
+                            <textarea name="popularItems" rows="5" placeholder="جبنة عبور لاند | 35 | علبة نصف كيلو | أجبان وألبان&#10;شامبو هيد أند شولدرز | 85 | حجم وسط | منظفات ورعاية" defaultValue={targetSupermarket.popularItems ? targetSupermarket.popularItems.map(item => `${item.name} | ${item.price} | ${item.description || ''} | ${item.category || 'منتجات عامة'}`).join('\n') : ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)', fontFamily: 'sans-serif' }} />
                           </div>
                           <div style={{ display: 'flex', gap: '12px' }}>
                             <button type="submit" style={{ flex: 1, padding: '12px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>حفظ</button>
@@ -4698,10 +4699,55 @@ function App() {
                   ))}
                 </div>
               </div>
+            ) : isSupermarket ? (
+              selectedRestaurant.popularItems && (() => {
+                const groups = {};
+                selectedRestaurant.popularItems.forEach(item => {
+                  const cat = item.category || 'منتجات عامة';
+                  if (!groups[cat]) groups[cat] = [];
+                  groups[cat].push(item);
+                });
+
+                return (
+                  <div>
+                    <h3 className="drawer-section-title">الأقسام والمنتجات المتاحة 🛒</h3>
+                    {Object.keys(groups).map((groupName, gIdx) => (
+                      <div key={gIdx} style={{ marginBottom: '20px' }}>
+                        <h4 style={{
+                          fontSize: '14px',
+                          color: 'var(--accent-color)',
+                          borderBottom: '1px dashed var(--border-color)',
+                          paddingBottom: '6px',
+                          marginBottom: '10px',
+                          fontWeight: 'bold',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px'
+                        }}>
+                          <i className="fa-solid fa-folder-open"></i> {groupName}
+                        </h4>
+                        <div className="popular-menu-list">
+                          {groups[groupName].map((item, idx) => (
+                            <div key={idx} className="popular-menu-item">
+                              <div className="popular-item-info">
+                                <span className="popular-item-name">{item.name}</span>
+                                <span className="popular-item-desc">{item.description}</span>
+                              </div>
+                              <span className="popular-item-price">
+                                {typeof item.price === 'number' ? `${item.price} ج.م` : item.price}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })()
             ) : (
               selectedRestaurant.popularItems && (
                 <div>
-                  <h3 className="drawer-section-title">{isSupermarket ? 'المنتجات والأنواع المتاحة' : 'الوجبات الأكثر مبيعاً والأسعار'}</h3>
+                  <h3 className="drawer-section-title">الوجبات الأكثر مبيعاً والأسعار</h3>
                   <div className="popular-menu-list">
                     {selectedRestaurant.popularItems.map((item, idx) => (
                       <div key={idx} className="popular-menu-item">
