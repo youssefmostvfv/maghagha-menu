@@ -4,6 +4,7 @@ import logo from '../public/assets/logo.webp';
 import logoTow from '../public/assets/logo-tow.webp';
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, get, set } from 'firebase/database';
+import { getAuth, signInAnonymously } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDeL-wGyed08dGASFBE5-ak_p3vUut_A0g",
@@ -550,22 +551,15 @@ function App() {
       return Array.isArray(data) ? data.filter(Boolean) : Object.values(data).filter(Boolean);
     };
 
-    // Fetch and seed Restaurants
+    // Fetch Restaurants
     const dbRestaurantsRef = ref(db, 'restaurants');
     get(dbRestaurantsRef)
       .then((snapshot) => {
         if (snapshot.exists()) {
           const fetched = normalizeData(snapshot.val());
-          const existingIds = new Set(fetched.map(item => String(item.id)));
-          const missing = INITIAL_RESTAURANTS.filter(item => !existingIds.has(String(item.id)));
-          const merged = [...fetched, ...missing];
-          setRestaurants(merged);
-          setShuffledRestaurants(shuffleArray(merged));
-          if (missing.length > 0) {
-            set(dbRestaurantsRef, merged);
-          }
+          setRestaurants(fetched);
+          setShuffledRestaurants(shuffleArray(fetched));
         } else {
-          set(dbRestaurantsRef, INITIAL_RESTAURANTS);
           setRestaurants(INITIAL_RESTAURANTS);
           setShuffledRestaurants(shuffleArray(INITIAL_RESTAURANTS));
         }
@@ -576,19 +570,14 @@ function App() {
         setShuffledRestaurants(shuffleArray(INITIAL_RESTAURANTS));
       });
 
-    // Fetch and seed Captains
+    // Fetch Captains
     const dbCaptainsRef = ref(db, 'captains');
     get(dbCaptainsRef).then((snapshot) => {
       if (snapshot.exists()) {
         const fetched = normalizeData(snapshot.val());
-        const existingIds = new Set(fetched.map(item => String(item.id)));
-        const missing = INITIAL_CAPTAINS.filter(item => !existingIds.has(String(item.id)));
-        const merged = [...fetched, ...missing];
-        setCaptains(merged);
-        setShuffledCaptains(shuffleArray(merged));
-        if (missing.length > 0) set(dbCaptainsRef, merged);
+        setCaptains(fetched);
+        setShuffledCaptains(shuffleArray(fetched));
       } else {
-        set(dbCaptainsRef, INITIAL_CAPTAINS);
         setCaptains(INITIAL_CAPTAINS);
         setShuffledCaptains(shuffleArray(INITIAL_CAPTAINS));
       }
@@ -598,19 +587,14 @@ function App() {
       setShuffledCaptains(shuffleArray(INITIAL_CAPTAINS));
     });
 
-    // Fetch and seed Supermarkets
+    // Fetch Supermarkets
     const dbSupermarketsRef = ref(db, 'supermarkets');
     get(dbSupermarketsRef).then((snapshot) => {
       if (snapshot.exists()) {
         const fetched = normalizeData(snapshot.val());
-        const existingIds = new Set(fetched.map(item => String(item.id)));
-        const missing = INITIAL_SUPERMARKETS.filter(item => !existingIds.has(String(item.id)));
-        const merged = [...fetched, ...missing];
-        setSupermarkets(merged);
-        setShuffledSupermarkets(shuffleArray(merged));
-        if (missing.length > 0) set(dbSupermarketsRef, merged);
+        setSupermarkets(fetched);
+        setShuffledSupermarkets(shuffleArray(fetched));
       } else {
-        set(dbSupermarketsRef, INITIAL_SUPERMARKETS);
         setSupermarkets(INITIAL_SUPERMARKETS);
         setShuffledSupermarkets(shuffleArray(INITIAL_SUPERMARKETS));
       }
@@ -620,19 +604,14 @@ function App() {
       setShuffledSupermarkets(shuffleArray(INITIAL_SUPERMARKETS));
     });
 
-    // Fetch and seed Job Seekers
+    // Fetch Job Seekers
     const dbJobSeekersRef = ref(db, 'job_seekers');
     get(dbJobSeekersRef).then((snapshot) => {
       if (snapshot.exists()) {
         const fetched = normalizeData(snapshot.val());
-        const existingIds = new Set(fetched.map(item => String(item.id)));
-        const missing = INITIAL_JOB_SEEKERS.filter(item => !existingIds.has(String(item.id)));
-        const merged = [...fetched, ...missing];
-        setJobSeekers(merged);
-        setShuffledJobSeekers(shuffleArray(merged));
-        if (missing.length > 0) set(dbJobSeekersRef, merged);
+        setJobSeekers(fetched);
+        setShuffledJobSeekers(shuffleArray(fetched));
       } else {
-        set(dbJobSeekersRef, INITIAL_JOB_SEEKERS);
         setJobSeekers(INITIAL_JOB_SEEKERS);
         setShuffledJobSeekers(shuffleArray(INITIAL_JOB_SEEKERS));
       }
@@ -642,19 +621,14 @@ function App() {
       setShuffledJobSeekers(shuffleArray(INITIAL_JOB_SEEKERS));
     });
 
-    // Fetch and seed Job Vacancies
+    // Fetch Job Vacancies
     const dbJobVacanciesRef = ref(db, 'job_vacancies');
     get(dbJobVacanciesRef).then((snapshot) => {
       if (snapshot.exists()) {
         const fetched = normalizeData(snapshot.val());
-        const existingIds = new Set(fetched.map(item => String(item.id)));
-        const missing = INITIAL_JOB_VACANCIES.filter(item => !existingIds.has(String(item.id)));
-        const merged = [...fetched, ...missing];
-        setJobVacancies(merged);
-        setShuffledJobVacancies(shuffleArray(merged));
-        if (missing.length > 0) set(dbJobVacanciesRef, merged);
+        setJobVacancies(fetched);
+        setShuffledJobVacancies(shuffleArray(fetched));
       } else {
-        set(dbJobVacanciesRef, INITIAL_JOB_VACANCIES);
         setJobVacancies(INITIAL_JOB_VACANCIES);
         setShuffledJobVacancies(shuffleArray(INITIAL_JOB_VACANCIES));
       }
@@ -664,19 +638,14 @@ function App() {
       setShuffledJobVacancies(shuffleArray(INITIAL_JOB_VACANCIES));
     });
 
-    // Fetch and seed Doctors
+    // Fetch Doctors
     const dbDoctorsRef = ref(db, 'doctors');
     get(dbDoctorsRef).then((snapshot) => {
       if (snapshot.exists()) {
         const fetched = normalizeData(snapshot.val());
-        const existingIds = new Set(fetched.map(item => String(item.id)));
-        const missing = INITIAL_DOCTORS.filter(item => !existingIds.has(String(item.id)));
-        const merged = [...fetched, ...missing];
-        setDoctors(merged);
-        setShuffledDoctors(shuffleArray(merged));
-        if (missing.length > 0) set(dbDoctorsRef, merged);
+        setDoctors(fetched);
+        setShuffledDoctors(shuffleArray(fetched));
       } else {
-        set(dbDoctorsRef, INITIAL_DOCTORS);
         setDoctors(INITIAL_DOCTORS);
         setShuffledDoctors(shuffleArray(INITIAL_DOCTORS));
       }
@@ -685,18 +654,14 @@ function App() {
       setDoctors(INITIAL_DOCTORS);
       setShuffledDoctors(shuffleArray(INITIAL_DOCTORS));
     });
-    // Fetch and seed Restaurant Categories
+
+    // Fetch Restaurant Categories
     const dbRestaurantCategoriesRef = ref(db, 'restaurant_categories');
     get(dbRestaurantCategoriesRef).then((snapshot) => {
       if (snapshot.exists()) {
         const fetched = normalizeData(snapshot.val());
-        const existingIds = new Set(fetched.map(item => String(item.id)));
-        const missing = CATEGORIES.filter(item => !existingIds.has(String(item.id)));
-        const merged = [...fetched, ...missing];
-        setRestaurantCategories(merged);
-        if (missing.length > 0) set(dbRestaurantCategoriesRef, merged);
+        setRestaurantCategories(fetched);
       } else {
-        set(dbRestaurantCategoriesRef, CATEGORIES);
         setRestaurantCategories(CATEGORIES);
       }
     }).catch((err) => {
@@ -704,18 +669,13 @@ function App() {
       setRestaurantCategories(CATEGORIES);
     });
 
-    // Fetch and seed Supermarket Categories
+    // Fetch Supermarket Categories
     const dbSupermarketCategoriesRef = ref(db, 'supermarket_categories');
     get(dbSupermarketCategoriesRef).then((snapshot) => {
       if (snapshot.exists()) {
         const fetched = normalizeData(snapshot.val());
-        const existingIds = new Set(fetched.map(item => String(item.id)));
-        const missing = SUPERMARKET_SUBCATEGORIES.filter(item => !existingIds.has(String(item.id)));
-        const merged = [...fetched, ...missing];
-        setSupermarketCategories(merged);
-        if (missing.length > 0) set(dbSupermarketCategoriesRef, merged);
+        setSupermarketCategories(fetched);
       } else {
-        set(dbSupermarketCategoriesRef, SUPERMARKET_SUBCATEGORIES);
         setSupermarketCategories(SUPERMARKET_SUBCATEGORIES);
       }
     }).catch((err) => {
@@ -723,37 +683,28 @@ function App() {
       setSupermarketCategories(SUPERMARKET_SUBCATEGORIES);
     });
 
-    // Fetch and seed Doctor Categories
+    // Fetch Doctor Categories
     const dbDoctorCategoriesRef = ref(db, 'doctor_categories');
     get(dbDoctorCategoriesRef).then((snapshot) => {
       if (snapshot.exists()) {
         const fetched = normalizeData(snapshot.val());
-        const existingIds = new Set(fetched.map(item => String(item.id)));
-        const missing = DOCTOR_CATEGORIES.filter(item => !existingIds.has(String(item.id)));
-        const merged = [...fetched, ...missing];
-        setDoctorCategories(merged);
-        if (missing.length > 0) set(dbDoctorCategoriesRef, merged);
+        setDoctorCategories(fetched);
       } else {
-        set(dbDoctorCategoriesRef, DOCTOR_CATEGORIES);
         setDoctorCategories(DOCTOR_CATEGORIES);
       }
     }).catch((err) => {
       console.error('Error loading doctor categories:', err);
       setDoctorCategories(DOCTOR_CATEGORIES);
     });
-    // Fetch and seed Pharmacies
+
+    // Fetch Pharmacies
     const dbPharmaciesRef = ref(db, 'pharmacies');
     get(dbPharmaciesRef).then((snapshot) => {
       if (snapshot.exists()) {
         const fetched = normalizeData(snapshot.val());
-        const existingIds = new Set(fetched.map(item => String(item.id)));
-        const missing = INITIAL_PHARMACIES.filter(item => !existingIds.has(String(item.id)));
-        const merged = [...fetched, ...missing];
-        setPharmacies(merged);
-        setShuffledPharmacies(shuffleArray(merged));
-        if (missing.length > 0) set(dbPharmaciesRef, merged);
+        setPharmacies(fetched);
+        setShuffledPharmacies(shuffleArray(fetched));
       } else {
-        set(dbPharmaciesRef, INITIAL_PHARMACIES);
         setPharmacies(INITIAL_PHARMACIES);
         setShuffledPharmacies(shuffleArray(INITIAL_PHARMACIES));
       }
@@ -763,19 +714,14 @@ function App() {
       setShuffledPharmacies(shuffleArray(INITIAL_PHARMACIES));
     });
 
-    // Fetch and seed Government Services
+    // Fetch Government Services
     const dbGovServicesRef = ref(db, 'gov_services');
     get(dbGovServicesRef).then((snapshot) => {
       if (snapshot.exists()) {
         const fetched = normalizeData(snapshot.val());
-        const existingIds = new Set(fetched.map(item => String(item.id)));
-        const missing = INITIAL_GOV_SERVICES.filter(item => !existingIds.has(String(item.id)));
-        const merged = [...fetched, ...missing];
-        setGovServices(merged);
-        setShuffledGovServices(shuffleArray(merged));
-        if (missing.length > 0) set(dbGovServicesRef, merged);
+        setGovServices(fetched);
+        setShuffledGovServices(shuffleArray(fetched));
       } else {
-        set(dbGovServicesRef, INITIAL_GOV_SERVICES);
         setGovServices(INITIAL_GOV_SERVICES);
         setShuffledGovServices(shuffleArray(INITIAL_GOV_SERVICES));
       }
@@ -794,6 +740,8 @@ function App() {
       const isAuth = sessionStorage.getItem('admin_logged_in');
       if (isAuth === 'true') {
         setIsAdminLoggedIn(true);
+        const auth = getAuth(app);
+        signInAnonymously(auth).catch((err) => console.error("Firebase auto-auth failed:", err));
       }
     } else if (pageParam === 'calls' || window.location.pathname === '/calls') {
       setIsCallsPage(true);
@@ -1019,9 +967,17 @@ function App() {
   const handleAdminLogin = (e) => {
     e.preventDefault();
     if (adminPasscode === 'MaghaghaAdmin2026') {
-      setIsAdminLoggedIn(true);
-      sessionStorage.setItem('admin_logged_in', 'true');
-      setAdminLoginError('');
+      const auth = getAuth(app);
+      signInAnonymously(auth)
+        .then(() => {
+          setIsAdminLoggedIn(true);
+          sessionStorage.setItem('admin_logged_in', 'true');
+          setAdminLoginError('');
+        })
+        .catch((error) => {
+          console.error("Auth error:", error);
+          setAdminLoginError('فشل الاتصال الآمن بالسيرفر ❌');
+        });
     } else {
       setAdminLoginError('كلمة المرور غير صحيحة ❌');
     }
