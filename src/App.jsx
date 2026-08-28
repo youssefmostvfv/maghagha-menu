@@ -3233,7 +3233,7 @@ function App() {
                             <input type="text" name="workingHours" defaultValue={targetPharmacy.workingHours || 'مفتوح على مدار الساعة'} placeholder="مثال: مفتوح على مدار الساعة، يغلق عند الساعة ١٢ ص" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
                           </div>
                           <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رابط الموقع على الخريطة (Google Maps URL):</label>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>رابط الموقع على الخريطة (Google Maps URL - اختياري):</label>
                             <input type="text" name="locationUrl" defaultValue={targetPharmacy.locationUrl || ''} placeholder="https://www.google.com/maps/..." style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
                           </div>
                           <div style={{ display: 'flex', gap: '12px' }}>
