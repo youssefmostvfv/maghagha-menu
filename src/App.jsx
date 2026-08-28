@@ -1684,8 +1684,18 @@ function App() {
                 const featuredDoctorsCount = doctors.filter(d => d.isFeatured || d.id === 'doc_phys_6').length;
                 
                 // Calculate dynamic call statistics for each section
-                const totalRestaurantCalls = Object.values(callsData || {}).reduce((acc, curr) => acc + (curr.total || 0), 0);
-                const totalSupermarketCalls = Object.values(sectionCalls['supermarket'] || {}).reduce((acc, curr) => acc + (curr || 0), 0);
+                const restaurantCallsObj = {};
+                const supermarketCallsObj = {};
+                Object.entries(callsData || {}).forEach(([key, val]) => {
+                  if (key.startsWith('supermarket_')) {
+                    supermarketCallsObj[key] = val;
+                  } else {
+                    restaurantCallsObj[key] = val;
+                  }
+                });
+
+                const totalRestaurantCalls = Object.values(restaurantCallsObj).reduce((acc, curr) => acc + (curr.total || 0), 0);
+                const totalSupermarketCalls = Object.values(supermarketCallsObj).reduce((acc, curr) => acc + (curr.total || 0), 0);
                 const totalDoctorCalls = Object.values(sectionCalls['doctors'] || {}).reduce((acc, curr) => acc + (curr || 0), 0);
                 const totalPharmacyCalls = Object.values(sectionCalls['pharmacies'] || {}).reduce((acc, curr) => acc + (curr || 0), 0);
                 const totalGovCalls = Object.values(sectionCalls['gov_services'] || {}).reduce((acc, curr) => acc + (curr || 0), 0);
@@ -3400,14 +3410,26 @@ function App() {
 
     if (activeCallsTab === 'restaurants') {
       rawItems = restaurants;
-      callsNode = callsData || {};
+      const filtered = {};
+      Object.entries(callsData || {}).forEach(([key, val]) => {
+        if (!key.startsWith('supermarket_')) {
+          filtered[key] = val;
+        }
+      });
+      callsNode = filtered;
     } else if (activeCallsTab === 'captains') {
       rawItems = captains;
       callsNode = tripsCounts || {};
       isTrips = true;
     } else if (activeCallsTab === 'supermarkets') {
       rawItems = supermarkets;
-      callsNode = sectionCalls['supermarket'] || {};
+      const filtered = {};
+      Object.entries(callsData || {}).forEach(([key, val]) => {
+        if (key.startsWith('supermarket_')) {
+          filtered[key] = val;
+        }
+      });
+      callsNode = filtered;
     } else if (activeCallsTab === 'doctors') {
       rawItems = doctors;
       callsNode = sectionCalls['doctors'] || {};
