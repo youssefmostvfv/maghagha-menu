@@ -2761,12 +2761,20 @@ export function isRestaurantOpen(workingHours) {
   }
 }
 
-export function getPromoCode(restaurant) {
+export function getPromoCode(restaurant, categories = []) {
   if (!restaurant) return "";
   if (restaurant.promoCode) return restaurant.promoCode;
 
   const today = new Date();
   const dateStr = `${today.getMonth() + 1}${today.getDate()}`;
+
+  // 1. Check if the category has a promoPrefix defined in the categories passed
+  if (categories && categories.length > 0) {
+    const cat = categories.find(c => c.id === restaurant.category);
+    if (cat && cat.promoPrefix) {
+      return `${cat.promoPrefix.toUpperCase()}-${dateStr}`;
+    }
+  }
 
   const knownPrefixes = {
     21: "TK", // مطعم توكيو
