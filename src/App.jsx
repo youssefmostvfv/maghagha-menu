@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { CATEGORIES, RESTAURANTS as INITIAL_RESTAURANTS, isRestaurantOpen, getPromoCode, CAPTAINS as INITIAL_CAPTAINS, SUPERMARKETS as INITIAL_SUPERMARKETS, INITIAL_JOB_SEEKERS, INITIAL_JOB_VACANCIES, DOCTOR_CATEGORIES, INITIAL_DOCTORS, INITIAL_PHARMACIES, INITIAL_GOV_SERVICES } from './data';
 import logo from '../public/assets/logo.webp';
 import logoTow from '../public/assets/logo-tow.webp';
@@ -731,9 +731,8 @@ function App() {
       setShuffledGovServices(shuffleArray(INITIAL_GOV_SERVICES));
     });
 
-    // Parse Deep Link URL ID and page parameter on mount (using seed data for instant synchronous matching)
+    // Parse page parameter on mount
     const params = new URLSearchParams(window.location.search);
-    
     const pageParam = params.get('page');
     if (pageParam === 'admin') {
       setIsAdminPage(true);
@@ -746,28 +745,49 @@ function App() {
     } else if (pageParam === 'calls' || window.location.pathname === '/calls') {
       setIsCallsPage(true);
     }
-
-    const idParam = params.get('id');
-    if (idParam) {
-      const foundRestaurant = INITIAL_RESTAURANTS.find(r => String(r.id) === idParam);
-      if (foundRestaurant) {
-        setSelectedRestaurant(foundRestaurant);
-        setActiveMainTab('restaurants');
-      } else {
-        const foundCaptain = INITIAL_CAPTAINS.find(c => String(c.id) === idParam);
-        if (foundCaptain) {
-          setSelectedRestaurant(foundCaptain);
-          setActiveMainTab('motorcycle');
-        } else {
-          const foundSupermarket = INITIAL_SUPERMARKETS.find(s => String(s.id) === idParam);
-          if (foundSupermarket) {
-            setSelectedRestaurant(foundSupermarket);
-            setActiveMainTab('supermarket');
-          }
-        }
-      }
-    }
   }, []);
+
+  // Track if we have already resolved the deep link to prevent repeating it on state updates
+  const hasResolvedDeepLink = useRef(false);
+
+  // Dynamic deep-link resolution once the data (static + Firebase fetched) is loaded
+  useEffect(() => {
+    if (hasResolvedDeepLink.current) return;
+    
+    const params = new URLSearchParams(window.location.search);
+    const idParam = params.get('id');
+    if (!idParam) {
+      hasResolvedDeepLink.current = true;
+      return;
+    }
+
+    // 1. Search in restaurants (combines static and dynamic database items)
+    const foundRestaurant = restaurants.find(r => String(r.id) === idParam);
+    if (foundRestaurant) {
+      setSelectedRestaurant(foundRestaurant);
+      setActiveMainTab('restaurants');
+      hasResolvedDeepLink.current = true;
+      return;
+    }
+
+    // 2. Search in captains
+    const foundCaptain = captains.find(c => String(c.id) === idParam);
+    if (foundCaptain) {
+      setSelectedRestaurant(foundCaptain);
+      setActiveMainTab('motorcycle');
+      hasResolvedDeepLink.current = true;
+      return;
+    }
+
+    // 3. Search in supermarkets
+    const foundSupermarket = supermarkets.find(s => String(s.id) === idParam);
+    if (foundSupermarket) {
+      setSelectedRestaurant(foundSupermarket);
+      setActiveMainTab('supermarket');
+      hasResolvedDeepLink.current = true;
+      return;
+    }
+  }, [restaurants, captains, supermarkets]);
 
   // Unified History popstate handling for closing drawer and lightbox on back button
   useEffect(() => {
