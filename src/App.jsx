@@ -2410,6 +2410,8 @@ function App() {
                             phones: phonesList,
                             whatsApp: formData.get('whatsApp') || '',
                             promoCode: formData.get('promoCode')?.trim() || '',
+                            menuImages: (formData.get('menuImages') || '').split(',').map(url => url.trim()).filter(Boolean),
+                            offerImages: (formData.get('offerImages') || '').split(',').map(url => url.trim()).filter(Boolean),
                             popularItems: (formData.get('popularItems') || '').split('\n').map(line => {
                               if (!line.trim()) return null;
                               const parts = line.split('|');
@@ -2486,6 +2488,16 @@ function App() {
                           <div>
                             <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>حروف الخصم المخصصة (البادئة) لهذا السوبرماركت (اختياري - يظهر كود مخصص بدلاً من كود القسم):</label>
                             <input type="text" name="promoCode" placeholder="مثال: AZHAR (سيظهر كود مثل: AZHAR-828)" defaultValue={targetSupermarket.promoCode || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>صور المنيو (روابط مفصولة بفواصل):</label>
+                            <input type="text" name="menuImages" placeholder="http://..., http://..." defaultValue={targetSupermarket.menuImages ? targetSupermarket.menuImages.join(', ') : ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>صور العروض والخصومات (روابط مفصولة بفواصل):</label>
+                            <input type="text" name="offerImages" placeholder="مثال: http://..., http://..." defaultValue={targetSupermarket.offerImages ? targetSupermarket.offerImages.join(', ') : ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
                           </div>
 
                           <div>
