@@ -353,7 +353,9 @@ function App() {
       if (restaurant) {
         handleRecordRestaurantCall(restaurant.id);
       }
-      window.location.href = `tel:${phoneNum}`;
+      setTimeout(() => {
+        window.location.href = `tel:${phoneNum}`;
+      }, 250);
     }
   };
 
@@ -5534,7 +5536,9 @@ function App() {
                       setPhoneSelectorList(null);
                       if (phone.category && phone.itemId) {
                         handleIncrementCall(phone.category, phone.itemId);
-                        window.location.href = `tel:${number}`;
+                        setTimeout(() => {
+                          window.location.href = `tel:${number}`;
+                        }, 250);
                       } else {
                         handleInitiateCall(number, selectedRestaurant);
                       }
