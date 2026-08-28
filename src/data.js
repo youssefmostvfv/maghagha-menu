@@ -2760,6 +2760,7 @@ export function isRestaurantOpen(workingHours) {
     return true;
   }
 }
+// 
 
 export function getPromoCode(restaurant, categories = []) {
   if (!restaurant) return "";
