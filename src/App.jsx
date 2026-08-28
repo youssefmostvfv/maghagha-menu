@@ -343,7 +343,7 @@ function App() {
   }, [promoAlert]);
 
   const handleInitiateCall = (phoneNum, restaurant) => {
-    if (restaurant && String(restaurant.id) === '999') {
+    if (restaurant && (String(restaurant.id) === '999' || restaurant.showPromoAlertOnCall)) {
       setPromoAlert({
         phone: phoneNum,
         countdown: 5
@@ -1951,6 +1951,7 @@ function App() {
                             secondBranchPhones: (formData.get('secondBranchPhones') || '') ? (formData.get('secondBranchPhones') || '').split(',').map(p => p.trim()).filter(Boolean) : null,
                             whatsApp: formData.get('whatsApp') || '',
                             promoCode: formData.get('promoCode')?.trim() || '',
+                            showPromoAlertOnCall: formData.get('showPromoAlertOnCall') === 'on',
                             workingHours: {
                               start: formData.get('workingHoursStart') || '12:00',
                               end: formData.get('workingHoursEnd') || '02:00',
@@ -2038,6 +2039,11 @@ function App() {
                           <div>
                             <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>حروف الخصم المخصصة (البادئة) لهذا المطعم (اختياري - يظهر كود مخصص بدلاً من كود القسم):</label>
                             <input type="text" name="promoCode" placeholder="مثال: TOKYO (سيظهر كود مثل: TOKYO-828)" defaultValue={targetRestaurant.promoCode || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <input type="checkbox" name="showPromoAlertOnCall" defaultChecked={targetRestaurant.showPromoAlertOnCall || false} style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
+                            <label style={{ fontWeight: 'bold', cursor: 'pointer' }}>تفعيل إشعار كود الخصم قبل الاتصال (عداد 5 ثوانٍ)</label>
                           </div>
 
                           <div>
@@ -2432,6 +2438,7 @@ function App() {
                             promoCode: formData.get('promoCode')?.trim() || '',
                             menuImages: (formData.get('menuImages') || '').split(',').map(url => url.trim()).filter(Boolean),
                             offerImages: (formData.get('offerImages') || '').split(',').map(url => url.trim()).filter(Boolean),
+                            showPromoAlertOnCall: formData.get('showPromoAlertOnCall') === 'on',
                             popularItems: (formData.get('popularItems') || '').split('\n').map(line => {
                               if (!line.trim()) return null;
                               const parts = line.split('|');
@@ -2508,6 +2515,11 @@ function App() {
                           <div>
                             <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>حروف الخصم المخصصة (البادئة) لهذا السوبرماركت (اختياري - يظهر كود مخصص بدلاً من كود القسم):</label>
                             <input type="text" name="promoCode" placeholder="مثال: AZHAR (سيظهر كود مثل: AZHAR-828)" defaultValue={targetSupermarket.promoCode || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <input type="checkbox" name="showPromoAlertOnCall" defaultChecked={targetSupermarket.showPromoAlertOnCall || false} style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
+                            <label style={{ fontWeight: 'bold', cursor: 'pointer' }}>تفعيل إشعار كود الخصم قبل الاتصال (عداد 5 ثوانٍ)</label>
                           </div>
 
                           <div>
