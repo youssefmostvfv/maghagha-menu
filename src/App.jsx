@@ -1686,10 +1686,11 @@ function App() {
                 const featuredDoctorsCount = doctors.filter(d => d.isFeatured || d.id === 'doc_phys_6').length;
                 
                 // Calculate dynamic call statistics for each section
+                const supermarketIds = new Set(supermarkets.map(s => String(s.id)));
                 const restaurantCallsObj = {};
                 const supermarketCallsObj = {};
                 Object.entries(callsData || {}).forEach(([key, val]) => {
-                  if (key.startsWith('supermarket_')) {
+                  if (supermarketIds.has(String(key))) {
                     supermarketCallsObj[key] = val;
                   } else {
                     restaurantCallsObj[key] = val;
@@ -3410,11 +3411,13 @@ function App() {
     let callsNode = {};
     let isTrips = false; // trips node uses a flat number schema instead of { total, daily }
 
+    const supermarketIds = new Set(supermarkets.map(s => String(s.id)));
+
     if (activeCallsTab === 'restaurants') {
       rawItems = restaurants;
       const filtered = {};
       Object.entries(callsData || {}).forEach(([key, val]) => {
-        if (!key.startsWith('supermarket_')) {
+        if (!supermarketIds.has(String(key))) {
           filtered[key] = val;
         }
       });
@@ -3427,7 +3430,7 @@ function App() {
       rawItems = supermarkets;
       const filtered = {};
       Object.entries(callsData || {}).forEach(([key, val]) => {
-        if (key.startsWith('supermarket_')) {
+        if (supermarketIds.has(String(key))) {
           filtered[key] = val;
         }
       });
@@ -4932,7 +4935,8 @@ function App() {
       {/* Details Bottom Sheet (Drawer) */}
       {selectedRestaurant && (() => {
         const isCaptain = typeof selectedRestaurant.id === 'string' && selectedRestaurant.id.startsWith('captain_');
-        const isSupermarket = typeof selectedRestaurant.id === 'string' && selectedRestaurant.id.startsWith('supermarket_');
+        const isSupermarket = (typeof selectedRestaurant.id === 'string' && selectedRestaurant.id.startsWith('supermarket_')) || 
+                              supermarkets.some(s => String(s.id) === String(selectedRestaurant.id));
         return (
           <div className="drawer-overlay" onClick={() => setSelectedRestaurant(null)}>
             <div className="drawer-content" onClick={(e) => e.stopPropagation()}>
