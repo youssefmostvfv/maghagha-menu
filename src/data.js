@@ -2763,10 +2763,14 @@ export function isRestaurantOpen(workingHours) {
 
 export function getPromoCode(restaurant, categories = []) {
   if (!restaurant) return "";
-  if (restaurant.promoCode) return restaurant.promoCode;
 
   const today = new Date();
   const dateStr = `${today.getMonth() + 1}${today.getDate()}`;
+
+  // If the restaurant has a custom promoCode/prefix override, append the dynamic date
+  if (restaurant.promoCode) {
+    return `${restaurant.promoCode.toUpperCase()}-${dateStr}`;
+  }
 
   // 1. Check if the category has a promoPrefix defined in the categories passed
   if (categories && categories.length > 0) {

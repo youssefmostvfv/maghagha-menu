@@ -2010,8 +2010,8 @@ function App() {
                           </div>
 
                           <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>كود الخصم المخصص لهذا المطعم (اختياري - يظهر كود ثابت بدلاً من التوليد التلقائي):</label>
-                            <input type="text" name="promoCode" placeholder="مثال: TOKYO-OFFER" defaultValue={targetRestaurant.promoCode || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>حروف الخصم المخصصة (البادئة) لهذا المطعم (اختياري - يظهر كود مخصص بدلاً من كود القسم):</label>
+                            <input type="text" name="promoCode" placeholder="مثال: TOKYO (سيظهر كود مثل: TOKYO-828)" defaultValue={targetRestaurant.promoCode || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
                           </div>
 
                           <div>
@@ -2478,8 +2478,8 @@ function App() {
                           </div>
 
                           <div>
-                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>كود الخصم المخصص لهذا السوبرماركت (اختياري - يظهر كود ثابت بدلاً من التوليد التلقائي للقسم):</label>
-                            <input type="text" name="promoCode" placeholder="مثال: AZHAR-5" defaultValue={targetSupermarket.promoCode || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>حروف الخصم المخصصة (البادئة) لهذا السوبرماركت (اختياري - يظهر كود مخصص بدلاً من كود القسم):</label>
+                            <input type="text" name="promoCode" placeholder="مثال: AZHAR (سيظهر كود مثل: AZHAR-828)" defaultValue={targetSupermarket.promoCode || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
                           </div>
 
                           <div>
