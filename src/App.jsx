@@ -7,7 +7,7 @@ import { getDatabase, ref, get, set } from 'firebase/database';
 import { getAuth, signInAnonymously } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDeL-wGyed08dGASFBE5-ak_p3vUut_A0g",
+  apiKey: "AIzaSyCn_qoKTql6YsThMEgoZA1CmVhdRxWF_r4",
   authDomain: "maghagha-menu.firebaseapp.com",
   databaseURL: "https://maghagha-menu-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "maghagha-menu",
