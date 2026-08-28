@@ -758,6 +758,12 @@ function App() {
         if (foundCaptain) {
           setSelectedRestaurant(foundCaptain);
           setActiveMainTab('motorcycle');
+        } else {
+          const foundSupermarket = INITIAL_SUPERMARKETS.find(s => String(s.id) === idParam);
+          if (foundSupermarket) {
+            setSelectedRestaurant(foundSupermarket);
+            setActiveMainTab('supermarket');
+          }
         }
       }
     }
