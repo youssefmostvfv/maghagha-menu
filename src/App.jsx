@@ -1924,6 +1924,7 @@ function App() {
                             phones: (formData.get('phones') || '').split(',').map(p => p.trim()).filter(Boolean),
                             secondBranchPhones: (formData.get('secondBranchPhones') || '') ? (formData.get('secondBranchPhones') || '').split(',').map(p => p.trim()).filter(Boolean) : null,
                             whatsApp: formData.get('whatsApp') || '',
+                            promoCode: formData.get('promoCode')?.trim() || '',
                             workingHours: {
                               start: formData.get('workingHoursStart') || '12:00',
                               end: formData.get('workingHoursEnd') || '02:00',
@@ -2006,6 +2007,11 @@ function App() {
                               <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>مواعيد العمل (نص العرض):</label>
                               <input type="text" name="workingHoursDisplay" defaultValue={targetRestaurant.workingHours ? targetRestaurant.workingHours.display : 'من 12:00 ظهراً إلى 2:00 بعد منتصف الليل'} required style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
                             </div>
+                          </div>
+
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>كود الخصم المخصص لهذا المطعم (اختياري - يظهر كود ثابت بدلاً من التوليد التلقائي):</label>
+                            <input type="text" name="promoCode" placeholder="مثال: TOKYO-OFFER" defaultValue={targetRestaurant.promoCode || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
                           </div>
 
                           <div>
@@ -2397,6 +2403,7 @@ function App() {
                             deliveryFee: formData.get('deliveryFee') || 'من 15 لـ 20 جنيه',
                             phones: phonesList,
                             whatsApp: formData.get('whatsApp') || '',
+                            promoCode: formData.get('promoCode')?.trim() || '',
                             popularItems: (formData.get('popularItems') || '').split('\n').map(line => {
                               if (!line.trim()) return null;
                               const parts = line.split('|');
@@ -2468,6 +2475,11 @@ function App() {
                           <div>
                             <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>الوصف القصير أو نبذة عن المحل:</label>
                             <textarea name="description" defaultValue={targetSupermarket.description || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                          </div>
+
+                          <div>
+                            <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>كود الخصم المخصص لهذا السوبرماركت (اختياري - يظهر كود ثابت بدلاً من التوليد التلقائي للقسم):</label>
+                            <input type="text" name="promoCode" placeholder="مثال: AZHAR-5" defaultValue={targetSupermarket.promoCode || ''} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
                           </div>
 
                           <div>
