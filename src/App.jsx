@@ -2517,7 +2517,8 @@ function App() {
                               const name = formData.get('cat_name');
                               const id = formData.get('cat_id') || `sub_${Date.now()}`;
                               const icon = formData.get('cat_icon') || 'fa-store';
-                              handleAddSupermarketCategory({ id, name, icon });
+                              const promoPrefix = formData.get('cat_promo_prefix') || '';
+                              handleAddSupermarketCategory({ id, name, icon, promoPrefix });
                             }} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                               <div>
                                 <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>اسم القسم (بالعربية):</label>
@@ -2530,6 +2531,10 @@ function App() {
                               <div>
                                 <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>أيقونة القسم (اسم أيقونة FontAwesome):</label>
                                 <input type="text" name="cat_icon" defaultValue="fa-store" placeholder="مثال: fa-apple-whole" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
+                              </div>
+                              <div>
+                                <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>حروف الخصم لهذا القسم (كود البادئة - اختياري):</label>
+                                <input type="text" name="cat_promo_prefix" placeholder="مثال: MARKET (تلقائياً سيتم توليد كود مثل: MARKET-828)" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }} />
                               </div>
                               <div style={{ display: 'flex', gap: '12px' }}>
                                 <button type="submit" style={{ flex: 1, padding: '12px', backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 'bold', cursor: 'pointer' }}>إضافة القسم</button>
@@ -2545,6 +2550,7 @@ function App() {
                                   <th style={{ padding: '12px 16px' }}>اسم القسم</th>
                                   <th style={{ padding: '12px 16px' }}>المعرف (ID)</th>
                                   <th style={{ padding: '12px 16px' }}>الأيقونة</th>
+                                  <th style={{ padding: '12px 16px' }}>حروف الخصم</th>
                                   <th style={{ padding: '12px 16px', textAlign: 'center' }}>العمليات</th>
                                 </tr>
                               </thead>
@@ -2554,6 +2560,53 @@ function App() {
                                     <td style={{ padding: '12px 16px', fontWeight: 'bold' }}>{cat.name}</td>
                                     <td style={{ padding: '12px 16px' }}>{cat.id}</td>
                                     <td style={{ padding: '12px 16px' }}><i className={`fa-solid ${cat.icon}`}></i> ({cat.icon})</td>
+                                    <td style={{ padding: '12px 16px' }}>
+                                      <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                                        <input 
+                                          type="text" 
+                                          defaultValue={cat.promoPrefix || ''} 
+                                          placeholder="تلقائي"
+                                          id={`sup-prefix-input-${cat.id}`}
+                                          style={{ 
+                                            width: '90px', 
+                                            padding: '6px 10px', 
+                                            borderRadius: 'var(--radius-sm)', 
+                                            border: '1px solid var(--border-color)', 
+                                            backgroundColor: 'var(--bg-primary)', 
+                                            color: 'var(--text-primary)',
+                                            fontSize: '13px'
+                                          }} 
+                                        />
+                                        <button 
+                                          onClick={async () => {
+                                            const inputVal = document.getElementById(`sup-prefix-input-${cat.id}`).value.trim().toUpperCase();
+                                            try {
+                                              const updatedList = supermarketCategories.map(c => 
+                                                c.id === cat.id ? { ...c, promoPrefix: inputVal } : c
+                                              );
+                                              await set(ref(db, 'supermarket_categories'), updatedList);
+                                              setSupermarketCategories(updatedList);
+                                              alert('تم حفظ حروف الخصم بنجاح! 💾');
+                                            } catch (error) {
+                                              console.error(error);
+                                              alert('حدث خطأ أثناء الحفظ: ' + error.message);
+                                            }
+                                          }}
+                                          style={{ 
+                                            padding: '6px 12px', 
+                                            backgroundColor: 'var(--accent-color)', 
+                                            color: '#fff', 
+                                            border: 'none', 
+                                            borderRadius: 'var(--radius-sm)', 
+                                            cursor: 'pointer',
+                                            fontSize: '12px',
+                                            fontWeight: 'bold'
+                                          }}
+                                        >
+                                          حفظ
+                                        </button>
+                                      </div>
+                                    </td>
                                     <td style={{ padding: '12px 16px', display: 'flex', gap: '8px', justifyContent: 'center' }}>
                                       <button onClick={() => handleDeleteSupermarketCategory(cat.id)} style={{ padding: '6px 12px', border: 'none', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--status-closed)', color: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>🗑️ حذف</button>
                                     </td>
@@ -4850,11 +4903,11 @@ function App() {
                         <span>{copySuccess ? 'تم نسخ الرابط! ✓' : 'مشاركة  '}</span>
                       </button>
 
-                      {!isCaptain && !isSupermarket && (
+                      {!isCaptain && (
                         <div className="promo-badge">
                           <i className="fa-solid fa-tag promo-icon"></i>
                           <span>كود الخصم:</span>
-                          <strong>{getPromoCode(selectedRestaurant, restaurantCategories)}</strong>
+                          <strong>{getPromoCode(selectedRestaurant, isSupermarket ? supermarketCategories : restaurantCategories)}</strong>
                         </div>
                       )}
                     </div>
