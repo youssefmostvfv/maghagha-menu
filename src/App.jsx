@@ -2,23 +2,55 @@ import React, { useState, useEffect, useRef } from 'react';
 import { CATEGORIES, RESTAURANTS as INITIAL_RESTAURANTS, isRestaurantOpen, getPromoCode, CAPTAINS as INITIAL_CAPTAINS, SUPERMARKETS as INITIAL_SUPERMARKETS, INITIAL_JOB_SEEKERS, INITIAL_JOB_VACANCIES, DOCTOR_CATEGORIES, INITIAL_DOCTORS, INITIAL_PHARMACIES, INITIAL_GOV_SERVICES } from './data';
 import logo from '../public/assets/logo.webp';
 import logoTow from '../public/assets/logo-tow.webp';
-import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, get, set } from 'firebase/database';
-import { getAuth, signInAnonymously } from 'firebase/auth';
+const API_URL = 'https://menu-maghagha.com/api/api.php';
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCn_qoKTql6YsThMEgoZA1CmVhdRxWF_r4",
-  authDomain: "maghagha-menu.firebaseapp.com",
-  databaseURL: "https://maghagha-menu-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "maghagha-menu",
-  storageBucket: "maghagha-menu.firebasestorage.app",
-  messagingSenderId: "107392502900",
-  appId: "1:107392502900:web:59d4c7c964a3c8d66ed521",
-  measurementId: "G-T7P3QQM8S9"
+const saveCollection = async (collectionName, data) => {
+  const response = await fetch(`${API_URL}?action=save_collection`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ collection: collectionName, data })
+  });
+  const resData = await response.json();
+  if (resData.status !== 'success') {
+    throw new Error(resData.message || 'Failed to save collection');
+  }
 };
-// 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+
+const recordVisit = async () => {
+  try {
+    await fetch(`${API_URL}?action=record_visit`, { method: 'POST' });
+  } catch (err) {
+    console.error('Error recording visit:', err);
+  }
+};
+
+const recordCall = async (category, entityId) => {
+  try {
+    await fetch(`${API_URL}?action=record_call`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ category, entity_id: entityId })
+    });
+  } catch (err) {
+    console.error('Error recording call:', err);
+  }
+};
+
+const submitRating = async (category, entityId, ratingValue) => {
+  const response = await fetch(`${API_URL}?action=submit_rating`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ category, entity_id: entityId, rating_value: ratingValue })
+  });
+  const resData = await response.json();
+  if (resData.status !== 'success') {
+    throw new Error(resData.message || 'Failed to submit rating');
+  }
+};const db = {};
+const ref = (db, path) => path;
+const set = async (path, data) => {
+  await saveCollection(path, data);
+};
 
 const resolveImage = (imgName) => {
   if (!imgName) return '/favicon.png';
@@ -298,30 +330,7 @@ function App() {
 
   const handleRecordRestaurantCall = (restaurantId) => {
     if (!restaurantId) return;
-    const rIdStr = String(restaurantId);
-    
-    const now = new Date();
-    const today = now.toISOString().split('T')[0];
-    
-    const localDateTime = now.getFullYear() + '-' + 
-      String(now.getMonth() + 1).padStart(2, '0') + '-' + 
-      String(now.getDate()).padStart(2, '0') + ' ' + 
-      String(now.getHours()).padStart(2, '0') + ':' + 
-      String(now.getMinutes()).padStart(2, '0') + ':' + 
-      String(now.getSeconds()).padStart(2, '0');
-
-    const callsDbRef = ref(db, `restaurant_calls/${rIdStr}`);
-    get(callsDbRef).then((snapshot) => {
-      const data = snapshot.exists() ? snapshot.val() : { total: 0, daily: {} };
-      const currentTotal = data.total || 0;
-      const currentDaily = (data.daily && data.daily[today]) || 0;
-      
-      set(ref(db, `restaurant_calls/${rIdStr}/total`), currentTotal + 1);
-      set(ref(db, `restaurant_calls/${rIdStr}/daily/${today}`), currentDaily + 1);
-      
-      const logId = now.getTime();
-      set(ref(db, `restaurant_calls/${rIdStr}/logs/${logId}`), localDateTime);
-    }).catch((err) => console.error('Call tracking error:', err));
+    recordCall('restaurants', String(restaurantId));
   };
 
   // Promo alert countdown timer and call initiation helper
@@ -436,18 +445,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const recordVisit = async () => {
-      try {
-        const now = new Date();
-        const today = now.toISOString().split('T')[0];
-        const visitsRef = ref(db, `site_visits/daily/${today}`);
-        const snapshot = await get(visitsRef);
-        const currentCount = snapshot.exists() ? (snapshot.val() || 0) : 0;
-        await set(visitsRef, currentCount + 1);
-      } catch (err) {
-        console.error('Error recording visit:', err);
-      }
-    };
     recordVisit();
   }, []);
 
@@ -460,19 +457,15 @@ function App() {
 
   useEffect(() => {
     if (isCallsPage || isAdminPage) {
-      const dbCallsRef = ref(db, 'restaurant_calls');
-      get(dbCallsRef).then((snapshot) => {
-        if (snapshot.exists()) {
-          setCallsData(snapshot.val());
-        }
-      }).catch(console.error);
-
-      const dbVisitsRef = ref(db, 'site_visits');
-      get(dbVisitsRef).then((snapshot) => {
-        if (snapshot.exists()) {
-          setVisitsData(snapshot.val() || {});
-        }
-      }).catch(console.error);
+      fetch(`${API_URL}?action=get_all_data`)
+        .then((res) => res.json())
+        .then((resData) => {
+          if (resData.status === 'success') {
+            const fetched = resData.data;
+            setCallsData(fetched.calls.restaurants || {});
+            setVisitsData(fetched.site_visits || {});
+          }
+        }).catch(console.error);
     }
   }, [isCallsPage, isAdminPage]);
 
@@ -519,219 +512,85 @@ function App() {
       }
     }
 
-    // Fetch global ratings from Firebase
-    const ratingsRef = ref(db, 'ratings');
-    get(ratingsRef)
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          setRatings(snapshot.val() || {});
-        }
-      })
-      .catch((err) => console.error('Error loading ratings:', err));
+    // Fetch all data from Hostinger API
+    fetch(`${API_URL}?action=get_all_data`)
+      .then((res) => res.json())
+      .then((resData) => {
+        if (resData.status === 'success') {
+          const fetched = resData.data;
 
-    // Fetch global trips counts from Firebase
-    const tripsRef = ref(db, 'trips');
-    get(tripsRef)
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          setTripsCounts(snapshot.val() || {});
-        }
-      })
-    // Fetch global calls counts from Firebase
-    const callsRef = ref(db, 'calls');
-    get(callsRef)
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          setSectionCalls(snapshot.val() || {});
-        }
-      })
-      .catch((err) => console.error('Error loading section calls:', err));
+          setRatings(fetched.ratings || {});
+          setTripsCounts(fetched.calls.trips || {});
+          setSectionCalls(fetched.calls || {});
+          setCallsData(fetched.calls.restaurants || {});
+          setVisitsData(fetched.site_visits || {});
 
-    // Helper to normalize snapshot to array
-    const normalizeData = (data) => {
-      if (!data) return [];
-      return Array.isArray(data) ? data.filter(Boolean) : Object.values(data).filter(Boolean);
-    };
+          const normalizeData = (data, fallback) => {
+            if (!data || data.length === 0) return fallback;
+            return data;
+          };
 
-    // Fetch Restaurants
-    const dbRestaurantsRef = ref(db, 'restaurants');
-    get(dbRestaurantsRef)
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          const fetched = normalizeData(snapshot.val());
-          setRestaurants(fetched);
-          setShuffledRestaurants(shuffleArray(fetched));
+          const resList = normalizeData(fetched.restaurants, INITIAL_RESTAURANTS);
+          setRestaurants(resList);
+          setShuffledRestaurants(shuffleArray(resList));
+
+          const capList = normalizeData(fetched.captains, INITIAL_CAPTAINS);
+          setCaptains(capList);
+          setShuffledCaptains(shuffleArray(capList));
+
+          const superList = normalizeData(fetched.supermarkets, INITIAL_SUPERMARKETS);
+          setSupermarkets(superList);
+          setShuffledSupermarkets(shuffleArray(superList));
+
+          const jobSList = normalizeData(fetched.job_seekers, INITIAL_JOB_SEEKERS);
+          setJobSeekers(jobSList);
+          setShuffledJobSeekers(shuffleArray(jobSList));
+
+          const jobVList = normalizeData(fetched.job_vacancies, INITIAL_JOB_VACANCIES);
+          setJobVacancies(jobVList);
+          setShuffledJobVacancies(shuffleArray(jobVList));
+
+          const docList = normalizeData(fetched.doctors, INITIAL_DOCTORS);
+          setDoctors(docList);
+          setShuffledDoctors(shuffleArray(docList));
+
+          setRestaurantCategories(normalizeData(fetched.restaurant_categories, CATEGORIES));
+          setSupermarketCategories(normalizeData(fetched.supermarket_categories, SUPERMARKET_SUBCATEGORIES));
+          setDoctorCategories(normalizeData(fetched.doctor_categories, DOCTOR_CATEGORIES));
+
+          const pharList = normalizeData(fetched.pharmacies, INITIAL_PHARMACIES);
+          setPharmacies(pharList);
+          setShuffledPharmacies(shuffleArray(pharList));
+
+          const govList = normalizeData(fetched.gov_services, INITIAL_GOV_SERVICES);
+          setGovServices(govList);
+          setShuffledGovServices(shuffleArray(govList));
         } else {
-          setRestaurants(INITIAL_RESTAURANTS);
-          setShuffledRestaurants(shuffleArray(INITIAL_RESTAURANTS));
+          throw new Error(resData.message || 'API error');
         }
       })
       .catch((err) => {
-        console.error('Error loading restaurants:', err);
+        console.error('Error loading data from Hostinger:', err);
         setRestaurants(INITIAL_RESTAURANTS);
         setShuffledRestaurants(shuffleArray(INITIAL_RESTAURANTS));
-      });
-
-    // Fetch Captains
-    const dbCaptainsRef = ref(db, 'captains');
-    get(dbCaptainsRef).then((snapshot) => {
-      if (snapshot.exists()) {
-        const fetched = normalizeData(snapshot.val());
-        setCaptains(fetched);
-        setShuffledCaptains(shuffleArray(fetched));
-      } else {
         setCaptains(INITIAL_CAPTAINS);
         setShuffledCaptains(shuffleArray(INITIAL_CAPTAINS));
-      }
-    }).catch((err) => {
-      console.error('Error loading captains:', err);
-      setCaptains(INITIAL_CAPTAINS);
-      setShuffledCaptains(shuffleArray(INITIAL_CAPTAINS));
-    });
-
-    // Fetch Supermarkets
-    const dbSupermarketsRef = ref(db, 'supermarkets');
-    get(dbSupermarketsRef).then((snapshot) => {
-      if (snapshot.exists()) {
-        const fetched = normalizeData(snapshot.val());
-        setSupermarkets(fetched);
-        setShuffledSupermarkets(shuffleArray(fetched));
-      } else {
         setSupermarkets(INITIAL_SUPERMARKETS);
         setShuffledSupermarkets(shuffleArray(INITIAL_SUPERMARKETS));
-      }
-    }).catch((err) => {
-      console.error('Error loading supermarkets:', err);
-      setSupermarkets(INITIAL_SUPERMARKETS);
-      setShuffledSupermarkets(shuffleArray(INITIAL_SUPERMARKETS));
-    });
-
-    // Fetch Job Seekers
-    const dbJobSeekersRef = ref(db, 'job_seekers');
-    get(dbJobSeekersRef).then((snapshot) => {
-      if (snapshot.exists()) {
-        const fetched = normalizeData(snapshot.val());
-        setJobSeekers(fetched);
-        setShuffledJobSeekers(shuffleArray(fetched));
-      } else {
         setJobSeekers(INITIAL_JOB_SEEKERS);
         setShuffledJobSeekers(shuffleArray(INITIAL_JOB_SEEKERS));
-      }
-    }).catch((err) => {
-      console.error('Error loading job seekers:', err);
-      setJobSeekers(INITIAL_JOB_SEEKERS);
-      setShuffledJobSeekers(shuffleArray(INITIAL_JOB_SEEKERS));
-    });
-
-    // Fetch Job Vacancies
-    const dbJobVacanciesRef = ref(db, 'job_vacancies');
-    get(dbJobVacanciesRef).then((snapshot) => {
-      if (snapshot.exists()) {
-        const fetched = normalizeData(snapshot.val());
-        setJobVacancies(fetched);
-        setShuffledJobVacancies(shuffleArray(fetched));
-      } else {
         setJobVacancies(INITIAL_JOB_VACANCIES);
         setShuffledJobVacancies(shuffleArray(INITIAL_JOB_VACANCIES));
-      }
-    }).catch((err) => {
-      console.error('Error loading job vacancies:', err);
-      setJobVacancies(INITIAL_JOB_VACANCIES);
-      setShuffledJobVacancies(shuffleArray(INITIAL_JOB_VACANCIES));
-    });
-
-    // Fetch Doctors
-    const dbDoctorsRef = ref(db, 'doctors');
-    get(dbDoctorsRef).then((snapshot) => {
-      if (snapshot.exists()) {
-        const fetched = normalizeData(snapshot.val());
-        setDoctors(fetched);
-        setShuffledDoctors(shuffleArray(fetched));
-      } else {
         setDoctors(INITIAL_DOCTORS);
         setShuffledDoctors(shuffleArray(INITIAL_DOCTORS));
-      }
-    }).catch((err) => {
-      console.error('Error loading doctors:', err);
-      setDoctors(INITIAL_DOCTORS);
-      setShuffledDoctors(shuffleArray(INITIAL_DOCTORS));
-    });
-
-    // Fetch Restaurant Categories
-    const dbRestaurantCategoriesRef = ref(db, 'restaurant_categories');
-    get(dbRestaurantCategoriesRef).then((snapshot) => {
-      if (snapshot.exists()) {
-        const fetched = normalizeData(snapshot.val());
-        setRestaurantCategories(fetched);
-      } else {
         setRestaurantCategories(CATEGORIES);
-      }
-    }).catch((err) => {
-      console.error('Error loading restaurant categories:', err);
-      setRestaurantCategories(CATEGORIES);
-    });
-
-    // Fetch Supermarket Categories
-    const dbSupermarketCategoriesRef = ref(db, 'supermarket_categories');
-    get(dbSupermarketCategoriesRef).then((snapshot) => {
-      if (snapshot.exists()) {
-        const fetched = normalizeData(snapshot.val());
-        setSupermarketCategories(fetched);
-      } else {
         setSupermarketCategories(SUPERMARKET_SUBCATEGORIES);
-      }
-    }).catch((err) => {
-      console.error('Error loading supermarket categories:', err);
-      setSupermarketCategories(SUPERMARKET_SUBCATEGORIES);
-    });
-
-    // Fetch Doctor Categories
-    const dbDoctorCategoriesRef = ref(db, 'doctor_categories');
-    get(dbDoctorCategoriesRef).then((snapshot) => {
-      if (snapshot.exists()) {
-        const fetched = normalizeData(snapshot.val());
-        setDoctorCategories(fetched);
-      } else {
         setDoctorCategories(DOCTOR_CATEGORIES);
-      }
-    }).catch((err) => {
-      console.error('Error loading doctor categories:', err);
-      setDoctorCategories(DOCTOR_CATEGORIES);
-    });
-
-    // Fetch Pharmacies
-    const dbPharmaciesRef = ref(db, 'pharmacies');
-    get(dbPharmaciesRef).then((snapshot) => {
-      if (snapshot.exists()) {
-        const fetched = normalizeData(snapshot.val());
-        setPharmacies(fetched);
-        setShuffledPharmacies(shuffleArray(fetched));
-      } else {
         setPharmacies(INITIAL_PHARMACIES);
         setShuffledPharmacies(shuffleArray(INITIAL_PHARMACIES));
-      }
-    }).catch((err) => {
-      console.error('Error loading pharmacies:', err);
-      setPharmacies(INITIAL_PHARMACIES);
-      setShuffledPharmacies(shuffleArray(INITIAL_PHARMACIES));
-    });
-
-    // Fetch Government Services
-    const dbGovServicesRef = ref(db, 'gov_services');
-    get(dbGovServicesRef).then((snapshot) => {
-      if (snapshot.exists()) {
-        const fetched = normalizeData(snapshot.val());
-        setGovServices(fetched);
-        setShuffledGovServices(shuffleArray(fetched));
-      } else {
         setGovServices(INITIAL_GOV_SERVICES);
         setShuffledGovServices(shuffleArray(INITIAL_GOV_SERVICES));
-      }
-    }).catch((err) => {
-      console.error('Error loading gov services:', err);
-      setGovServices(INITIAL_GOV_SERVICES);
-      setShuffledGovServices(shuffleArray(INITIAL_GOV_SERVICES));
-    });
+      });
 
     // Parse page parameter on mount
     const params = new URLSearchParams(window.location.search);
@@ -741,8 +600,6 @@ function App() {
       const isAuth = sessionStorage.getItem('admin_logged_in');
       if (isAuth === 'true') {
         setIsAdminLoggedIn(true);
-        const auth = getAuth(app);
-        signInAnonymously(auth).catch((err) => console.error("Firebase auto-auth failed:", err));
       }
     } else if (pageParam === 'calls' || window.location.pathname === '/calls') {
       setIsCallsPage(true);
@@ -896,27 +753,18 @@ function App() {
     });
 
     try {
-      // Get latest ratings from Firebase to ensure concurrency safety
-      const ratingsRef = ref(db, 'ratings');
-      const snapshot = await get(ratingsRef);
-      let currentRatings = {};
-      if (snapshot.exists()) {
-        currentRatings = snapshot.val() || {};
-      }
+      await submitRating('restaurants', restaurantId, ratingValue);
 
-      const currentRestaurantRating = currentRatings[restaurantId] || { sum: 0, count: 0 };
+      const currentRestaurantRating = ratings[restaurantId] || { sum: 0, count: 0 };
       const updatedRestaurantRating = {
         sum: currentRestaurantRating.sum + ratingValue,
         count: currentRestaurantRating.count + 1
       };
 
       const newRatings = {
-        ...currentRatings,
+        ...ratings,
         [restaurantId]: updatedRestaurantRating
       };
-
-      // Save to Firebase
-      await set(ratingsRef, newRatings);
 
       // Update local state
       setRatings(newRatings);
@@ -946,15 +794,11 @@ function App() {
 
   const handleIncrementTrips = async (captainId) => {
     try {
-      const tripsRef = ref(db, `trips/${captainId}`);
-      const snapshot = await get(tripsRef);
-      const currentCount = snapshot.exists() ? (snapshot.val() || 0) : 0;
-      const newCount = currentCount + 1;
-      await set(tripsRef, newCount);
+      await recordCall('trips', captainId);
       
       setTripsCounts(prev => ({
         ...prev,
-        [captainId]: newCount
+        [captainId]: (prev[captainId] || 0) + 1
       }));
     } catch (error) {
       console.error('Error incrementing trips:', error);
@@ -964,17 +808,13 @@ function App() {
   const handleIncrementCall = async (category, itemId) => {
     if (!category || !itemId) return;
     try {
-      const callRef = ref(db, `calls/${category}/${itemId}`);
-      const snapshot = await get(callRef);
-      const count = snapshot.exists() ? (snapshot.val() || 0) : 0;
-      const newCount = count + 1;
-      await set(callRef, newCount);
+      await recordCall(category, itemId);
       
       setSectionCalls(prev => ({
         ...prev,
         [category]: {
           ...(prev[category] || {}),
-          [itemId]: newCount
+          [itemId]: ((prev[category] && prev[category][itemId]) || 0) + 1
         }
       }));
     } catch (e) {
@@ -995,17 +835,9 @@ function App() {
   const handleAdminLogin = (e) => {
     e.preventDefault();
     if (adminPasscode === 'MaghaghaAdmin2026') {
-      const auth = getAuth(app);
-      signInAnonymously(auth)
-        .then(() => {
-          setIsAdminLoggedIn(true);
-          sessionStorage.setItem('admin_logged_in', 'true');
-          setAdminLoginError('');
-        })
-        .catch((error) => {
-          console.error("Auth error:", error);
-          setAdminLoginError('فشل الاتصال الآمن بالسيرفر ❌');
-        });
+      setIsAdminLoggedIn(true);
+      sessionStorage.setItem('admin_logged_in', 'true');
+      setAdminLoginError('');
     } else {
       setAdminLoginError('كلمة المرور غير صحيحة ❌');
     }

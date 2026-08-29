@@ -1,0 +1,3903 @@
+{
+  "calls": {
+    "doctors": {
+      "doc_1787778794565": 2,
+      "doc_derm_2": 1,
+      "doc_derm_7": 1,
+      "doc_gyn_23": 1,
+      "doc_gyn_24": 1,
+      "doc_int_11": 2,
+      "doc_int_12": 1,
+      "doc_int_15": 1,
+      "doc_int_17": 1,
+      "doc_int_2": 1,
+      "doc_int_20": 1,
+      "doc_ortho_12": 3,
+      "doc_ortho_2": 1,
+      "doc_ortho_4": 2,
+      "doc_ortho_6": 1,
+      "doc_surg_15": 4
+    },
+    "gov_services": {
+      "gov_council": 2,
+      "gov_gas_emerg": 1,
+      "gov_hosp_maghagha": 1,
+      "gov_minia_ops": 1,
+      "gov_police": 1,
+      "gov_tourism_police": 1,
+      "gov_traffic_police": 2,
+      "gov_water": 1
+    },
+    "pharmacies": {
+      "ph_2": 1,
+      "ph_4": 1
+    }
+  },
+  "captains": [
+    {
+      "avatar": "https://drive.google.com/file/d/1wmSgY2S0AG5p6XkbPV0FDNS3LVhu-HUx/view?usp=drive_link",
+      "description": "وجبات سريعة ادويه بقاله  دليفري  علي  كيفك ",
+      "id": "captain_1787925127923",
+      "isAvailable": true,
+      "name": "دليفري  علي  كيفك",
+      "phone": "01154848861",
+      "serviceTypes": [
+        "توصيل طلبات"
+      ],
+      "tripsCount": 0,
+      "whatsApp": "201154848861"
+    },
+    {
+      "avatar": "https://drive.google.com/file/d/18Sh3GyiIxUptiC4O2LWKi1cf_AEKzf1N/view?usp=drive_link",
+      "description": "خدمة توصيل🛵 شاملة  (مطاعم🧑‍🍳،سوبر ماركت🛒 ،خضار وفواكه🥗، منظفات 🫧 شحن كهرباء💡 وماء🚰،صيدليات 💉💊،توصيل اشخاص داخل وخارج مغاغة 🧍🏼‍♂️) مواعيد شغلي في الصيف من الساعه 1:00  مساء حتى الساعه حتى الساعه 3:00 صباحا في الشتاء المواعيد دي بتتغير ",
+      "id": "captain_1787926145958",
+      "isAvailable": true,
+      "name": "سوبر دليفري ",
+      "phone": "01033838169",
+      "serviceTypes": [
+        "توصيل طلبات",
+        "مشاوير"
+      ],
+      "tripsCount": 0,
+      "whatsApp": "01033838169"
+    },
+    {
+      "avatar": "https://drive.google.com/file/d/1lC8qvXluZq7gsvPLhEwCj-t-vCMFKzU0/view?usp=drive_link",
+      "description": "خدمة توصيل شاملة 🛵 لكل احتياجاتك داخل وخارج مغاغة، من المطاعم والسوبر ماركت للخضار والفواكه والمنظفات والصيدليات، بالإضافة لخدمات شحن الكهرباء والمياه ",
+      "id": "captain_1787927447077",
+      "isAvailable": true,
+      "name": "دليفري  سريعة",
+      "phone": "01141961256",
+      "serviceTypes": [
+        "توصيل طلبات"
+      ],
+      "tripsCount": 0,
+      "whatsApp": "01123282488"
+    },
+    {
+      "avatar": "https://drive.google.com/file/d/1PdqPNEFfVBXMj5KobZYT4-zysuxV_cui/view?usp=drive_link",
+      "description": "خدمة دليفري سريعة 🛵⚡ اطلب اللي محتاجه وإحنا نوصلّه لحد باب بيتك، من المطاعم والطلبات اليومية لحد الصيدليات والسوبر ماركت، وكمان توصيل الأشخاص داخل وخارج مغاغة. طلبك علينا… وراحتك تهمنا ❤️",
+      "id": "captain_1787933167120",
+      "isAvailable": true,
+      "name": "دليفري طلبات ",
+      "phone": "01153929411",
+      "serviceTypes": [
+        "توصيل طلبات"
+      ],
+      "tripsCount": 0,
+      "whatsApp": "01030291748"
+    }
+  ],
+  "doctor_categories": [
+    {
+      "icon": "fa-user-nurse",
+      "id": "surgery_urology",
+      "name": "الجراحة والمسالك"
+    },
+    {
+      "icon": "fa-child-reaching",
+      "id": "physical_therapy",
+      "name": "العلاج الطبيعي"
+    },
+    {
+      "icon": "fa-baby",
+      "id": "pediatrics",
+      "name": "الأطفال"
+    },
+    {
+      "icon": "fa-venus",
+      "id": "gynecology",
+      "name": "النساء والتوليد"
+    },
+    {
+      "icon": "fa-user-doctor",
+      "id": "female_gynecology",
+      "name": "طبيبات النساء والتوليد"
+    },
+    {
+      "icon": "fa-head-side-cough",
+      "id": "ent",
+      "name": "الأنف والأذن والحنجرة"
+    },
+    {
+      "icon": "fa-eye",
+      "id": "ophthalmology",
+      "name": "العيون"
+    },
+    {
+      "icon": "fa-tooth",
+      "id": "dental",
+      "name": "الأسنان"
+    },
+    {
+      "icon": "fa-stethoscope",
+      "id": "internal_chest",
+      "name": "الباطنة والصدر والحميات"
+    },
+    {
+      "icon": "fa-brain",
+      "id": "neurology",
+      "name": "المخ والأعصاب"
+    },
+    {
+      "icon": "fa-bone",
+      "id": "orthopedics",
+      "name": "العظام"
+    },
+    {
+      "icon": "fa-hand-dots",
+      "id": "dermatology",
+      "name": "الجلدية"
+    },
+    {
+      "icon": "fa-vial-virus",
+      "id": "labs",
+      "name": "معامل التحاليل"
+    },
+    {
+      "icon": "fa-user-doctor",
+      "id": "Psychotherapy",
+      "name": "أمراض  نفسية وعصبيه"
+    }
+  ],
+  "doctors": [
+    {
+      "address": "ش المحطة",
+      "id": "doc_surg_1",
+      "name": "د. أحمد بدر الدين",
+      "phone": "01013550123",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "ش الدسوقي",
+      "id": "doc_surg_2",
+      "name": "د. ثروت جرجس",
+      "phone": "01223582918",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "ش عبد العظيم",
+      "id": "doc_surg_3",
+      "name": "د. جابر يوسف",
+      "phone": "01006566223",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_surg_4",
+      "name": "د. جمال أبو هشيمة",
+      "phone": "01001289625",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_surg_5",
+      "name": "د. حسين عبد الرازق",
+      "phone": "01005763957",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "ش المحطة",
+      "id": "doc_surg_6",
+      "name": "د. خالد نجيب",
+      "phone": "3553664",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "ش المركز الطبي",
+      "id": "doc_surg_7",
+      "name": "د. خلف ياسين",
+      "phone": "01003092109",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_surg_8",
+      "name": "د. رجب مهني",
+      "phone": "01010267847",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "ش ناعوم – أمام جامع قاسم المصري",
+      "id": "doc_surg_9",
+      "name": "د. ريمون ميلاد عطية",
+      "phone": "01228983829",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "ش الكوبري القديم",
+      "id": "doc_surg_10",
+      "name": "د. صموائيل جرجس",
+      "phone": "01203749812",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_surg_11",
+      "name": "د. صموائيل مريد",
+      "phone": "01005632530",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_surg_12",
+      "name": "د. عاطف جرجس بقطر",
+      "phone": "01224538712",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_surg_13",
+      "name": "د. عاطف نصر الله",
+      "phone": "—",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "ش المركز الطبي",
+      "id": "doc_surg_14",
+      "name": "د. عمرو حمدي",
+      "phone": "01113183042",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "ش أسواق حبيبة",
+      "id": "doc_surg_15",
+      "name": "د. عصام رشدي",
+      "phone": "01224538712",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_surg_16",
+      "name": "د. فايز أبو زيد",
+      "phone": "01113183042",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_surg_17",
+      "name": "د. كميل كرومو",
+      "phone": "01002344295",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_surg_18",
+      "name": "د. محمد أحمد مهدي",
+      "phone": "01025143132",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_surg_19",
+      "name": "د. محمد العربي",
+      "phone": "01001156139",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_surg_20",
+      "name": "د. محمد رجب",
+      "phone": "—",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "ش المركز الطبي",
+      "id": "doc_surg_21",
+      "name": "د. محمد نجاتي",
+      "phone": "01003092109",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "بجوار التأمينات",
+      "id": "doc_surg_22",
+      "name": "د. محمود عرفة",
+      "phone": "01068457390 / 01118873298",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "قليني",
+      "id": "doc_surg_23",
+      "name": "د. مصطفى السيد",
+      "phone": "01067593630",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_surg_24",
+      "name": "د. مصطفى خيري",
+      "phone": "01094545908",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "ش عبد العظيم",
+      "id": "doc_surg_25",
+      "name": "د. ناصر زغلول",
+      "phone": "01113148658",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "قليني",
+      "id": "doc_surg_26",
+      "name": "د. هشام حسن",
+      "phone": "01098237830",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "ش الكوبري الجديد",
+      "id": "doc_surg_27",
+      "name": "د. وليد عبد الرحمن",
+      "phone": "01094559065",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "شارع السلام – ميدان الحمامة",
+      "id": "doc_surg_28",
+      "name": "د. محمد رجب – جراحة عامة",
+      "phone": "01012039123",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "العبور، شارع المستشارين، أمام مسجد عباد الرحمن",
+      "id": "doc_surg_29",
+      "name": "د. أيمن معتوق – استشاري جراحة تجميل",
+      "phone": "01125076265",
+      "specialty": "الجراحة والمسالك",
+      "specialtyId": "surgery_urology"
+    },
+    {
+      "address": "ش أدهم البحري",
+      "id": "doc_phys_1",
+      "name": "د. أحمد حامد غرياني",
+      "phone": "01148632551",
+      "specialty": "العلاج الطبيعي",
+      "specialtyId": "physical_therapy"
+    },
+    {
+      "address": "ش السنترال",
+      "id": "doc_phys_2",
+      "name": "د. أمير حنا جندي",
+      "phone": "01010810934",
+      "specialty": "العلاج الطبيعي",
+      "specialtyId": "physical_therapy"
+    },
+    {
+      "address": "ش السنترال",
+      "id": "doc_phys_3",
+      "name": "د. بيتر ناجي توفيق",
+      "phone": "0863564595",
+      "specialty": "العلاج الطبيعي",
+      "specialtyId": "physical_therapy"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_phys_4",
+      "name": "د. سوزان زكريا",
+      "phone": "01224280788",
+      "specialty": "العلاج الطبيعي",
+      "specialtyId": "physical_therapy"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_phys_5",
+      "name": "د. صفاء حجاج رمضان",
+      "phone": "01156846364",
+      "specialty": "العلاج الطبيعي",
+      "specialtyId": "physical_therapy"
+    },
+    {
+      "address": "ش الكنيسة",
+      "id": "doc_phys_6",
+      "name": "د. فؤاد هريدي",
+      "phone": "01112582585",
+      "specialty": "العلاج الطبيعي",
+      "specialtyId": "physical_therapy"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_phys_7",
+      "name": "د. محمد أبو الوفا",
+      "phone": "01008684436",
+      "specialty": "العلاج الطبيعي",
+      "specialtyId": "physical_therapy"
+    },
+    {
+      "address": "ش الثورة",
+      "id": "doc_phys_8",
+      "name": "د. محمد عبد الحليم",
+      "phone": "01097006052",
+      "specialty": "العلاج الطبيعي",
+      "specialtyId": "physical_therapy"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_phys_9",
+      "name": "د. مصطفي خضر",
+      "phone": "01284393909",
+      "specialty": "العلاج الطبيعي",
+      "specialtyId": "physical_therapy"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_phys_10",
+      "name": "د. نهي نجاتي علي",
+      "phone": "01012726975",
+      "specialty": "العلاج الطبيعي",
+      "specialtyId": "physical_therapy"
+    },
+    {
+      "address": "ش الثورة",
+      "id": "doc_phys_11",
+      "name": "د. ياسمين حمدي الشيمي",
+      "phone": "01125800480",
+      "specialty": "العلاج الطبيعي",
+      "specialtyId": "physical_therapy"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_ped_1",
+      "name": "د. أحمد المنياوي",
+      "phone": "010066776516",
+      "specialty": "الأطفال",
+      "specialtyId": "pediatrics"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_ped_2",
+      "name": "د. أحمد حجاج",
+      "phone": "01101347380",
+      "specialty": "الأطفال",
+      "specialtyId": "pediatrics"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_ped_3",
+      "name": "د. الحسيني مجاور",
+      "phone": "01112401226",
+      "specialty": "الأطفال",
+      "specialtyId": "pediatrics"
+    },
+    {
+      "address": "أعلى المصرية للصرافة",
+      "id": "doc_ped_4",
+      "name": "د. السيد جمال",
+      "phone": "01119703825",
+      "specialty": "الأطفال",
+      "specialtyId": "pediatrics"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_ped_5",
+      "name": "د. أيمن لويز",
+      "phone": "01226751189",
+      "specialty": "الأطفال",
+      "specialtyId": "pediatrics"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_ped_6",
+      "name": "د. بهاء أبو العلا",
+      "phone": "01024916491",
+      "specialty": "الأطفال",
+      "specialtyId": "pediatrics"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_ped_7",
+      "name": "د. جمال بهيج",
+      "phone": "3558771",
+      "specialty": "الأطفال",
+      "specialtyId": "pediatrics"
+    },
+    {
+      "address": "ش المحطة",
+      "id": "doc_ped_8",
+      "name": "د. رضا فاروق البنا",
+      "phone": "01003780316",
+      "specialty": "الأطفال",
+      "specialtyId": "pediatrics"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_ped_9",
+      "name": "د. سليمان عبد الغفار",
+      "phone": "01228054346",
+      "specialty": "الأطفال",
+      "specialtyId": "pediatrics"
+    },
+    {
+      "address": "ش المحطة",
+      "id": "doc_ped_10",
+      "name": "د. عزت سعد",
+      "phone": "01146543797",
+      "specialty": "الأطفال",
+      "specialtyId": "pediatrics"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_ped_11",
+      "name": "د. عزة عمر طرة",
+      "phone": "01007216725",
+      "specialty": "الأطفال",
+      "specialtyId": "pediatrics"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_ped_12",
+      "name": "د. عصام شكري نصر الله",
+      "phone": "35500830",
+      "specialty": "الأطفال",
+      "specialtyId": "pediatrics"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_ped_13",
+      "name": "د. على شعبان",
+      "phone": "01159167511",
+      "specialty": "الأطفال",
+      "specialtyId": "pediatrics"
+    },
+    {
+      "address": "آخر ش الجمهورية",
+      "id": "doc_ped_14",
+      "name": "د. على حسن أبو شوق",
+      "phone": "01280010439",
+      "specialty": "الأطفال",
+      "specialtyId": "pediatrics"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_ped_15",
+      "name": "د. عمرو مجدي كريم",
+      "phone": "—",
+      "specialty": "الأطفال",
+      "specialtyId": "pediatrics"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_ped_16",
+      "name": "د. غالي حنا",
+      "phone": "01003570744",
+      "specialty": "الأطفال",
+      "specialtyId": "pediatrics"
+    },
+    {
+      "address": "ميدان الحمامة",
+      "id": "doc_ped_17",
+      "name": "د. محمود محمد عيد",
+      "phone": "0114678851",
+      "specialty": "الأطفال",
+      "specialtyId": "pediatrics"
+    },
+    {
+      "address": "ش أسواق حبيبة",
+      "id": "doc_ped_18",
+      "name": "د. مدحت عدلي",
+      "phone": "01228054346",
+      "specialty": "الأطفال",
+      "specialtyId": "pediatrics"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_ped_19",
+      "name": "د. هاني حسين",
+      "phone": "01093642304",
+      "specialty": "الأطفال",
+      "specialtyId": "pediatrics"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_ped_20",
+      "name": "د. نشوى الطحاوي",
+      "phone": "3558771",
+      "specialty": "الأطفال",
+      "specialtyId": "pediatrics"
+    },
+    {
+      "address": "ش عبد العظيم",
+      "id": "doc_ped_21",
+      "name": "د. يوسف شحاتة",
+      "phone": "01274376960",
+      "specialty": "الأطفال",
+      "specialtyId": "pediatrics"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_gyn_1",
+      "name": "مركز د. محمود البطل",
+      "phone": "01062124250",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_gyn_2",
+      "name": "د. احمد حسن عبد الصمد",
+      "phone": "01204884931",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "بجوار بنك مصر",
+      "id": "doc_gyn_3",
+      "name": "د. أحمد فوزي",
+      "phone": "01204171944",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_gyn_4",
+      "name": "د. أحمد مرزوق",
+      "phone": "01110993693",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_gyn_5",
+      "name": "د. احمد هاشم",
+      "phone": "01100055220",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "مغاغة",
+      "id": "doc_gyn_6",
+      "name": "د. أسامة إبراهيم",
+      "phone": "01011221723",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "صيدلية الملطاوي",
+      "id": "doc_gyn_7",
+      "name": "د. ارميا سمسوم",
+      "phone": "01006520807",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش عبد العظيم",
+      "id": "doc_gyn_8",
+      "name": "د. امير حبيب",
+      "phone": "—",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_gyn_9",
+      "name": "د. حسن العلوي",
+      "phone": "01117507960",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_gyn_10",
+      "name": "د. حسين الليثي",
+      "phone": "01005826837",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش ناعوم أمام جامع قاسم المصري",
+      "id": "doc_gyn_11",
+      "name": "د. ريمون ميلاد عطية",
+      "phone": "01228983829",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش الدسوقي",
+      "id": "doc_gyn_12",
+      "name": "د. سعد الجيلاتي",
+      "phone": "01068700595",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_gyn_13",
+      "name": "د. صبحي حبيب",
+      "phone": "01227007050",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_gyn_14",
+      "name": "د. طاهر عبد القادر",
+      "phone": "01002211382",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_gyn_15",
+      "name": "د. طه عبد المعبود",
+      "phone": "01122702344",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش المحطة",
+      "id": "doc_gyn_16",
+      "name": "د. علواني السنوسي",
+      "phone": "3553718",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_gyn_17",
+      "name": "د. كريم المحمدي",
+      "phone": "01112428446",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_gyn_18",
+      "name": "د. لطفي ساويرس",
+      "phone": "01222895725",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش الانجيلية",
+      "id": "doc_gyn_19",
+      "name": "د. ماركو نشأت",
+      "phone": "01284014077",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش الشبان المسلمين",
+      "id": "doc_gyn_20",
+      "name": "د. محمد أحمد زين",
+      "phone": "01229367096",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_gyn_21",
+      "name": "د. محمد توفيق جاد الرب",
+      "phone": "3555220",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_gyn_22",
+      "name": "د. محمد حكيم",
+      "phone": "01111994686",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_gyn_23",
+      "name": "د. محمد سعيد زيدان",
+      "phone": "01222902276",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_gyn_24",
+      "name": "د. محمد رمضان",
+      "phone": "01006592458",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_gyn_25",
+      "name": "د. محمد سيد دياب",
+      "phone": "01006216293",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "آبا البلد",
+      "id": "doc_gyn_26",
+      "name": "د. محمد على توفيق",
+      "phone": "01148721708",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_gyn_27",
+      "name": "د. محمد نور الدين",
+      "phone": "01013571350",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_gyn_28",
+      "name": "د. محمود زغلول ابو الحسن",
+      "phone": "01204404422",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_gyn_29",
+      "name": "د. مراد عدلي",
+      "phone": "01222442460",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش الكنيسة",
+      "id": "doc_gyn_30",
+      "name": "د. مينا عبيد",
+      "phone": "01226272819",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_gyn_31",
+      "name": "د. مينا ناجي ناروز",
+      "phone": "01220136189",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_gyn_32",
+      "name": "د. ناصف عدلي",
+      "phone": "01201422228 / 01001544932",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology",
+      "workingDays": "يوميا",
+      "workingHours": "من 1 مساءا الي  10 مساءا - طوارئ علي  مداء  الساعه للولادة فقط"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_gyn_33",
+      "name": "د. نجيب ياسر نجيب",
+      "phone": "—",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ميدان الحمامة",
+      "id": "doc_gyn_34",
+      "name": "د. نزيه الجنايني",
+      "phone": "01112375390",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_gyn_35",
+      "name": "د. هاني ظريف",
+      "phone": "01203943454",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_gyn_36",
+      "name": "د. ياسر نجيب",
+      "phone": "01062336666",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "مغاغة",
+      "id": "doc_gyn_37",
+      "name": "د. شيرين رشدي",
+      "phone": "01271997278",
+      "specialty": "النساء والتوليد",
+      "specialtyId": "gynecology"
+    },
+    {
+      "address": "ش المحطة",
+      "id": "doc_ent_1",
+      "name": "د. أحمد عادل صادق",
+      "phone": "01003518769",
+      "specialty": "الأنف والأذن والحنجرة",
+      "specialtyId": "ent"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_ent_2",
+      "name": "د. جورج نصر الله",
+      "phone": "—",
+      "specialty": "الأنف والأذن والحنجرة",
+      "specialtyId": "ent"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_ent_3",
+      "name": "د. حسام فهمي",
+      "phone": "01145201781",
+      "specialty": "الأنف والأذن والحنجرة",
+      "specialtyId": "ent"
+    },
+    {
+      "address": "ش عبد العظيم",
+      "id": "doc_ent_4",
+      "name": "د. صموئيل سعيد",
+      "phone": "01270634739",
+      "specialty": "الأنف والأذن والحنجرة",
+      "specialtyId": "ent"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_ent_5",
+      "name": "د. طارق منصور",
+      "phone": "01112528839",
+      "specialty": "الأنف والأذن والحنجرة",
+      "specialtyId": "ent"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_ent_6",
+      "name": "د. مايكل جبران",
+      "phone": "01221149846",
+      "specialty": "الأنف والأذن والحنجرة",
+      "specialtyId": "ent"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_ent_7",
+      "name": "د. محمد فايز",
+      "phone": "—",
+      "specialty": "الأنف والأذن والحنجرة",
+      "specialtyId": "ent"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_ent_8",
+      "name": "د. محمد يحيى الشمي",
+      "phone": "01140822383",
+      "specialty": "الأنف والأذن والحنجرة",
+      "specialtyId": "ent"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_ent_9",
+      "name": "د. ممدوح أبو الروس",
+      "phone": "01002047572",
+      "specialty": "الأنف والأذن والحنجرة",
+      "specialtyId": "ent"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_ent_10",
+      "name": "د. مينا سمير نجيب",
+      "phone": "01014310433",
+      "specialty": "الأنف والأذن والحنجرة",
+      "specialtyId": "ent"
+    },
+    {
+      "address": "ش التأمينات",
+      "id": "doc_oph_1",
+      "name": "د. أحمد البحار",
+      "phone": "01289829783",
+      "specialty": "العيون",
+      "specialtyId": "ophthalmology"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_oph_2",
+      "name": "د. خالد عبد العظيم",
+      "phone": "01156569577",
+      "specialty": "العيون",
+      "specialtyId": "ophthalmology"
+    },
+    {
+      "address": "ش المحطة",
+      "id": "doc_oph_3",
+      "name": "د. شريف صابر",
+      "phone": "3551247",
+      "specialty": "العيون",
+      "specialtyId": "ophthalmology"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_oph_4",
+      "name": "د. عبد اللطيف خميس",
+      "phone": "01154964621",
+      "specialty": "العيون",
+      "specialtyId": "ophthalmology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_oph_5",
+      "name": "د. عمرو الجارحي",
+      "phone": "0111977764",
+      "specialty": "العيون",
+      "specialtyId": "ophthalmology"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_oph_6",
+      "name": "د. عمرو عبد الرحمن",
+      "phone": "01015914471",
+      "specialty": "العيون",
+      "specialtyId": "ophthalmology"
+    },
+    {
+      "address": "ش المحطة",
+      "id": "doc_oph_7",
+      "name": "د. محمد حسن عبد العال",
+      "phone": "01006644650",
+      "specialty": "العيون",
+      "specialtyId": "ophthalmology"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_oph_8",
+      "name": "د. محمود المغربي",
+      "phone": "01208564488",
+      "specialty": "العيون",
+      "specialtyId": "ophthalmology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_oph_9",
+      "name": "د. محمود عبد المجيد",
+      "phone": "01281141841",
+      "specialty": "العيون",
+      "specialtyId": "ophthalmology"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_oph_10",
+      "name": "د. محمود فوزي",
+      "phone": "01123542695",
+      "specialty": "العيون",
+      "specialtyId": "ophthalmology"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_den_1",
+      "name": "د. أبانوب جمال",
+      "phone": "—",
+      "specialty": "الأسنان",
+      "specialtyId": "dental"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_den_2",
+      "name": "د. أبو بكر حجاج",
+      "phone": "—",
+      "specialty": "الأسنان",
+      "specialtyId": "dental"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_den_3",
+      "name": "د. إبراهيم أحمد حماد",
+      "phone": "—",
+      "specialty": "الأسنان",
+      "specialtyId": "dental"
+    },
+    {
+      "address": "ش الدسوقي",
+      "id": "doc_den_4",
+      "name": "د. أحمد الخياط",
+      "phone": "3553417",
+      "specialty": "الأسنان",
+      "specialtyId": "dental"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_den_5",
+      "name": "د. أحمد جمال حمزاوي",
+      "phone": "3556655",
+      "specialty": "الأسنان",
+      "specialtyId": "dental"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_den_6",
+      "name": "د. أحمد جمال مكاوي",
+      "phone": "01154702313",
+      "specialty": "الأسنان",
+      "specialtyId": "dental"
+    },
+    {
+      "address": "ش التأمينات",
+      "id": "doc_den_7",
+      "name": "د. أحمد محمد على",
+      "phone": "—",
+      "specialty": "الأسنان",
+      "specialtyId": "dental"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_den_8",
+      "name": "دكتورة/ إسراء محمد عبد الحفيظ",
+      "phone": "01002977699",
+      "specialty": "الأسنان",
+      "specialtyId": "dental"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_den_9",
+      "name": "د. إاسلام العمدة",
+      "phone": "—",
+      "specialty": "الأسنان",
+      "specialtyId": "dental"
+    },
+    {
+      "address": "ش السنترال",
+      "id": "doc_den_10",
+      "name": "د. أشرف عفيفي",
+      "phone": "—",
+      "specialty": "الأسنان",
+      "specialtyId": "dental"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_den_11",
+      "name": "د. انطوني محروس",
+      "phone": "01282648484",
+      "specialty": "الأسنان",
+      "specialtyId": "dental"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_den_12",
+      "name": "دكتورة/ إيمان سيد مختار",
+      "phone": "3567750",
+      "specialty": "الأسنان",
+      "specialtyId": "dental"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_den_13",
+      "name": "د. بهاء بحيري",
+      "phone": "01017151312",
+      "specialty": "الأسنان",
+      "specialtyId": "dental"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_den_14",
+      "name": "د. شريف شهدي",
+      "phone": "3555100",
+      "specialty": "الأسنان",
+      "specialtyId": "dental"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_den_15",
+      "name": "د. طاهر عبد الله",
+      "phone": "01158986997",
+      "specialty": "الأسنان",
+      "specialtyId": "dental"
+    },
+    {
+      "address": "ش عبد العظيم",
+      "id": "doc_den_16",
+      "name": "د. عادل عبد العظيم",
+      "phone": "—",
+      "specialty": "الأسنان",
+      "specialtyId": "dental"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_den_17",
+      "name": "د. عصام مطيع صبره",
+      "phone": "01020539334",
+      "specialty": "الأسنان",
+      "specialtyId": "dental"
+    },
+    {
+      "address": "ش نوح",
+      "id": "doc_int_1",
+      "name": "د. أحمد ربيع",
+      "phone": "01009545086",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_int_2",
+      "name": "د. أحمد ماهر",
+      "phone": "01200814720",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_int_3",
+      "name": "د. أحمد محمد كامل مرسي",
+      "phone": "01033081515",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_int_4",
+      "name": "د. إسحق عبد الله",
+      "phone": "01005886162",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش قاسم المصري",
+      "id": "doc_int_5",
+      "name": "د. أشرف أنيس",
+      "phone": "01144637789",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_int_6",
+      "name": "د. أيمن محمد عبد الحافظ",
+      "phone": "01024737575",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_int_7",
+      "name": "د. حمدى مقرب",
+      "phone": "3563090",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_int_8",
+      "name": "د. خالد المغربي",
+      "phone": "3555203",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_int_9",
+      "name": "د. رضا حسن",
+      "phone": "—",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_int_10",
+      "name": "د. رضا مفتاح",
+      "phone": "01111493056",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش عبد العظيم",
+      "id": "doc_int_11",
+      "name": "د. روماني ثابت",
+      "phone": "3556437",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش الدسوقي",
+      "id": "doc_int_12",
+      "name": "دكتورة/ زينب حسن كامل",
+      "phone": "01140018099",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش التأمينات",
+      "id": "doc_int_13",
+      "name": "د. صفوت سنبل",
+      "phone": "6551019",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_int_14",
+      "name": "د. صلاح دسوقي",
+      "phone": "01143090167",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش عبد العظيم",
+      "id": "doc_int_15",
+      "name": "د. عاطف عبد السيد",
+      "phone": "01218606217",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_int_16",
+      "name": "د. عبد العزيز فهمي",
+      "phone": "01069354349",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش الإعدادية بنات",
+      "id": "doc_int_17",
+      "name": "دكتورة/ عزة عويس",
+      "phone": "01226625241",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش الشواني",
+      "id": "doc_int_18",
+      "name": "د. علاء أبو غنيمة",
+      "phone": "01222750301",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_int_19",
+      "name": "د. علاء راضي",
+      "phone": "01281431331",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_int_20",
+      "name": "د. على عبد العظيم",
+      "phone": "01003564805",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_int_21",
+      "name": "د. على نجيب",
+      "phone": "01201911567",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_int_22",
+      "name": "د. محمد مفرح",
+      "phone": "01110797001",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش الكوبري الجديد",
+      "id": "doc_int_23",
+      "name": "د. محمود رجب",
+      "phone": "01227018183",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_int_24",
+      "name": "د. محمود محمد حسين",
+      "phone": "01121621894",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "العبور",
+      "id": "doc_int_25",
+      "name": "د. محمود معتوق",
+      "phone": "01009121289",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش التأمينات",
+      "id": "doc_int_26",
+      "name": "د. مجدي فؤاد شلبي",
+      "phone": "01282615399",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش الدسوقي",
+      "id": "doc_int_27",
+      "name": "د. مصطفى جمال",
+      "phone": "01202430951",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش المحطة",
+      "id": "doc_int_28",
+      "name": "د. مصطفى كمال الصغير",
+      "phone": "—",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش المحطة",
+      "id": "doc_int_29",
+      "name": "د. ممدوح الشوربجي",
+      "phone": "3553606",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_int_30",
+      "name": "د. ناصر على عبد اللطيف",
+      "phone": "01061325630",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ش المحطة",
+      "id": "doc_int_31",
+      "name": "د. ياسر عبد الغني",
+      "phone": "01149021078",
+      "specialty": "الباطنة والصدر والحميات",
+      "specialtyId": "internal_chest"
+    },
+    {
+      "address": "ميدان الحمامة",
+      "id": "doc_neuro_1",
+      "name": "د. حسين سعيد",
+      "phone": "01156704586",
+      "specialty": "المخ والأعصاب",
+      "specialtyId": "neurology"
+    },
+    {
+      "address": "ش الدسوقي",
+      "id": "doc_neuro_2",
+      "name": "د. زين الدين سعيد",
+      "phone": "01008265998",
+      "specialty": "المخ والأعصاب",
+      "specialtyId": "neurology"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_neuro_3",
+      "name": "د. سامح عياد",
+      "phone": "01221008776",
+      "specialty": "المخ والأعصاب",
+      "specialtyId": "neurology"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_neuro_4",
+      "name": "د. صموئيل سامح عياد",
+      "phone": "01220935867",
+      "specialty": "المخ والأعصاب",
+      "specialtyId": "neurology"
+    },
+    {
+      "address": "ش المحطة",
+      "id": "doc_neuro_5",
+      "name": "د. ماهر شكري",
+      "phone": "01061840722",
+      "specialty": "المخ والأعصاب",
+      "specialtyId": "neurology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_neuro_6",
+      "name": "د. محمد عبد الحميد",
+      "phone": "01151148725",
+      "specialty": "المخ والأعصاب",
+      "specialtyId": "neurology"
+    },
+    {
+      "address": "أمام قليني",
+      "id": "doc_neuro_7",
+      "name": "د. هاني الأشعل",
+      "phone": "01147334974",
+      "specialty": "المخ والأعصاب",
+      "specialtyId": "neurology"
+    },
+    {
+      "address": "مغاغة",
+      "id": "doc_neuro_8",
+      "name": "د. جوزيف ممدوح إلياس",
+      "phone": "01020118604",
+      "specialty": "المخ والأعصاب",
+      "specialtyId": "neurology"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_ortho_1",
+      "name": "د. أحمد أبو العلا",
+      "phone": "3553417",
+      "specialty": "العظام",
+      "specialtyId": "orthopedics"
+    },
+    {
+      "address": "ش الصنايع",
+      "id": "doc_ortho_2",
+      "name": "د. أحمد أمين",
+      "phone": "3556655",
+      "specialty": "العظام",
+      "specialtyId": "orthopedics"
+    },
+    {
+      "address": "أمام مستشفى قليني",
+      "id": "doc_ortho_3",
+      "name": "د. أحمد جمال",
+      "phone": "01018589511",
+      "specialty": "العظام",
+      "specialtyId": "orthopedics"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_ortho_4",
+      "name": "د. أحمد محمد حسنين",
+      "phone": "01154702313",
+      "specialty": "العظام",
+      "specialtyId": "orthopedics"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_ortho_5",
+      "name": "د. أحمد عبد العظيم",
+      "phone": "—",
+      "specialty": "العظام",
+      "specialtyId": "orthopedics"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_ortho_6",
+      "name": "د. أحمد عويس",
+      "phone": "01116741414",
+      "specialty": "العظام",
+      "specialtyId": "orthopedics"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_ortho_7",
+      "name": "د. أحمد عيد",
+      "phone": "01091974044",
+      "specialty": "العظام",
+      "specialtyId": "orthopedics"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_ortho_8",
+      "name": "د. أحمد نادي الشويخ",
+      "phone": "01017151312",
+      "specialty": "العظام",
+      "specialtyId": "orthopedics"
+    },
+    {
+      "address": "ش أسواق حبيبة",
+      "id": "doc_ortho_9",
+      "name": "د. أشرف سعيد",
+      "phone": "—",
+      "specialty": "العظام",
+      "specialtyId": "orthopedics"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_ortho_10",
+      "name": "د. إمام درويش",
+      "phone": "3555100",
+      "specialty": "العظام",
+      "specialtyId": "orthopedics"
+    },
+    {
+      "address": "ش عبد العظيم",
+      "id": "doc_ortho_11",
+      "name": "د. إيهاب الشال",
+      "phone": "—",
+      "specialty": "العظام",
+      "specialtyId": "orthopedics"
+    },
+    {
+      "address": "ش التأمينات",
+      "id": "doc_ortho_12",
+      "name": "د. رأفت عبد اللطيف",
+      "phone": "01020539334",
+      "specialty": "العظام",
+      "specialtyId": "orthopedics"
+    },
+    {
+      "address": "ش التأمينات",
+      "id": "doc_ortho_13",
+      "name": "د. شريف عاشور",
+      "phone": "01019395977",
+      "specialty": "العظام",
+      "specialtyId": "orthopedics"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_ortho_14",
+      "name": "د. عبد الله جلال",
+      "phone": "01287942060",
+      "specialty": "العظام",
+      "specialtyId": "orthopedics"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_ortho_15",
+      "name": "د. عبد الوهاب عبد العال",
+      "phone": "01110381581",
+      "specialty": "العظام",
+      "specialtyId": "orthopedics"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_ortho_16",
+      "name": "د. عمر جيرة",
+      "phone": "0863552966",
+      "specialty": "العظام",
+      "specialtyId": "orthopedics"
+    },
+    {
+      "address": "ش آدهم",
+      "id": "doc_ortho_17",
+      "name": "د. محمد أحمد عيد",
+      "phone": "01091974044",
+      "specialty": "العظام",
+      "specialtyId": "orthopedics"
+    },
+    {
+      "address": "ش الزهور",
+      "id": "doc_ortho_18",
+      "name": "د. محمد سيد خميس",
+      "phone": "01289086172",
+      "specialty": "العظام",
+      "specialtyId": "orthopedics"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_ortho_19",
+      "name": "د. محمد كمال نظير",
+      "phone": "01118116559",
+      "specialty": "العظام",
+      "specialtyId": "orthopedics"
+    },
+    {
+      "address": "ش المركز الطبي",
+      "id": "doc_ortho_20",
+      "name": "د. محمد لكلوك",
+      "phone": "01002679146",
+      "specialty": "العظام",
+      "specialtyId": "orthopedics"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_ortho_21",
+      "name": "د. محمد معوض",
+      "phone": "01020622562",
+      "specialty": "العظام",
+      "specialtyId": "orthopedics"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_ortho_22",
+      "name": "د. نادي الشويخ",
+      "phone": "01017151312",
+      "specialty": "العظام",
+      "specialtyId": "orthopedics"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_derm_1",
+      "name": "د. خالد محمد توفيق",
+      "phone": "3567750",
+      "specialty": "الجلدية",
+      "specialtyId": "dermatology"
+    },
+    {
+      "address": "ش الجمهورية",
+      "id": "doc_derm_2",
+      "name": "د. صموائيل لوزة",
+      "phone": "01286708590",
+      "specialty": "الجلدية",
+      "specialtyId": "dermatology"
+    },
+    {
+      "address": "ش المحطة",
+      "id": "doc_derm_3",
+      "name": "د. طارق العماوي",
+      "phone": "—",
+      "specialty": "الجلدية",
+      "specialtyId": "dermatology"
+    },
+    {
+      "address": "ش المحطة",
+      "id": "doc_derm_4",
+      "name": "د. عبد الرازق كامل",
+      "phone": "3556881",
+      "specialty": "الجلدية",
+      "specialtyId": "dermatology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_derm_5",
+      "name": "د. محمود حمدي منتصر",
+      "phone": "01009463000",
+      "specialty": "الجلدية",
+      "specialtyId": "dermatology"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_derm_6",
+      "name": "د. ناجح مكرم محمد",
+      "phone": "01153507650",
+      "specialty": "الجلدية",
+      "specialtyId": "dermatology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_derm_7",
+      "name": "دكتورة/ نجوي عبد الفتاح",
+      "phone": "01288528821",
+      "specialty": "الجلدية",
+      "specialtyId": "dermatology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_derm_8",
+      "name": "دكتورة/ هناء كرم الدين",
+      "phone": "—",
+      "specialty": "الجلدية",
+      "specialtyId": "dermatology"
+    },
+    {
+      "address": "ش عبد العظيم",
+      "id": "doc_derm_9",
+      "name": "د. كرستينا كرومر",
+      "phone": "01012145879",
+      "specialty": "الجلدية",
+      "specialtyId": "dermatology"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_fgyn_1",
+      "name": "دكتورة/ أماني يونس",
+      "phone": "01152177705",
+      "specialty": "طبيبات النساء والتوليد",
+      "specialtyId": "female_gynecology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_fgyn_2",
+      "name": "دكتورة/ أم هاشم الجمال",
+      "phone": "01117174519",
+      "specialty": "طبيبات النساء والتوليد",
+      "specialtyId": "female_gynecology"
+    },
+    {
+      "address": "ش السلام",
+      "id": "doc_fgyn_3",
+      "name": "دكتورة/ بطة الجهمي",
+      "phone": "01228592336",
+      "specialty": "طبيبات النساء والتوليد",
+      "specialtyId": "female_gynecology"
+    },
+    {
+      "address": "ش المحطة",
+      "id": "doc_fgyn_4",
+      "name": "دكتورة/ سوسن أبو السعود",
+      "phone": "3552606",
+      "specialty": "طبيبات النساء والتوليد",
+      "specialtyId": "female_gynecology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_fgyn_5",
+      "name": "دكتورة/ شيماء محمد حسين",
+      "phone": "01119174772",
+      "specialty": "طبيبات النساء والتوليد",
+      "specialtyId": "female_gynecology"
+    },
+    {
+      "address": "ش الكوبري الجديد",
+      "id": "doc_fgyn_6",
+      "name": "دكتورة/ علا أبو سريع",
+      "phone": "3551843",
+      "specialty": "طبيبات النساء والتوليد",
+      "specialtyId": "female_gynecology"
+    },
+    {
+      "address": "ش التأمينات",
+      "id": "doc_fgyn_7",
+      "name": "دكتورة/ فاطمة مظهر",
+      "phone": "01119277930",
+      "specialty": "طبيبات النساء والتوليد",
+      "specialtyId": "female_gynecology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_fgyn_8",
+      "name": "دكتورة/ مروة ممدوح",
+      "phone": "01211922217",
+      "specialty": "طبيبات النساء والتوليد",
+      "specialtyId": "female_gynecology"
+    },
+    {
+      "address": "ش أسواق الاتحاد",
+      "id": "doc_fgyn_9",
+      "name": "دكتورة/ نهى لبيب",
+      "phone": "—",
+      "specialty": "طبيبات النساء والتوليد",
+      "specialtyId": "female_gynecology"
+    },
+    {
+      "address": "ش طه حسين",
+      "id": "doc_fgyn_10",
+      "name": "دكتورة/ نورا الجهمي",
+      "phone": "3557007",
+      "specialty": "طبيبات النساء والتوليد",
+      "specialtyId": "female_gynecology"
+    },
+    {
+      "address": "ش أدهم البحري",
+      "id": "doc_fgyn_11",
+      "name": "دكتورة/ هبه محمد عبد الوهاب",
+      "phone": "01060980656",
+      "specialty": "طبيبات النساء والتوليد",
+      "specialtyId": "female_gynecology"
+    },
+    {
+      "address": "أول ش طه حسين – الفرع الجديد: ش السلام ناصية الإنجيلية",
+      "id": "doc_lab_1",
+      "name": "دكتور/ حسين علي حسين – معمل الحسيني",
+      "phone": "01006592488",
+      "specialty": "معامل التحاليل",
+      "specialtyId": "labs"
+    },
+    {
+      "address": "8 ش الجمهورية – الدور الثاني",
+      "id": "doc_lab_2",
+      "name": "معمل البرج",
+      "phone": "01117773029 / 0863567954 / 0863567953",
+      "specialty": "معامل التحاليل",
+      "specialtyId": "labs"
+    },
+    {
+      "address": "ش أسواق حبيبة – أعلى صيدلية السنترال",
+      "id": "doc_lab_3",
+      "name": "معامل البحوث للتحاليل الطبية – دكتور/ فادي صبري كامل",
+      "phone": "01020374054",
+      "specialty": "معامل التحاليل",
+      "specialtyId": "labs"
+    },
+    {
+      "address": "العنوان شارع الجمهوريه بجانب صيدليه د / حلمى  مركز ملك السلام ",
+      "id": "doc_1787876372447",
+      "name": "د/  مونيكا أسعد ",
+      "phone": "01280628103 / 01091960191",
+      "specialty": "Psychotherapist",
+      "specialtyId": "Psychotherapy",
+      "workingDays": " الاحد والجمعه",
+      "workingHours": "من 1 مساءا الي  10 مساءا"
+    },
+    {
+      "address": "العنوان / مغاغه - شارع السلام - أمام فرع we - أعلي فريست سكان للأشعة ",
+      "id": "doc_1787927660876",
+      "name": "د/مصطفي نشأت ",
+      "phone": "01015631293",
+      "specialty": "أسنان",
+      "specialtyId": "dental",
+      "workingDays": "يوميا",
+      "workingHours": "من 1 مساءا الي  10 مساءا"
+    },
+    {
+      "address": "شارع الزهور، مدينة مغاغة، مركز مغاغة، محافظة المنيا، مصر",
+      "id": "doc_1787927808803",
+      "name": "د/ محمود زيدان",
+      "phone": "⁦01010249710⁩",
+      "specialty": "أسنان",
+      "specialtyId": "dental",
+      "workingDays": "يوميا",
+      "workingHours": "من 1 مساءا الي  10 مساءا"
+    },
+    {
+      "address": "•المنيا-مغاغة شارع المدرسة الانجيلية متفرع من شارع السلام أسفل مركز الشمس للاشعة مدخل المعمل بالدور الأرضي ",
+      "id": "doc_1787927972779",
+      "name": "معامل العاصمة Capital Labs ",
+      "phone": "01129263528 / 0863568683",
+      "specialty": "للتحاليل الطبية",
+      "specialtyId": "labs",
+      "workingDays": "يوميا",
+      "workingHours": "مفتوح على مدار الساعة"
+    },
+    {
+      "address": "شارع الجمهورية خلف عيادة د/سامح عياد أعلى كوافير نجلاء وأعلى مركز أحمد إتصالات",
+      "id": "doc_1787940619004",
+      "name": "د/حازم صالح المأذون",
+      "phone": "01123117897",
+      "specialty": "أسنان",
+      "specialtyId": "dental",
+      "workingDays": "يوميا",
+      "workingHours": " من الساعة 12 ظهرا  الي  11 مساءا"
+    },
+    {
+      "address": "شارع اسواق حبيبة بجوار صيدلية السنترال ",
+      "id": "doc_1787941030235",
+      "name": "عيادة د صموئيل عزت ",
+      "phone": "01274628445",
+      "specialty": "انف واذن ",
+      "specialtyId": "ent",
+      "workingDays": "",
+      "workingHours": ""
+    }
+  ],
+  "gov_services": [
+    {
+      "address": "مركز مغاغة، محافظة المنيا",
+      "category": "civil",
+      "id": "gov_court",
+      "locationUrl": "https://maps.app.goo.gl/DK4stG62yERpCF3v8",
+      "name": "محكمة مغاغة",
+      "phone": "086 3563474",
+      "workingHours": "من 8:00 ص إلى 2:00 م"
+    },
+    {
+      "address": "مغاغة - بجوار مركز الشرطة",
+      "category": "civil",
+      "id": "gov_council",
+      "locationUrl": "https://www.google.com/maps/search/?api=1&query=%D9%85%D8%AC%D9%84%D8%B3+%D9%85%D8%AF%D9%8A%D9%86%D8%A9+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9",
+      "name": "مجلس مدينة مغاغة",
+      "phone": "086 3562203",
+      "workingHours": "من 8:00 ص إلى 2:00 ظهراً (عدا الجمعة والسبت)"
+    },
+    {
+      "address": "ش طه حسين، مغاغة، المنيا",
+      "category": "civil",
+      "id": "gov_post",
+      "locationUrl": "https://www.google.com/maps/search/?api=1&query=%D8%A8%D8%B1%D9%8A%D8%AF+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9",
+      "name": "مكتب بريد مغاغة",
+      "phone": "086 7550016",
+      "workingHours": "السبت–الأربعاء 8ص–3م"
+    },
+    {
+      "address": "9 ش طه حسين، مغاغة، المنيا",
+      "category": "civil",
+      "id": "gov_supply",
+      "locationUrl": "",
+      "name": "مكتب تموين مغاغة",
+      "phone": "",
+      "workingHours": "أيام العمل الرسمية"
+    },
+    {
+      "address": "مغاغة - طريق القاهرة أسيوط الزراعي",
+      "category": "civil",
+      "id": "gov_water",
+      "locationUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B4%D8%B1%D9%83%D8%A9+%D9%85%D9%8A%D8%A7%D9%87+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9",
+      "name": "شركة مياه الشرب والصرف الصحي بمغاغة",
+      "phone": "125 / 086 3562410",
+      "workingHours": "مفتوح على مدار الساعة (الطوارئ)"
+    },
+    {
+      "address": "شارع المدارس",
+      "category": "civil",
+      "id": "gov_electricity",
+      "locationUrl": "https://www.google.com/maps/search/?api=1&query=%D9%83%D9%87%D8%B1%D8%A8%D8%A7%D8%A1+%D9%85%D8%BA%D8%A7%D8%BA%D9%89",
+      "name": "هندسة كهرباء مغاغة",
+      "phone": "121 / 086 3562255",
+      "workingHours": "مفتوح على مدار الساعة (الطوارئ)"
+    },
+    {
+      "address": "مساكن الفشنية، مغاغة، المنيا",
+      "category": "civil",
+      "id": "gov_traffic_office",
+      "locationUrl": "",
+      "name": "إدارة مرور مغاغة",
+      "phone": "",
+      "workingHours": "أيام العمل الرسمية"
+    },
+    {
+      "address": "جمهورية مصر العربية",
+      "category": "emergency",
+      "id": "gov_police",
+      "locationUrl": "",
+      "name": "الشرطة (نجدة)",
+      "phone": "122",
+      "workingHours": "24 ساعة"
+    },
+    {
+      "address": "جمهورية مصر العربية",
+      "category": "emergency",
+      "id": "gov_ambulance",
+      "locationUrl": "",
+      "name": "الإسعاف (وزارة الصحة)",
+      "phone": "123",
+      "workingHours": "24 ساعة"
+    },
+    {
+      "address": "جمهورية مصر العربية",
+      "category": "emergency",
+      "id": "gov_fire",
+      "locationUrl": "",
+      "name": "إدارة الحماية المدنية (المطافئ)",
+      "phone": "180",
+      "workingHours": "24 ساعة"
+    },
+    {
+      "address": "وزارة الداخلية",
+      "category": "emergency",
+      "id": "gov_traffic_police",
+      "locationUrl": "",
+      "name": "شرطة المرور",
+      "phone": "128",
+      "workingHours": "24 ساعة"
+    },
+    {
+      "address": "وزارة الداخلية",
+      "category": "emergency",
+      "id": "gov_tourism_police",
+      "locationUrl": "",
+      "name": "شرطة السياحة",
+      "phone": "126",
+      "workingHours": "24 ساعة"
+    },
+    {
+      "address": "الهيئة القومية لكهرباء مصر",
+      "category": "emergency",
+      "id": "gov_elec_emerg",
+      "locationUrl": "",
+      "name": "طوارئ الكهرباء",
+      "phone": "121",
+      "workingHours": "24 ساعة"
+    },
+    {
+      "address": "الشركة القابضة للغازات",
+      "category": "emergency",
+      "id": "gov_gas_emerg",
+      "locationUrl": "",
+      "name": "طوارئ الغاز",
+      "phone": "129",
+      "workingHours": "24 ساعة"
+    },
+    {
+      "address": "شركة مياه الشرب والصرف الصحي (المنيا)",
+      "category": "emergency",
+      "id": "gov_water_emerg",
+      "locationUrl": "",
+      "name": "طوارئ المياه",
+      "phone": "125",
+      "workingHours": "24 ساعة"
+    },
+    {
+      "address": "محافظة المنيا",
+      "category": "emergency",
+      "id": "gov_minia_ops",
+      "locationUrl": "",
+      "name": "غرفة عمليات محافظة المنيا",
+      "phone": "114",
+      "workingHours": "24 ساعة"
+    },
+    {
+      "address": "وزارة النقل (الطرق السريعة)",
+      "category": "emergency",
+      "id": "gov_road_emerg",
+      "locationUrl": "",
+      "name": "طوارئ الطرق والكباري",
+      "phone": "1221111111",
+      "workingHours": "24 ساعة"
+    },
+    {
+      "address": "محافظة المنيا",
+      "category": "emergency",
+      "id": "gov_amb_minia",
+      "locationUrl": "",
+      "name": "أرقام الإسعاف البديلة (المنيا)",
+      "phone": "086 2330053 / 086 2325264 / 086 2325265 / 086 2325266 / 086 2325267 / 086 2325268",
+      "workingHours": "24 ساعة"
+    },
+    {
+      "address": "ش الجمهورية، مغاغة، المنيا (بجوار محكمة الأسرة)",
+      "category": "emergency",
+      "id": "gov_maghagha_police_station",
+      "locationUrl": "",
+      "name": "مركز شرطة مغاغة",
+      "phone": "",
+      "workingHours": "24 ساعة"
+    },
+    {
+      "address": "ش المدارس، حي قليني، مغاغة، المنيا",
+      "category": "emergency",
+      "id": "gov_hosp_maghagha",
+      "locationUrl": "",
+      "name": "مستشفى مغاغة العام",
+      "phone": "086 7550035",
+      "workingHours": "24 ساعة"
+    },
+    {
+      "address": "نهاية ش 26 يوليو، أطنيه، مغاغة، المنيا",
+      "category": "emergency",
+      "id": "gov_hosp_fever",
+      "locationUrl": "",
+      "name": "مستشفى حميات مغاغة",
+      "phone": "086 7550377",
+      "workingHours": "24 ساعة"
+    }
+  ],
+  "job_seekers": [
+    {
+      "age": "23 سنة",
+      "education": "مؤهل عالي تجاري",
+      "id": "seeker_1",
+      "jobDesired": "كاشير ومبيعات محلات",
+      "location": "مغاغة",
+      "name": "باحث عن عمل (نموذج توضيحي 1)",
+      "phone": "01062049652",
+      "skills": "نموذج تجريبي توضيحي للمهارات والخبرات المتاحة للتقديم والتواصل عبر الدليل.",
+      "whatsApp": "201062049652"
+    },
+    {
+      "age": "25 سنة",
+      "education": "مؤهل متوسط",
+      "id": "seeker_2",
+      "jobDesired": "سائق دليفري / مشاوير",
+      "location": "مغاغة",
+      "name": "باحث عن عمل (نموذج توضيحي 2)",
+      "phone": "01062049652",
+      "skills": "نموذج تجريبي يوضح إمكانية إضافة بيانات الباحثين عن عمل والخدمات.",
+      "whatsApp": "201062049652"
+    }
+  ],
+  "job_vacancies": [
+    {
+      "businessName": "نشاط تجاري (نموذج رقم 1)",
+      "id": "vacancy_1",
+      "location": "مغاغة",
+      "phone": "01062049652",
+      "requirements": "شروط تجريبية للتوضيح - حسن الأسلوب والالتزام بالعمل.",
+      "salary": "مرتب مجزي + عمولة",
+      "title": "طلب موظف كاشير (فرصة عمل تجريبية)",
+      "whatsApp": "201062049652",
+      "workType": "صباحي - 8 ساعات"
+    },
+    {
+      "businessName": "نشاط تجاري (نموذج رقم 2)",
+      "id": "vacancy_2",
+      "location": "مغاغة",
+      "phone": "01062049652",
+      "requirements": "متطلبات تجريبية - النظافة والسرعة في العمل.",
+      "salary": "يحدد في المقابلة",
+      "title": "طلب مساعد مبيعات (فرصة عمل تجريبية)",
+      "whatsApp": "201062049652",
+      "workType": "مسائي - 8 ساعات"
+    }
+  ],
+  "pharmacies": [
+    {
+      "address": "شارع طه حسين",
+      "id": "ph_1",
+      "locationUrl": "https://www.google.com/maps/dir//%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D9%87+%D9%85%D8%AF%D9%86%D9%89%D8%8C+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%B7%D9%87+%D8%AD%D8%B3%D9%8A%D9%86%D8%8C+%D9%85%D8%AF%D9%8A%D9%86%D8%A9+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9%D8%8C+%D9%85%D8%B1%D9%83%D8%B2+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9%D8%8C+%D9%85%D8%AD%D8%A7%D9%81%D8%B8%D8%A9+%D8%A7%D9%84%D9%85%D9%86%D9%8A%D8%A7+61691%E2%80%AD/data=!4m6!4m5!1m1!4e2!1m2!1m1!1s0x145bada485437e5f:0x8b2f27f90e3ddb01?sa=X&ved=1t:57443&ictx=111",
+      "name": "صيدليه مدنى",
+      "phone": "011 52091052",
+      "workingHours": "مفتوح على مدار الساعة"
+    },
+    {
+      "address": "تقاطع شارع صلاح الدين مع شارع عبد العظيم",
+      "id": "ph_2",
+      "locationUrl": "https://www.google.com/maps/dir//%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A7%D8%AA+%D9%85%D8%AF%D9%86%D9%8A16791,+sallah+el+din+street+with+abd+alazim+street,+%D9%85%D8%B1%D9%83%D8%B2+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9%D8%8C+%D9%85%D8%AD%D8%A7%D9%81%D8%B8%D8%A9+%D8%A7%D9%84%D9%85%D9%86%D9%8A%D8%A7+61691%E2%80%AD/data=!4m6!4m5!1m1!4e2!1m2!1m1!1s0x145bada413265735:0x4353212d9429b99c?sa=X&ved=1t:57443&ictx=111",
+      "name": "صيدليات مدني",
+      "phone": "16791",
+      "workingHours": "مفتوح على مدار الساعة"
+    },
+    {
+      "address": "مدينة مغاغة",
+      "id": "ph_3",
+      "locationUrl": "https://www.google.com/maps/dir//JRXQ%2B5GV+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%AF.+%D8%B4%D8%B9%D8%A8%D8%A7%D9%86+%D8%A8%D9%83%D9%8A%D8%B1%D8%8C+%D9%85%D8%AF%D9%8A%D9%86%D8%A9+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9%D8%8C+%D9%85%D8%B1%D9%83%D8%B2+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9%D8%8C+%D9%85%D8%AD%D8%A7%D9%81%D8%B8%D8%A9+%D8%A7%D9%84%D9%85%D9%86%D9%8A%D8%A7+2547510%E2%80%AD/data=!4m6!4m5!1m1!4e2!1m2!1m1!1s0x145bac67d65b9509:0xba7a57328575672b?sa=X&ved=1t:57443&ictx=111",
+      "name": "صيدلية د. شعبان بكير",
+      "phone": "011 18877202",
+      "workingHours": "يغلق عند الساعة ١٢ ص"
+    },
+    {
+      "address": "مغاغه شارع السلام امام قاعة الماسه بجوار مسجد السمسطاوي",
+      "id": "ph_4",
+      "locationUrl": "https://www.google.com/maps/dir//%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A7%D8%AA+%D9%81%D8%B6%D9%84%D8%8C+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A7%D8%AA+%D9%81%D8%B6%D9%84%D8%8C+%D9%85%D8%BA%D8%A7%D8%BA%D9%87+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85+%D8%A7%D9%84%D8%B9%D8%AF%D9%88%D9%87+%D8%A7%D9%85%D8%A7%D9%85+%D8%A7%D9%84%D9%86%D8%A7%D8%AF%D9%8A+%D8%A7%D9%84%D8%B1%D9%8A%D8%A7%D8%B6%D9%8A%D8%8C+%D9%85%D8%AD%D8%A7%D9%81%D8%B8%D8%A9+%D8%A7%D9%84%D9%85%D9%86%D9%8A%D8%A7%E2%80%AD/data=!4m6!4m5!1m1!4e2!1m2!1m1!1s0x145badf71f982a81:0x727647f1554e197d?sa=X&ved=1t:57443&ictx=111",
+      "name": "صيدليات فضل",
+      "phone": "011 49966075",
+      "workingHours": "مفتوح على مدار الساعة"
+    },
+    {
+      "address": "أطنيه، مركز مغاغة",
+      "id": "ph_5",
+      "locationUrl": "https://www.google.com/maps/dir//MR3P%2B244+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%AF%D9%83%D8%AA%D9%88%D8%B1+%D9%88%D9%84%D9%8A%D8%AF+%D8%B9%D8%A8%D8%AF+%D8%A7%D9%84%D9%85%D8%A7%D8%AC%D8%AF%D8%8C+%D8%A3%D8%B7%D9%86%D9%8A%D9%87%D8%8C+%D9%85%D8%B1%D9%83%D8%B2+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9%D8%8C+%D9%85%D8%AD%D8%A7%D9%81%D8%B8%D8%A9+%D8%A7%D9%84%D9%85%D9%86%D9%8A%D8%A7+2546260%E2%80%AD/data=!4m6!4m5!1m1!4e2!1m2!1m1!1s0x145bac4258bcd4d3:0x1049d0d2c42ec1c3?sa=X&ved=1t:57443&ictx=111",
+      "name": "صيدلية الدكتور وليد عبد الماجد",
+      "phone": "0867562952 / 01113401118 / 01010971100",
+      "workingHours": "مفتوح على مدار الساعة"
+    },
+    {
+      "address": "حي الزهور، مدينة مغاغة",
+      "id": "ph_6",
+      "locationUrl": "https://www.google.com/maps/dir//JRWR%2BHQW+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9+%D8%A7%D9%84%D8%B2%D9%87%D9%88%D8%B1%D8%8C+%D9%85%D8%AF%D9%8A%D9%86%D8%A9+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9%D8%8C+%D9%85%D8%B1%D9%83%D8%B2+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9%D8%8C+%D9%85%D8%AD%D8%A7%D9%81%D8%B8%D8%A9+%D8%A7%D9%84%D9%85%D9%86%D9%8A%D8%A7+2547545%E2%80%AD/data=!4m6!4m5!1m1!4e2!1m2!1m1!1s0x145badf18344d0af:0x32567d22233fd194?sa=X&ved=1t:57443&ictx=111",
+      "name": "صيدلية الزهور",
+      "phone": "010 32220167",
+      "workingHours": "يغلق عند الساعة ١١ م"
+    },
+    {
+      "address": "شارع الجمهورية، مدينة مغاغة",
+      "id": "ph_7",
+      "locationUrl": "https://www.google.com/maps/dir//JRXR%2BFF9+%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D9%87+%D8%AF%D9%83%D8%AA%D9%88%D8%B1+%D8%B1%D9%85%D8%B2%D9%8A%D8%8C+%D8%B4%D8%A7%D8%B1%D8%B9+%D8%A7%D9%84%D8%AC%D9%85%D9%87%D9%88%D8%B1%D9%8A%D8%A9%D8%8C+%D9%85%D8%AF%D9%8A%D9%86%D8%A9+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9%D8%8C+%D9%85%D8%B1%D9%83%D8%B2+%D9%85%D8%BA%D8%A7%D8%BA%D8%A9%D8%8C+%D9%85%D8%ED%D8%A7%D9%81%D8%B8%D8%A9+%D8%A7%D9%84%D9%85%D9%86%D9%8A%D8%A7+2547541%E2%80%AD/data=!4m6!4m5!1m1!4e2!1m2!1m1!1s0x145bac679d4186af:0xd1877fd779a33def?sa=X&ved=1t:57443&ictx=111",
+      "name": "صيدليه دكتور رمزي",
+      "phone": "010 26108766",
+      "workingHours": "مفتوح"
+    },
+    {
+      "address": "ميدان البحر بجوار التامين الصحي ",
+      "id": "pharm_1787924906260",
+      "locationUrl": "",
+      "name": "صيدليه د/محمد عوض الجديده ",
+      "phone": "01124892459",
+      "workingHours": "مفتوح على مدار الساعة"
+    },
+    {
+      "address": "ش. عبدالعظيم الشرقي بجوار مسجد تاج الدين ",
+      "id": "pharm_1787925565179",
+      "locationUrl": "",
+      "name": "صيدلية د.عائشه شعبان ",
+      "phone": "01102730281",
+      "workingHours": "من 8ص الي 2 ليلا"
+    }
+  ],
+  "ratings": {
+    "7": {
+      "count": 5,
+      "sum": 25
+    },
+    "8": {
+      "count": 3,
+      "sum": 15
+    },
+    "9": {
+      "count": 8,
+      "sum": 27
+    },
+    "10": {
+      "count": 11,
+      "sum": 49
+    },
+    "11": {
+      "count": 11,
+      "sum": 50
+    },
+    "12": {
+      "count": 9,
+      "sum": 30
+    },
+    "13": {
+      "count": 2,
+      "sum": 10
+    },
+    "14": {
+      "count": 2,
+      "sum": 10
+    },
+    "16": {
+      "count": 4,
+      "sum": 17
+    },
+    "17": {
+      "count": 5,
+      "sum": 21
+    },
+    "18": {
+      "count": 8,
+      "sum": 34
+    },
+    "19": {
+      "count": 6,
+      "sum": 18
+    },
+    "20": {
+      "count": 3,
+      "sum": 12
+    },
+    "21": {
+      "count": 21,
+      "sum": 88
+    },
+    "22": {
+      "count": 6,
+      "sum": 25
+    },
+    "23": {
+      "count": 5,
+      "sum": 17
+    },
+    "24": {
+      "count": 5,
+      "sum": 21
+    },
+    "25": {
+      "count": 8,
+      "sum": 20
+    },
+    "27": {
+      "count": 5,
+      "sum": 17
+    },
+    "28": {
+      "count": 7,
+      "sum": 21
+    },
+    "999": {
+      "count": 1,
+      "sum": 5
+    },
+    "1787778360213": {
+      "count": 1,
+      "sum": 5
+    },
+    "captain_1": {
+      "count": 1,
+      "sum": 5
+    },
+    "captain_1787774364149": {
+      "count": 2,
+      "sum": 10
+    },
+    "captain_2": {
+      "count": 1,
+      "sum": 5
+    },
+    "supermarket_1": {
+      "count": 13,
+      "sum": 38
+    },
+    "supermarket_2": {
+      "count": 4,
+      "sum": 20
+    },
+    "supermarket_3": {
+      "count": 6,
+      "sum": 21
+    }
+  },
+  "restaurant_calls": {
+    "7": {
+      "daily": {
+        "2026-08-25": 3,
+        "2026-08-26": 1,
+        "2026-08-27": 2
+      },
+      "logs": {
+        "1787622667385": "2026-08-25 04:51:07",
+        "1787663420807": "2026-08-25 16:10:20",
+        "1787663527085": "2026-08-25 16:12:07",
+        "1787735095267": "2026-08-26 12:04:55",
+        "1787829416130": "2026-08-27 14:16:56",
+        "1787831591598": "2026-08-27 14:53:11"
+      },
+      "total": 6
+    },
+    "8": {
+      "daily": {
+        "2026-08-24": 1,
+        "2026-08-25": 1,
+        "2026-08-27": 1
+      },
+      "logs": {
+        "1787615253915": "2026-08-25 02:47:33",
+        "1787670071586": "2026-08-25 18:01:11",
+        "1787847804674": "2026-08-27 19:23:24"
+      },
+      "total": 3
+    },
+    "9": {
+      "daily": {
+        "2026-08-24": 1,
+        "2026-08-25": 6,
+        "2026-08-26": 7,
+        "2026-08-27": 2
+      },
+      "logs": {
+        "1787610500133": "2026-08-25 01:28:20",
+        "1787619962770": "2026-08-25 04:06:02",
+        "1787622836698": "2026-08-25 04:53:56",
+        "1787622879354": "2026-08-25 04:54:39",
+        "1787643928865": "2026-08-25 10:45:28",
+        "1787654151285": "2026-08-25 13:35:51",
+        "1787667248864": "2026-08-25 17:14:08",
+        "1787720089551": "2026-08-26 07:54:49",
+        "1787742433274": "2026-08-26 14:07:13",
+        "1787767663449": "2026-08-26 21:07:43",
+        "1787778363996": "2026-08-27 00:06:03",
+        "1787778443045": "2026-08-27 00:07:23",
+        "1787778447826": "2026-08-27 00:07:27",
+        "1787778456720": "2026-08-27 00:07:36",
+        "1787790978926": "2026-08-27 03:36:18",
+        "1787790986729": "2026-08-27 03:36:26"
+      },
+      "total": 16
+    },
+    "10": {
+      "daily": {
+        "2026-08-24": 3,
+        "2026-08-25": 5,
+        "2026-08-26": 2,
+        "2026-08-27": 1
+      },
+      "logs": {
+        "1787608475548": "2026-08-25 00:54:35",
+        "1787608518301": "2026-08-25 00:55:18",
+        "1787613163123": "2026-08-25 02:12:43",
+        "1787638874728": "2026-08-25 09:21:14",
+        "1787652207433": "2026-08-25 13:03:27",
+        "1787678601570": "2026-08-25 20:23:21",
+        "1787689051465": "2026-08-25 23:17:31",
+        "1787689090109": "2026-08-25 23:18:10",
+        "1787770358257": "2026-08-26 21:52:38",
+        "1787774477426": "2026-08-26 23:01:17",
+        "1787864409425": "2026-08-28 00:00:09"
+      },
+      "total": 11
+    },
+    "12": {
+      "daily": {
+        "2026-08-25": 4
+      },
+      "logs": {
+        "1787622629814": "2026-08-25 04:50:29",
+        "1787681425340": "2026-08-25 21:10:25",
+        "1787681898063": "2026-08-25 21:18:18",
+        "1787682180299": "2026-08-25 21:23:00"
+      },
+      "total": 4
+    },
+    "13": {
+      "daily": {
+        "2026-08-24": 1,
+        "2026-08-25": 6,
+        "2026-08-26": 4
+      },
+      "logs": {
+        "1787610504916": "2026-08-25 01:28:24",
+        "1787627093870": "2026-08-25 06:04:53",
+        "1787662254255": "2026-08-25 15:50:54",
+        "1787668316235": "2026-08-25 17:31:56",
+        "1787682197211": "2026-08-25 21:23:17",
+        "1787682265370": "2026-08-25 21:24:25",
+        "1787690514700": "2026-08-25 23:41:54",
+        "1787710996075": "2026-08-26 05:23:16",
+        "1787756835032": "2026-08-26 18:07:15",
+        "1787758288080": "2026-08-26 18:31:28",
+        "1787767673370": "2026-08-26 21:07:53"
+      },
+      "total": 11
+    },
+    "14": {
+      "daily": {
+        "2026-08-25": 3,
+        "2026-08-26": 2
+      },
+      "logs": {
+        "1787622718777": "2026-08-25 04:51:58",
+        "1787682342627": "2026-08-25 21:25:42",
+        "1787682435049": "2026-08-25 21:27:15",
+        "1787747076498": "2026-08-26 15:24:36",
+        "1787783024691": "2026-08-27 01:23:44"
+      },
+      "total": 5
+    },
+    "16": {
+      "daily": {
+        "2026-08-24": 3,
+        "2026-08-25": 3,
+        "2026-08-26": 1
+      },
+      "logs": {
+        "1787583776857": "2026-08-24 18:02:56",
+        "1787583787346": "2026-08-24 18:03:07",
+        "1787606154028": "2026-08-25 00:15:54",
+        "1787651242008": "2026-08-25 12:47:22",
+        "1787677345915": "2026-08-25 20:02:25",
+        "1787690990460": "2026-08-25 23:49:50",
+        "1787760266015": "2026-08-26 19:04:26"
+      },
+      "total": 7
+    },
+    "17": {
+      "daily": {
+        "2026-08-24": 1,
+        "2026-08-25": 4,
+        "2026-08-26": 4,
+        "2026-08-27": 2
+      },
+      "logs": {
+        "1787603289696": "2026-08-24 23:28:09",
+        "1787677906858": "2026-08-25 20:11:46",
+        "1787677914065": "2026-08-25 20:11:54",
+        "1787682046459": "2026-08-25 21:20:46",
+        "1787682171456": "2026-08-25 21:22:51",
+        "1787727133162": "2026-08-26 09:52:13",
+        "1787765996252": "2026-08-26 20:39:56",
+        "1787765999362": "2026-08-26 20:39:59",
+        "1787768220622": "2026-08-26 21:17:00",
+        "1787815556831": "2026-08-27 10:25:56",
+        "1787848873940": "2026-08-27 19:41:13"
+      },
+      "total": 11
+    },
+    "18": {
+      "daily": {
+        "2026-08-22": 1,
+        "2026-08-25": 2,
+        "2026-08-27": 2
+      },
+      "logs": {
+        "1787622566083": "2026-08-25 04:49:26",
+        "1787685170678": "2026-08-25 22:12:50",
+        "1787791082565": "2026-08-27 03:38:02",
+        "1787791101005": "2026-08-27 03:38:21"
+      },
+      "total": 5
+    },
+    "19": {
+      "daily": {
+        "2026-08-25": 2,
+        "2026-08-26": 1,
+        "2026-08-27": 1
+      },
+      "logs": {
+        "1787622534935": "2026-08-25 04:48:54",
+        "1787641236791": "2026-08-25 10:00:36",
+        "1787777934485": "2026-08-26 23:58:54",
+        "1787841044795": "2026-08-27 17:30:44"
+      },
+      "total": 4
+    },
+    "20": {
+      "daily": {
+        "2026-08-24": 3,
+        "2026-08-25": 10,
+        "2026-08-26": 3
+      },
+      "logs": {
+        "1787603275242": "2026-08-24 23:27:55",
+        "1787615965073": "2026-08-25 02:59:25",
+        "1787615968139": "2026-08-25 02:59:28",
+        "1787631887096": "2026-08-25 07:24:47",
+        "1787649386894": "2026-08-25 12:16:26",
+        "1787652620146": "2026-08-25 13:10:20",
+        "1787655012254": "2026-08-25 13:50:12",
+        "1787665897324": "2026-08-25 16:51:37",
+        "1787669711864": "2026-08-25 17:55:11",
+        "1787671545941": "2026-08-25 18:25:45",
+        "1787674564583": "2026-08-25 19:16:04",
+        "1787678560332": "2026-08-25 20:22:40",
+        "1787680665872": "2026-08-25 20:57:45",
+        "1787765729960": "2026-08-26 20:35:29",
+        "1787765762676": "2026-08-26 20:36:02",
+        "1787769513449": "2026-08-26 21:38:33"
+      },
+      "total": 16
+    },
+    "21": {
+      "daily": {
+        "2026-08-23": 4,
+        "2026-08-24": 6,
+        "2026-08-25": 12,
+        "2026-08-26": 2,
+        "2026-08-27": 4
+      },
+      "logs": {
+        "1787497168972": "2026-08-23 17:59:28",
+        "1787503228110": "2026-08-23 19:40:28",
+        "1787516537927": "2026-08-23 23:22:17",
+        "1787517727027": "2026-08-23 23:42:07",
+        "1787583541240": "2026-08-24 17:59:01",
+        "1787583750150": "2026-08-24 18:02:30",
+        "1787606887697": "2026-08-25 00:28:07",
+        "1787608773223": "2026-08-25 00:59:33",
+        "1787610481432": "2026-08-25 01:28:01",
+        "1787613977910": "2026-08-25 02:26:17",
+        "1787618830822": "2026-08-25 03:47:10",
+        "1787619770700": "2026-08-25 04:02:50",
+        "1787620022085": "2026-08-25 04:07:02",
+        "1787628362767": "2026-08-25 06:26:02",
+        "1787633414527": "2026-08-25 07:50:14",
+        "1787638745284": "2026-08-25 09:19:05",
+        "1787641264012": "2026-08-25 10:01:04",
+        "1787655867115": "2026-08-25 14:04:27",
+        "1787664822044": "2026-08-25 16:33:42",
+        "1787671530926": "2026-08-25 18:25:30",
+        "1787672709583": "2026-08-25 18:45:09",
+        "1787673446113": "2026-08-25 18:57:26",
+        "1787743348241": "2026-08-26 14:22:28",
+        "1787773083496": "2026-08-26 22:38:03",
+        "1787840605192": "2026-08-27 17:23:25",
+        "1787846683463": "2026-08-27 19:04:43",
+        "1787849847835": "2026-08-27 19:57:27",
+        "1787862548327": "2026-08-27 23:29:08"
+      },
+      "total": 28
+    },
+    "22": {
+      "daily": {
+        "2026-08-24": 1,
+        "2026-08-25": 6,
+        "2026-08-26": 1
+      },
+      "logs": {
+        "1787606980589": "2026-08-25 00:29:40",
+        "1787622506440": "2026-08-25 04:48:26",
+        "1787653466198": "2026-08-25 13:24:26",
+        "1787668468216": "2026-08-25 17:34:28",
+        "1787681535038": "2026-08-25 21:12:15",
+        "1787698191682": "2026-08-26 01:49:51",
+        "1787700314255": "2026-08-26 02:25:14",
+        "1787767469812": "2026-08-26 21:04:29"
+      },
+      "total": 8
+    },
+    "23": {
+      "daily": {
+        "2026-08-22": 2
+      },
+      "logs": {
+        "1787430862527": "2026-08-22 23:34:22"
+      },
+      "total": 2
+    },
+    "24": {
+      "daily": {
+        "2026-08-25": 1
+      },
+      "logs": {
+        "1787622736756": "2026-08-25 04:52:16"
+      },
+      "total": 1
+    },
+    "25": {
+      "daily": {
+        "2026-08-23": 1,
+        "2026-08-25": 1
+      },
+      "logs": {
+        "1787516635666": "2026-08-23 23:23:55",
+        "1787622767130": "2026-08-25 04:52:47"
+      },
+      "total": 2
+    },
+    "27": {
+      "daily": {
+        "2026-08-25": 3,
+        "2026-08-26": 2,
+        "2026-08-27": 1
+      },
+      "logs": {
+        "1787648088146": "2026-08-25 11:54:48",
+        "1787667582812": "2026-08-25 17:19:42",
+        "1787696421369": "2026-08-26 01:20:21",
+        "1787751464296": "2026-08-26 16:37:44",
+        "1787761615043": "2026-08-26 19:26:55",
+        "1787855277862": "2026-08-27 21:27:57"
+      },
+      "total": 6
+    },
+    "28": {
+      "daily": {
+        "2026-08-25": 4,
+        "2026-08-26": 1,
+        "2026-08-27": 1
+      },
+      "logs": {
+        "1787654949240": "2026-08-25 13:49:09",
+        "1787677304076": "2026-08-25 20:01:44",
+        "1787682274751": "2026-08-25 21:24:34",
+        "1787687061969": "2026-08-25 22:44:21",
+        "1787748007135": "2026-08-26 15:40:07",
+        "1787851201085": "2026-08-27 20:20:01"
+      },
+      "total": 6
+    },
+    "999": {
+      "daily": {
+        "2026-08-24": 7,
+        "2026-08-25": 3,
+        "2026-08-27": 1
+      },
+      "logs": {
+        "1787581322848": "2026-08-24 17:22:02",
+        "1787581487884": "2026-08-24 17:24:47",
+        "1787581495648": "2026-08-24 17:24:55",
+        "1787583991236": "2026-08-24 18:06:31",
+        "1787583996224": "2026-08-24 18:06:36",
+        "1787584016497": "2026-08-24 18:06:56",
+        "1787592256383": "2026-08-24 20:24:16",
+        "1787654868484": "2026-08-25 13:47:48",
+        "1787666044045": "2026-08-25 16:54:04",
+        "1787691156067": "2026-08-25 23:52:36",
+        "1787860089282": "2026-08-27 22:48:09"
+      },
+      "total": 11
+    },
+    "supermarket_1": {
+      "daily": {
+        "2026-08-25": 1
+      },
+      "logs": {
+        "1787650135932": "2026-08-25 12:28:55"
+      },
+      "total": 1
+    }
+  },
+  "restaurant_categories": [
+    {
+      "icon": "fa-store",
+      "id": "all",
+      "name": "الكل"
+    },
+    {
+      "icon": "fa-fire-burner",
+      "id": "grill",
+      "name": "المشويات"
+    },
+    {
+      "icon": "fa-fire",
+      "id": "syrian",
+      "name": "سوري/شاورما"
+    },
+    {
+      "icon": "fa-pizza-slice",
+      "id": "crepe",
+      "name": "كريب/بيتزا"
+    },
+    {
+      "icon": "fa-ice-cream",
+      "id": "sweets",
+      "name": "وافل/حلويات"
+    },
+    {
+      "icon": "fa-drumstick-bite",
+      "id": "chicken",
+      "name": "فرايد تشكن /بروست"
+    },
+    {
+      "icon": "fa-burger",
+      "id": "burger",
+      "name": "سماش برجر"
+    },
+    {
+      "icon": "fa-bowl-food",
+      "id": "koshary",
+      "name": "كشري"
+    },
+    {
+      "icon": "fa-fish",
+      "id": "fish",
+      "name": "الأسماك"
+    }
+  ],
+  "restaurants": [
+    {
+      "address": "مغاغة - شارع السلام - امام هارد روك",
+      "category": "crepe",
+      "deliveryFee": "من 20 لـ 30 جنيه",
+      "description": "مطعم توكيو لجميع أنواع الكريب الإيطالي المميز والبيتزا الغنية بأجود المكونات في مغاغة.",
+      "id": 21,
+      "logo": "/assets/tokyo-logo-D_mkwAT5.jpg",
+      "menuImages": [
+        "/assets/tokyo-menu1-DUTeVghv.jpg",
+        "/assets/tokyo-menu2-CCuVflsb.jpg",
+        "/assets/tokyo-menu3-C0UDuY3b.jpg",
+        "/assets/tokyo-menu4-BQ5v4hhk.jpg",
+        "/assets/tokyo-menu5-BghB206D.jpg"
+      ],
+      "name": "مطعم توكيو - Tokyo",
+      "phones": [
+        "01221104263"
+      ],
+      "popularItems": [
+        {
+          "description": "كريب نوتيلا غني مع الموز الطازج والمكسرات",
+          "name": "كريب نوتيلا بالموز",
+          "price": 65
+        },
+        {
+          "description": "بيتزا وسط مغطاة بقطع الدجاج، صوص الرانش اللذيذ، فلفل ألوان، وموزاريلا",
+          "name": "بيتزا تشيكن رانش وسط",
+          "price": 110
+        }
+      ],
+      "whatsApp": "",
+      "workingHours": {
+        "display": "من 12:00 ظهراً إلى 2:00 بعد منتصف الليل",
+        "end": "02:00",
+        "start": "12:00"
+      }
+    },
+    {
+      "address": "ش الثورة - امام كشري هند",
+      "category": "fish",
+      "deliveryFee": "من 20 لـ 30 جنيه",
+      "description": "اسماك يونس لجميع المأكولات البحرية الطازجة، صواني فرن، طواجن، وألذ الوجبات في مغاغة.",
+      "id": 23,
+      "logo": "/assets/youns-logo-TZ8C2399.jpg",
+      "menuImages": [
+        "/assets/youns-menu1-DPkaOM5g.jpg",
+        "/assets/youns-menu2-DNXwQwWw.jpg"
+      ],
+      "name": "اسماك يونس",
+      "phones": [
+        "01203504063",
+        "01111475437",
+        "01044280970"
+      ],
+      "popularItems": [
+        {
+          "description": "سمك بلطي طازج متبل ومشوي بالردة على اللهب",
+          "name": "كيلو سمك بلطي مشوي",
+          "price": 120
+        },
+        {
+          "description": "تشكيلة جمبري، كاليماري، فيليه بخلطة الكريمة والجبنة في الفرن",
+          "name": "طاجن فواكه البحر بالكريمة وسط",
+          "price": 160
+        }
+      ],
+      "whatsApp": "201113826695",
+      "workingHours": {
+        "display": "من 12:00 ظهراً إلى 2:00 بعد منتصف الليل",
+        "end": "02:00",
+        "start": "12:00"
+      }
+    },
+    {
+      "address": "مغاغة - شارع الثورة - بجوار حلا بحليب",
+      "category": "crepe",
+      "deliveryFee": "من 20 لـ 30 جنيه",
+      "description": "تيك اوي حوده يقدم أشهى وأفضل أنواع الكريب والبيتزا الإيطالية والسندوتشات الغربية اللذيذة في مغاغة.",
+      "id": 22,
+      "logo": "/assets/houda-logo-BfCdZS4q.jpg",
+      "menuImages": [
+        "/assets/houda-menu1-NswzpPwD.jpg",
+        "/assets/houda-menu2-DuirWrzF.jpg",
+        "/assets/houda-menu3-Clttqunx.jpg"
+      ],
+      "name": "تيك اوي حوده",
+      "phones": [
+        "01025850812"
+      ],
+      "popularItems": [
+        {
+          "description": "كريب مقرمش غني بقطع الفرايد تشكن، البطاطس، الموتزاريلا والصوصات",
+          "name": "كريب كرانشي سوبريم",
+          "price": 75
+        },
+        {
+          "description": "عجينة بيتزا إيطالية مميزة بصلصة الطماطم الغنية والجبن الموزاريلا",
+          "name": "بيتزا مارجريتا وسط",
+          "price": 70
+        }
+      ],
+      "whatsApp": "",
+      "workingHours": {
+        "display": "من 12:00 ظهراً إلى 2:00 بعد منتصف الليل",
+        "end": "02:00",
+        "start": "12:00"
+      }
+    },
+    {
+      "address": "مغاغة - شارع الشعبة (أمام بن الأسمر)",
+      "category": "syrian",
+      "deliveryFee": "من 20 لـ 30 جنيه",
+      "description": "أفضل شاورما سوري، فتة، ساندوتشات غربية، وأكلات شامية لذيذة في مغاغة.",
+      "id": 20,
+      "logo": "/assets/gedo-logo-CeAeyf1m.jpg",
+      "menuImages": [
+        "/assets/gedo-menu1-CG-wgoSJ.jpg",
+        "/assets/gedo-menu2-Dk9Wi56U.jpg"
+      ],
+      "name": "جدو الشام - Gedo Elsham",
+      "phones": [
+        "01002405348"
+      ],
+      "popularItems": [
+        {
+          "description": "شاورما دجاج، تومية، مخلل، خبز صاج مقرمش مع بطاطس فارم فريتس",
+          "name": "ساندوتش شاورما دجاج سوبر عربي",
+          "price": 80
+        },
+        {
+          "description": "أرز بسمتي مبهر، شاورما دجاج، خبز محمص، وصوص التومية الغني",
+          "name": "فتة شاورما دجاج وسط",
+          "price": 95
+        },
+        {
+          "description": "2 قطعة دجاج بروستد مقرمش، بطاطس، تومية، كول سلو، خبز سوري",
+          "name": "وجبة نصف دجاجة بروستد",
+          "price": 135
+        }
+      ],
+      "whatsApp": "",
+      "workingHours": {
+        "display": "من 12:00 ظهراً إلى 2:00 بعد منتصف الليل",
+        "end": "02:00",
+        "start": "12:00"
+      }
+    },
+    {
+      "address": "مغاغة - فرع شارع الثورة (أمام أسواق سيف) | فرع شارع المحطة",
+      "category": "koshary",
+      "deliveryFee": "من 20 لـ 30 جنيه",
+      "description": "أشهر وألذ أطباق الكشري المصري الأصيل والطواجن المتنوعة في مغاغة بفرعيه.",
+      "id": 19,
+      "logo": "/assets/hind-logo-V8sW9i3P.jpg",
+      "menuImages": [
+        "/assets/hind-menu1-fEHftxa-.jpg",
+        "/assets/hind-menu2-DQVWqiva.jpg",
+        "/assets/hind-menu3-B_L58Aip.jpg",
+        "/assets/hind-menu4-rW6y83-B.jpg"
+      ],
+      "name": "كشري هند - Koshary Hend",
+      "phones": [
+        "01210195153",
+        "01015061338"
+      ],
+      "popularItems": [
+        {
+          "description": "أرز، مكرونة، عدس، حمص، بصل مقرمش مع الصلصة والتقلية المميزة",
+          "name": "علبة كشري هند خصوصي",
+          "price": 40
+        },
+        {
+          "description": "مكرونة فرن باللحمة المفرومة والصلصة الحمراء الغنية",
+          "name": "طاجن لحمة مفرومة بالفرن",
+          "price": 55
+        },
+        {
+          "description": "مكرونة بقطع الدجاج والصلصة مغطاة بطبقة غنية من الموزاريلا",
+          "name": "طاجن فراخ بالجبنة الموتزاريلا",
+          "price": 65
+        }
+      ],
+      "secondBranchPhones": [
+        "01206500071",
+        "01116816266"
+      ],
+      "whatsApp": "",
+      "workingHours": {
+        "display": "من 12:00 ظهراً إلى 2:00 بعد منتصف الليل",
+        "end": "02:00",
+        "start": "12:00"
+      }
+    },
+    {
+      "address": "مغاغة - شارع الشعبة / الزهور، متفرع من شارع السلام",
+      "category": "chicken",
+      "deliveryFee": "من 20 لـ 30 جنيه",
+      "description": "أقوى بروست مقرمش ووجبات فرايد تشيكن غنية بخلطات وتتبيلات هاي المميزة في مغاغة.",
+      "id": 18,
+      "logo": "/assets/hy-brosted-logo-Bt9Beu4v.jpg",
+      "menuImages": [
+        "/assets/hy-brosted-menu1-CkelqdLq.jpg",
+        "/assets/hy-brosted-menu2-BJaMqafH.jpg"
+      ],
+      "name": "هاي بروست - Hy Broasted",
+      "phones": [
+        "01287877563",
+        "01110771334",
+        "01020020965"
+      ],
+      "popularItems": [
+        {
+          "description": "4 قطع دجاج بروست مقرمش، بطاطس فارم فريتس، تومية، كول سلو، خبز",
+          "name": "وجبة سوبر هاي بروست (4 قطع)",
+          "price": 145
+        },
+        {
+          "description": "8 قطع بروست مقرمش، بطاطس عائلية، لتر كولا، كول سلو كبير وخبز",
+          "name": "وجبة العيلة هاي (8 قطع)",
+          "price": 270
+        },
+        {
+          "description": "صدور دجاج كريسبي، جبنة شيدر سايحة، خس، خيار مخلل وصوص هاي السري",
+          "name": "ساندوتش تشيكن رويال العملاق",
+          "price": 90
+        }
+      ],
+      "whatsApp": "",
+      "workingHours": {
+        "display": "من 12:00 ظهراً إلى 2:00 بعد منتصف الليل",
+        "end": "02:00",
+        "start": "12:00"
+      }
+    },
+    {
+      "address": "مغاغة - شارع السلام، ميدان الحمامة",
+      "category": "syrian",
+      "deliveryFee": "من 20 لـ 30 جنيه",
+      "description": "أشهى المأكولات السورية، الشاورما، الفتات، والوجبات المتنوعة بطعم الشام الأصيل في مغاغة.",
+      "id": 17,
+      "logo": "/assets/arous-alsham-logo-B_b9XUH3.jpg",
+      "menuImages": [
+        "/assets/arous-alsham-menu1-D92lMjan.jpg",
+        "/assets/arous-alsham-menu2-B_yiCkcp.jpg"
+      ],
+      "name": "مطعم عروس الشام - Arous El Sham",
+      "phones": [
+        "01031115114",
+        "01128904090"
+      ],
+      "popularItems": [
+        {
+          "description": "",
+          "name": "فرخة +6 قطع كرسبي",
+          "price": "375"
+        },
+        {
+          "description": "",
+          "name": "نص فرخة + 3 طع كرسبي",
+          "price": "200"
+        },
+        {
+          "description": "",
+          "name": "24 قطعة شاورما + 6 قطع كرسبي",
+          "price": "375"
+        },
+        {
+          "description": "",
+          "name": "12 قطعة شاورما + 3 قطع كرسبي",
+          "price": "200"
+        }
+      ],
+      "promoCode": "",
+      "showPromoAlertOnCall": false,
+      "whatsApp": "",
+      "workingHours": {
+        "display": "من 12:00 ظهراً إلى 2:00 بعد منتصف الليل",
+        "end": "02:00",
+        "start": "12:00"
+      }
+    },
+    {
+      "address": "مغاغة - شارع الثورة، بجوار حلو الشام",
+      "category": "burger",
+      "deliveryFee": "من 20 لـ 30 جنيه",
+      "description": "أفضل وأجود ساندوتشات السماش برجر اللحم والدجاج الطازج بخلطتنا الفريدة في مغاغة.",
+      "id": 16,
+      "logo": "/assets/baba-food-logo-BTE1lxxq.jpg",
+      "menuImages": [
+        "/assets/baba-food-menu-BDXQvle9.jpg"
+      ],
+      "name": "بابا برجر - Baba Burger",
+      "phones": [
+        "01118487387"
+      ],
+      "popularItems": [
+        {
+          "description": "قطعة لحم سماش، جبنة شيدر، خس، طماطم، خيار مخلل، صوص بابا المميز",
+          "name": "سماش برجر كلاسيك (سنجل)",
+          "price": 70
+        },
+        {
+          "description": "قطعتين لحم سماش، دبل جبنة شيدر، بصل مكرمل وصوص خاص",
+          "name": "بابا برجر دبل سماش",
+          "price": 95
+        },
+        {
+          "description": "صدر دجاج مقرمش، جبنة شيدر سايحة، خس، مايونيز",
+          "name": "ساندوتش دجاج كريسبي بابا",
+          "price": 80
+        }
+      ],
+      "whatsApp": "201118487387",
+      "workingHours": {
+        "display": "من 12:00 ظهراً إلى 2:00 بعد منتصف الليل",
+        "end": "02:00",
+        "start": "12:00"
+      }
+    },
+    {
+      "address": "مغاغة - شارع الثورة - أمام مطعم زيزو",
+      "category": "crepe",
+      "deliveryFee": "من 20 لـ 30 جنيه",
+      "description": "أطعم وأكبر كريب حادق وحلو وبيتزا إيطالي مميزة في مغاغة.",
+      "id": 11,
+      "logo": "/assets/mazeka-logo-DaIMOaTt.png",
+      "menuImages": [
+        "/assets/mazeka--meanu-JCHjZe_U.jpg"
+      ],
+      "name": "مزيكا كريب - Mazeka Crepe",
+      "phones": [
+        "01024716334",
+        "01110672280"
+      ],
+      "popularItems": [
+        {
+          "description": "فرايد تشيكن مقرمش، بطاطس، جبن موزاريلا، صوصات مميزة",
+          "name": "كريب سوبر كرانشي حار",
+          "price": 75
+        },
+        {
+          "description": "بطاطس مقلية مع تشكيلة جبن وصوص تومية",
+          "name": "كريب بطاطس سوري بالجبنة",
+          "price": 40
+        },
+        {
+          "description": "شرائح لحوم متبلة، موزاريلا، خضروات طازجة",
+          "name": "بيتزا سوبر سوبريم وسط",
+          "price": 95
+        }
+      ],
+      "whatsApp": "",
+      "workingHours": {
+        "display": "من 12:00 ظهراً إلى 2:00 بعد منتصف الليل",
+        "end": "02:00",
+        "start": "12:00"
+      }
+    },
+    {
+      "address": "مغاغة - شارع الثورة، بجوار قصر السلطان",
+      "category": "crepe",
+      "deliveryFee": "من 20 لـ 30 جنيه",
+      "description": "أشهى كريب وسندوتشات غربية متنوعة وبيتزا إيطالية مميزة.",
+      "id": 12,
+      "logo": "/assets/elthwra-menu-D2QI-rQz.jpg",
+      "menuImages": [
+        "/assets/elthwra-CzlZs12X.jpg"
+      ],
+      "name": "مطعم الثورة - El Thawra Restaurant",
+      "phones": [
+        "01128804535",
+        "01032527269"
+      ],
+      "popularItems": [
+        {
+          "description": "قطع زنجر الدجاج الحار، جبن موزاريلا، فلفل، زيتون، صوصات",
+          "name": "كريب زنجر سوبريم حار",
+          "price": 80
+        },
+        {
+          "description": "عجينة بيتزا إيطالية غنية بالجبن الموزاريلا وصلصة الطماطم المتبلة",
+          "name": "بيتزا مارجريتا (وسط)",
+          "price": 65
+        },
+        {
+          "description": "شاورما دجاج، جبن شيدر وموزاريلا، بطاطس، تومية وصوصات",
+          "name": "كريب شاورما دجاج جامبو",
+          "price": 75
+        }
+      ],
+      "whatsApp": "",
+      "workingHours": {
+        "display": "من 12:00 ظهراً إلى 2:00 بعد منتصف الليل",
+        "end": "02:00",
+        "start": "12:00"
+      }
+    },
+    {
+      "address": "مغاغة - شارع السلام، أمام مدرسة الراهبات",
+      "category": "crepe",
+      "deliveryFee": "من 20 لـ 30 جنيه",
+      "description": "أجود أنواع الكريب والبيتزا الإيطالية والسندوتشات الغربية اللذيذة.",
+      "id": 14,
+      "logo": "/assets/elshraea-logo-u6lbFMNr.jpg",
+      "menuImages": [
+        "/assets/elshraea2-menu1-BLBNK1ZI.jpg",
+        "/assets/elshraea2-menu2-C7rARLWn.jpg"
+      ],
+      "name": "كريب وبيتزا الشريعي - El Shraea Crepe & Pizza",
+      "phones": [
+        "01201882717"
+      ],
+      "popularItems": [
+        {
+          "description": "قطع زنجر الدجاج، بطاطس، موزاريلا، كاتشب، مايونيز، زيتون، فلفل",
+          "name": "كريب زنجر سوبر سوبريم",
+          "price": 75
+        },
+        {
+          "description": "صدور دجاج، صوص رانش، موزاريلا، فلفل، زيتون",
+          "name": "بيتزا تشيكن رانش وسط",
+          "price": 90
+        },
+        {
+          "description": "كريب حلو غني بالنوتيلا والموز والمكسرات",
+          "name": "كريب نوتيلا بالموز والمكسرات",
+          "price": 50
+        }
+      ],
+      "whatsApp": "",
+      "workingHours": {
+        "display": "من 12:00 ظهراً إلى 2:00 بعد منتصف الليل",
+        "end": "02:00",
+        "start": "12:00"
+      }
+    },
+    {
+      "address": "مغاغة - شارع السلام - بجوار مسجد السمسطاوي",
+      "category": "grill",
+      "deliveryFee": "من 20 لـ 30 جنيه",
+      "description": "أفضل الكباب والكفتة والمشويات على الفحم بطعم مغاغي بلدي أصيل.",
+      "id": 8,
+      "logo": "/assets/abo-talaat-logo-Cl-IpBdc.png",
+      "menuImages": [
+        "/assets/abo-talaat-meanu1-CJz90hJ0.jpg",
+        "/assets/abo-talaat-meanu2-D4-MXFa4.jpg"
+      ],
+      "name": "مشويات أبو طلعت - Abo Talaat Grill",
+      "phones": [
+        "01113567679",
+        "01023449972"
+      ],
+      "popularItems": [
+        {
+          "description": "لحم بلدي متبل على الطريقة الشرقية الأصيلة",
+          "name": "كيلو كفتة مشوية على الفحم",
+          "price": 390
+        },
+        {
+          "description": "كفتة وكباب مشوي مع أرز، سلطة خضراء، طحينة، وخبز",
+          "name": "وجبة ربع كباب وكفتة",
+          "price": 130
+        },
+        {
+          "description": "تقدم مع الأرز والسلطات والعيش",
+          "name": "فرخة مشوية على الفحم",
+          "price": 240
+        }
+      ],
+      "whatsApp": "",
+      "workingHours": {
+        "display": "من 12:00 ظهراً إلى 2:00 بعد منتصف الليل",
+        "end": "02:00",
+        "start": "12:00"
+      }
+    },
+    {
+      "address": "مغاغة - شارع الثورة - بجوار مسجد السلام",
+      "category": "chicken",
+      "deliveryFee": "من 20 لـ 30 جنيه",
+      "description": "أقوى بروست مقرمش ووجبات فرايد تشكن بخلطة أبو علي السرية المميزة.",
+      "id": 7,
+      "logo": "/assets/abo-ali-brost-BNMK18T_.jpg",
+      "menuImages": [
+        "/assets/abo-ali-meanu1-D7Det2h1.jpg",
+        "/assets/abo-ali-meanu2-_c-rFrqL.jpg"
+      ],
+      "name": "أبو علي بروست - Abo Ali Broast",
+      "phones": [
+        "01035890038",
+        "01240077763",
+        "01144074480",
+        "01233370023",
+        "01035872002",
+        "01100896009"
+      ],
+      "popularItems": [
+        {
+          "description": "2 قطعة فرايد تشيكن + 2 كرسبي استربس + 2 خبز + كاتشب 🔥",
+          "name": "العرض الأول | لَمّة محبي الفرايد تشيكن",
+          "price": 149
+        },
+        {
+          "description": "8 قطع فرايد تشيكن + أرز بخلطة أبو علي + تومية وسط + كولسلو وسط + بطاطس بالجبنة + 4 خبز + كاتشب 😋🔥",
+          "name": "👑 العرض الثاني | صينية اللتاتة",
+          "price": 449
+        },
+        {
+          "description": "4 قطع فرايد تشيكن + 4 كرسبي استربس + أرز بالخلطة + بطاطس بالجبنة + كولسلو وسط + تومية وسط + كاتشب + 3 خبز 🍗🧀",
+          "name": "❤️ العرض الثالث | صينية الطبطبة",
+          "price": 399
+        }
+      ],
+      "whatsApp": "",
+      "workingHours": {
+        "display": "من 12:00 ظهراً إلى 2:00 بعد منتصف الليل",
+        "end": "02:00",
+        "start": "12:00"
+      }
+    },
+    {
+      "address": "مغاغة – شارع السلام، أمام مدرسة الصنايع",
+      "category": "chicken",
+      "deliveryFee": "من 20 لـ 30 جنيه",
+      "description": "وجبات تشيكن بروست وفرايد تشكن مقرمشة وساندوتشات عائلية متميزة.",
+      "id": 9,
+      "logo": "/assets/doctor-box-Cr8y5Ao3.jpg",
+      "menuImages": [
+        "/assets/doctor-box-meanu1-FI4nQ5V4.jpg",
+        "/assets/doctor-box-meanu2-nU1poif5.jpg",
+        "/assets/doctor-box-meanu3-C6k_RhCd.jpg",
+        "/assets/doctor-box-meanu4-CzrryHAb.jpg",
+        "/assets/doctor-box-meanu5-C1LNkDby.jpg",
+        "/assets/doctor-box-meanu6-BNBssJfu.jpg",
+        "/assets/doctor-box-meanu7-BOo6mi2O.jpg",
+        "/assets/doctor-box-meanu8-BtLKzMGK.jpg"
+      ],
+      "name": "دكتور بوكس - Doctor Box",
+      "phones": [
+        "17818"
+      ],
+      "popularItems": [
+        {
+          "description": "3 قطع دجاج بروست، بطاطس، ثومية، خبز",
+          "name": "بوكس الوجبة الفردية (3 قطع)",
+          "price": 110
+        },
+        {
+          "description": "صدور الدجاج المقرمشة بخلطة الطبيب الحارة مع الجبن السايح",
+          "name": "ساندوتش دكتور تشيكن العملاق",
+          "price": 85
+        },
+        {
+          "description": "9 قطع بروست، بطاطس عائلية، كول سلو كبير، خبز، لتر بيبسي",
+          "name": "شيرنج بوكس العائلي (9 قطع)",
+          "price": 285
+        }
+      ],
+      "whatsApp": "",
+      "workingHours": {
+        "display": "من 12:00 ظهراً إلى 2:00 بعد منتصف الليل",
+        "end": "02:00",
+        "start": "12:00"
+      }
+    },
+    {
+      "address": "مغاغة - شارع السلام، أمام كوبري الصنائع",
+      "category": "chicken",
+      "deliveryFee": "من 20 لـ 30 جنيه",
+      "description": "أقوى وجبات الفرايد تشيكن والبروست المقرمش بعروض وخلطات مميزة.",
+      "id": 13,
+      "logo": "/assets/elshraea-logo-u6lbFMNr.jpg",
+      "menuImages": [
+        "/assets/elshraea-menu1-DlIsG5nd.jpg",
+        "/assets/elshraea-menu2-B7Nn4qX5.jpg",
+        "/assets/elshraea-menu3-CL9lE9uG.jpg",
+        "/assets/elshraea-offer-DSx3I9mS.jpg"
+      ],
+      "name": "الشريعي فرايد تشيكن - El Shraea Fried Chicken",
+      "phones": [
+        "01208696419"
+      ],
+      "popularItems": [
+        {
+          "description": "3 قطع دجاج بروست، بطاطس، ثومية، عيش",
+          "name": "وجبة سوبر كرانشي فردية",
+          "price": 90
+        },
+        {
+          "description": "صدور دجاج كريسبي مقرمشة مع الخس والمايونيز والجبن",
+          "name": "ساندوتش الشريعي العملاق",
+          "price": 80
+        },
+        {
+          "description": "12 قطعة بروست، بطاطس عائلية، كول سلو كبير، خبز ولتر كولا",
+          "name": "وجبة العيلة الشريعي (12 قطعة)",
+          "price": 340
+        }
+      ],
+      "whatsApp": "",
+      "workingHours": {
+        "display": "من 12:00 ظهراً إلى 2:00 بعد منتصف الليل",
+        "end": "02:00",
+        "start": "12:00"
+      }
+    },
+    {
+      "address": "مغاغة - شارع السلام، أمام الشعبة",
+      "category": "sweets",
+      "deliveryFee": "من 20 لـ 30 جنيه",
+      "description": "أجود وأطعم أنواع الوافل، الكريب الحلو، العصائر، والحلويات المنعشة.",
+      "id": 10,
+      "logo": "/assets/kokap-logo-Caheu2BN.jpg",
+      "menuImages": [
+        "/assets/kokap-meanu1.jpg-CBwVZrKr.jpeg"
+      ],
+      "name": "كوكب السعادة - Kawkab El Saada",
+      "phones": [
+        "01113914972"
+      ],
+      "popularItems": [
+        {
+          "description": "وافل مغطى بالنوتيلا مع قطع الفراولة والموز والكيوي",
+          "name": "وافل نوتيلا فواكه مشكل",
+          "price": 55
+        },
+        {
+          "description": "كريب رقيق محشو شوكولاتة نوتيلا وبندق محمص",
+          "name": "كريب حلو نوتيلا بندق",
+          "price": 45
+        },
+        {
+          "description": "طبقات من المانجو والفراولة والجوافة مع قطع الفواكه الطازجة",
+          "name": "عصير كوكتيل كوكب السعادة",
+          "price": 40
+        }
+      ],
+      "whatsApp": "",
+      "workingHours": {
+        "display": "من 12:00 ظهراً إلى 2:00 بعد منتصف الليل",
+        "end": "02:00",
+        "start": "12:00"
+      }
+    },
+    {
+      "address": "مغاغة - الشارع التجريبي - بجوار الميدان",
+      "category": "grill",
+      "deliveryFee": "15 جنيه",
+      "description": "مطعم مشويات تجريبي لخدمات المشويات واللحوم البلدية الفاخرة في مغاغة.",
+      "id": 999,
+      "logo": "grill-logo",
+      "menuImages": [
+        "tokyo-menu1"
+      ],
+      "name": "نموذج تجريبي",
+      "phones": [
+        "01000000000"
+      ],
+      "popularItems": [
+        {
+          "description": "مشكل كباب وكفتة على الفحم مع السلطات والخبز",
+          "name": "كيلو كباب وكفتة مشكل",
+          "price": 350
+        },
+        {
+          "description": "ربع فرخة مشوية على الفحم مع أرز مبهر وسلطات",
+          "name": "ربع فرخة مشوية صدر",
+          "price": 90
+        }
+      ],
+      "whatsApp": "01000000000",
+      "workingHours": {
+        "display": "من 11:00 صباحاً إلى 12:00 منتصف الليل",
+        "end": "23:59",
+        "start": "11:00"
+      }
+    },
+    {
+      "address": "مغاغة - ش الثورة بجوار حلو الشام",
+      "category": "sweets",
+      "deliveryFee": "من 20 لـ 30 جنيه",
+      "description": "حلا بحليب لألذ وأطيب الحلويات الشرقية والغربية، الوافل، الآيس كريم، وعصائر منعشة بأعلى جودة في مغاغة.",
+      "id": 24,
+      "logo": "halabhaleeb-logo",
+      "menuImages": [
+        "halabhaleeb-menu1"
+      ],
+      "name": "حلا بحليب - Hala B.Haleeb",
+      "phones": [
+        "01040853091",
+        "01228838016"
+      ],
+      "popularItems": [
+        {
+          "description": "أرز بلبن غني مع قشطة، مكسرات، عسل وفواكه طازجة",
+          "name": "طبق حلا بحليب المشكل",
+          "price": 65
+        },
+        {
+          "description": "وافل مقرمش مغطى بطبقة غنية من الشوكولاتة النوتيلا والمكسرات",
+          "name": "وافل نوتيلا دبل",
+          "price": 50
+        }
+      ],
+      "whatsApp": "",
+      "workingHours": {
+        "display": "من 12:00 ظهراً إلى 2:00 بعد منتصف الليل",
+        "end": "02:00",
+        "start": "12:00"
+      }
+    },
+    {
+      "address": "مغاغة - شارع الثورة - امام كشرى هند",
+      "category": "grill",
+      "deliveryFee": "من 20 لـ 30 جنيه",
+      "description": "مطعم رغيف كفتة لأشهر ساندوتشات المشويات على الفحم، كفتة، كباب، وطواجن شرقية شهية بأجود أنواع اللحوم البلدي في مغاغة.",
+      "id": 25,
+      "logo": "raghifkofta-logo",
+      "menuImages": [
+        "raghifkofta-menu1"
+      ],
+      "name": "رغيف كفتة - Raghif Kofta",
+      "phones": [
+        "01144252519",
+        "01095496696"
+      ],
+      "popularItems": [
+        {
+          "description": "كفتة بلدي مشوية على الفحم مع السلطات والطحينة في خبز بلدي طازج",
+          "name": "ساندوتش رغيف كفتة بلدي على الفحم",
+          "price": 45
+        },
+        {
+          "description": "مشويات بلدي متبلة تقدم مع الأرز والعيش والسلطات",
+          "name": "وجبة كفتة وكباب مكس",
+          "price": 120
+        }
+      ],
+      "whatsApp": "",
+      "workingHours": {
+        "display": "من 12:00 ظهراً إلى 2:00 بعد منتصف الليل",
+        "end": "02:00",
+        "start": "12:00"
+      }
+    },
+    {
+      "address": "مغاغة - شارع السلام",
+      "category": "syrian",
+      "deliveryFee": "من 20 لـ 30 جنيه",
+      "description": "مطعم شطة لتقديم أشهى الوجبات السريعة، الكريب، وسندوتشات الشاورما السورية المميزة بمغاغة.",
+      "id": 27,
+      "logo": "shatah-logo",
+      "menuImages": [
+        "shatah-menu1",
+        "shatah-menu2"
+      ],
+      "name": "مطعم شطة - Shatah",
+      "phones": [
+        "01062049652"
+      ],
+      "popularItems": [
+        {
+          "description": "شاورما سوري مميزة بخبز الصاج مع الثومية والمخلل",
+          "name": "ساندوتش شاورما شطة سوبر",
+          "price": 85
+        }
+      ],
+      "whatsApp": "",
+      "workingHours": {
+        "display": "من 12:00 ظهراً إلى 2:00 بعد منتصف الليل",
+        "end": "02:00",
+        "start": "12:00"
+      }
+    },
+    {
+      "address": "مغاغة - شارع الثورة - امام ملوك النابلسية",
+      "category": "syrian",
+      "deliveryFee": "من 20 لـ 30 جنيه",
+      "description": "مطعم سلوم يقدم أشهى المأكولات السورية، الشاورما، والوجبات المتنوعة بطعم مميز في مغاغة.",
+      "id": 28,
+      "logo": "salom-logo",
+      "menuImages": [
+        "salom-menu1",
+        "salom-menu2"
+      ],
+      "name": "مطعم سلوم-salom",
+      "phones": [
+        "01101025654"
+      ],
+      "popularItems": [
+        {
+          "description": "شاورما سوري مميزة بخبز الصاج مع الثومية والمخلل والبطاطس",
+          "name": "ساندوتش شاورما سلوم سوبر عربي",
+          "price": 85
+        }
+      ],
+      "whatsApp": "",
+      "workingHours": {
+        "display": "من 12:00 ظهراً إلى 2:00 بعد منتصف الليل",
+        "end": "02:00",
+        "start": "12:00"
+      }
+    },
+    {
+      "address": "العنوان عمارة 5 ش طه حسين مغاغه",
+      "category": "fish",
+      "deliveryFee": "حسب  الاتفاق",
+      "description": "مطعم اسماك عروس البحر  لافضل انواع السمك واسرع خدمه وانضف",
+      "id": 1787940970781,
+      "logo": "https://drive.google.com/file/d/1G5rByMz1GuIVqJhrrwHXJhK9z2Qmf34D/view?usp=drive_link",
+      "name": "أسماك عروسة  البحر",
+      "phones": [
+        "01152488020"
+      ],
+      "promoCode": "A",
+      "secondBranchPhones": [
+        "01152488020"
+      ],
+      "showPromoAlertOnCall": false,
+      "whatsApp": "",
+      "workingHours": {
+        "display": "من 7 wfhph إلى 12:00 منتصف الليل",
+        "end": "12:00",
+        "start": "07:00"
+      }
+    }
+  ],
+  "site_visits": {
+    "daily": {
+      "2026-08-25": 1053,
+      "2026-08-26": 1481,
+      "2026-08-27": 425,
+      "2026-08-28": 13
+    }
+  },
+  "supermarket_categories": [
+    {
+      "icon": "fa-store",
+      "id": "grocery",
+      "name": "سوبرماركت وبقالة"
+    },
+    {
+      "icon": "fa-soap",
+      "id": "cleaning",
+      "name": "منظفات وكيماويات"
+    },
+    {
+      "icon": "fa-cheese",
+      "id": "dairy",
+      "name": "ألبان وأجبان"
+    },
+    {
+      "icon": "fa-drumstick-bite",
+      "id": "meat",
+      "name": "لحوم ومجمدات"
+    },
+    {
+      "icon": "fa-mug-hot",
+      "id": "Coffee",
+      "name": "البن / القهوة"
+    },
+    {
+      "icon": "fa-store",
+      "id": "baked goods",
+      "name": "مخبوزات ",
+      "promoPrefix": "Z"
+    }
+  ],
+  "supermarkets": [
+    {
+      "address": "مغاغة - شارع الزهور - بجوار شبكة المياه - خلف المطافي",
+      "deliveryFee": "خدمة توصيل طلبات 📦",
+      "description": "محل الوكيل متخصص في بيع السلع الغذائية والبقالة الأساسية بالكامل، يقدم أسعار قطاعي بسعر الجملة لتلبية احتياجاتكم بأقل الأسعار.",
+      "id": "supermarket_2",
+      "logo": "alwakeel-logo",
+      "name": "الوكيل لتجارة الجملة - Al Wakeel",
+      "phones": [
+        "01015838397",
+        "01010279704"
+      ],
+      "whatsApp": "201015838397",
+      "workingHours": {
+        "display": "من 8:00 صباحاً إلى 2:00 بعد منتصف الليل",
+        "end": "02:00",
+        "start": "08:00"
+      }
+    },
+    {
+      "branches": [
+        "فرع 1: مغاغة العبور - شارع الثورة",
+        "فرع 2: مغاغة - شارع السلام - بجوار مدرسة الراهبات",
+        "فرع 3: مغاغة - منشية المصري بجوار جامع ناصر"
+      ],
+      "deliveryFee": "خدمة توصيل فورية 🚀",
+      "description": "سلسلة هايبر العمدة توفر جميع السلع الغذائية، المنتجات المنزلية والمستلزمات بأفضل الأسعار وخدمة دليفري لجميع مناطق مغاغة.",
+      "id": "supermarket_1",
+      "logo": "elomda-logo",
+      "name": "هايبر العمدة - El Omda Hypermarket",
+      "phones": [
+        "01224161001",
+        "01288583389",
+        "01040092445"
+      ],
+      "workingHours": {
+        "display": "من 8:00 صباحاً إلى 2:00 بعد منتصف الليل",
+        "end": "02:00",
+        "start": "08:00"
+      }
+    },
+    {
+      "address": "مغاغة - شارع الثورة - خلف أسواق سيف",
+      "deliveryFee": "خدمة توصيل طلبات 📦",
+      "description": "محل بـ جبنة لجميع أنواع الأجبان، البقالة، والمنتجات الطبيعية 100%. جميع أنواع المربات الطبيعية متاحة بجميع الأطعام المميزة في مغاغة.",
+      "id": "supermarket_3",
+      "logo": "begebna-logo",
+      "menuImages": [
+        "begebna-menu2",
+        "begebna-menu1"
+      ],
+      "name": "بـ جبنة - BeGebna",
+      "phones": [
+        "01156115709",
+        "01038860273"
+      ],
+      "popularItems": [
+        {
+          "category": "منتجات عامة",
+          "description": "مربى توت طبيعي طازجة وبدون مواد حافظة 💛👌🏻",
+          "name": "مربى توت طبيعي 100%",
+          "price": "حسب الحجم"
+        },
+        {
+          "category": "منتجات عامة",
+          "description": "مربى فراولة طازجة طبيعية 100% 💛👌🏻",
+          "name": "مربى فراولة طبيعي 100%",
+          "price": "حسب الحجم"
+        },
+        {
+          "category": "منتجات عامة",
+          "description": "مربى مانجو طبيعية بطعم غني 💛👌🏻",
+          "name": "مربى مانجو طبيعي 100%",
+          "price": "حسب الحجم"
+        },
+        {
+          "category": "منتجات عامة",
+          "description": "مربى كيوي طبيعي 100% 💛👌🏻",
+          "name": "مربى كيوي طبيعي 100%",
+          "price": "حسب الحجم"
+        },
+        {
+          "category": "منتجات عامة",
+          "description": "مربى تين طبيعي طازجة وبدون مواد حافظة 💛👌🏻",
+          "name": "مربى تين طبيعي 100%",
+          "price": "حسب الحجم"
+        },
+        {
+          "category": "منتجات عامة",
+          "description": "مربى مشمش طبيعية 100% 💛👌🏻",
+          "name": "مربى مشمش طبيعي 100%",
+          "price": "حسب الحجم"
+        }
+      ],
+      "promoCode": "B",
+      "shopCategory": "grocery",
+      "showPromoAlertOnCall": false,
+      "whatsApp": "201156115709",
+      "workingHours": "[object Object]"
+    },
+    {
+      "address": "مغاغة - شارع الثورة - خلف أسواق سيف",
+      "deliveryFee": "خدمة توصيل طلبات 📦",
+      "description": "محل بـ جبنة لجميع أنواع الأجبان، البقالة، والمنتجات الطبيعية 100%. جميع أنواع المربات الطبيعية متاحة بجميع الأطعام المميزة في مغاغة.",
+      "id": "supermarket_1787876891322",
+      "logo": "begebna-logo",
+      "menuImages": [
+        "begebna-menu2",
+        "begebna-menu1"
+      ],
+      "name": "بـ جبنة - مكرر للتعديل",
+      "phones": [
+        "01156115709",
+        "01038860273"
+      ],
+      "popularItems": [
+        {
+          "description": "مربى توت طبيعي طازجة وبدون مواد حافظة 💛👌🏻",
+          "name": "مربى توت طبيعي 100%",
+          "price": "حسب الحجم"
+        },
+        {
+          "description": "مربى فراولة طازجة طبيعية 100% 💛👌🏻",
+          "name": "مربى فراولة طبيعي 100%",
+          "price": "حسب الحجم"
+        },
+        {
+          "description": "مربى مانجو طبيعية بطعم غني 💛👌🏻",
+          "name": "مربى مانجو طبيعي 100%",
+          "price": "حسب الحجم"
+        },
+        {
+          "description": "مربى كيوي طبيعي 100% 💛👌🏻",
+          "name": "مربى كيوي طبيعي 100%",
+          "price": "حسب الحجم"
+        },
+        {
+          "description": "مربى تين طبيعي طازجة وبدون مواد حافظة 💛👌🏻",
+          "name": "مربى تين طبيعي 100%",
+          "price": "حسب الحجم"
+        },
+        {
+          "description": "مربى مشمش طبيعية 100% 💛👌🏻",
+          "name": "مربى مشمش طبيعي 100%",
+          "price": "حسب الحجم"
+        }
+      ],
+      "shopCategory": "dairy",
+      "whatsApp": "201156115709",
+      "workingHours": {
+        "display": "من 8:00 صباحاً إلى 2:00 بعد منتصف الليل",
+        "end": "02:00",
+        "start": "08:00"
+      }
+    },
+    {
+      "address": "مغاغه شارع الثوره امام فرايد تشيكن ابو علي",
+      "deliveryFee": "التوصيل داخل مغاغه فقط 20 جنيه",
+      "description": "جرب قهوتك المفضلة، وخلي الفنجان الجاي أحلى من اللي قبله ❤️\n",
+      "id": 1787918919701,
+      "logo": "https://drive.google.com/file/d/1SC8AJrDwd2p0T_SXzVOQ-SNXCbqAYhq-/view?usp=drive_link",
+      "name": "Saudi Coffee - بن سعودي",
+      "phones": [
+        "01070004744"
+      ],
+      "popularItems": [
+        {
+          "category": "قهوة",
+          "description": "بدلا من 215",
+          "name": "ربع كيلو بن ساده + تمن فرنساوي هديه",
+          "price": "150"
+        },
+        {
+          "category": "قهوة",
+          "description": "بدلا من 215",
+          "name": "ربع كيلو بن محوج+ تمن فرنساوي هديه",
+          "price": "160"
+        }
+      ],
+      "promoCode": "S",
+      "shopCategory": "Coffee",
+      "showPromoAlertOnCall": true,
+      "whatsApp": "201070004744",
+      "workingHours": "من 9 صباحا الي 3 بعد منتصف اليل"
+    },
+    {
+      "address": "ميدان المطافي  بجانب  ابو عباس",
+      "deliveryFee": "من 15 لـ 20 جنيه",
+      "description": "مخبز ابو زيزو العيش السياحي",
+      "id": 1787925425380,
+      "logo": "https://drive.google.com/file/d/13xdRoXEzoMVmSIAbCNK3LFn-4lywjwEY/view?usp=drive_link",
+      "name": "مخبوزات ابو زيزو",
+      "phones": [
+        "01156697381"
+      ],
+      "promoCode": "Z",
+      "shopCategory": "baked goods",
+      "showPromoAlertOnCall": false,
+      "whatsApp": "01156697381",
+      "workingHours": "مفتوح على مدار الساعة"
+    }
+  ],
+  "test_connection": {
+    "status": "OK",
+    "time": 1787769163502
+  },
+  "trips": {
+    "captain_1": 23,
+    "captain_1787735387437": 4,
+    "captain_1787774364149": 5,
+    "captain_2": 10
+  }
+}

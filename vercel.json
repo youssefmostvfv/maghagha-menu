@@ -1,0 +1,15 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "maghagha-menu.vercel.app"
+        }
+      ],
+      "destination": "https://menu-maghagha.com/$1",
+      "permanent": true
+    }
+  ]
+}

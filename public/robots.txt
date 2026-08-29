@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://maghagha-menu.vercel.app/sitemap.xml
+Sitemap: https://menu-maghagha.com/sitemap.xml

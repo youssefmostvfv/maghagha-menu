@@ -1,0 +1,14 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # تحويل الزوار من الدومين القديم إلى الجديد
+  RewriteCond %{HTTP_HOST} ^maghagha-menu\.vercel\.app$ [NC]
+  RewriteRule ^(.*)$ https://menu-maghagha.com/$1 [L,R=301]
+
+  # توجيه جميع الطلبات إلى ملف index.html لتعمل تطبيقات React (SPA) بدون أخطاء 404
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
